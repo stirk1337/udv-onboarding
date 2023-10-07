@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfiles/React
     restart: "always"
     ports:
-      - "3000:3000"
+      - "5173:5173"
 
   python:
     build:

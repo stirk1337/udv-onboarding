@@ -4,8 +4,10 @@ WORKDIR /app
 
 COPY frontend-server .
 
-# RUN npm install --force
+RUN npm install --force
 
-# COPY . .
+RUN npm install typescript --save-dev
 
-# CMD ["npm", "start", "--prefix", ""]
+COPY . .
+
+CMD ["yarn", "run", "dev", "--host", "0.0.0.0"]
