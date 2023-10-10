@@ -51,3 +51,4 @@ uvicorn==0.23.2
 watchfiles==0.20.0
 websockets==11.0.3
 zipp==3.17.0
+pytest==7.4.2
