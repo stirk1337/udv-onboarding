@@ -26,7 +26,7 @@ def include_auth_routers(app: FastAPI) -> None:
     )
 
     app.include_router(
-        fastapi_users.get_register_router(UserRead, UserCreate),
+        fastapi_users.get_register_router(gUserRead, UserCreate),
         prefix='/auth',
         tags=['auth'],
     )

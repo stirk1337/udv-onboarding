@@ -6,6 +6,18 @@ from src.db import Base
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
+    """
+       Represents a user in the database.
+
+       Attributes:
+           id (int): The unique identifier for the user.
+           email (str): The email address of the user.
+           hashed_password (str): The hashed password of the user.
+           is_active (bool): Indicates whether the user is active.
+           is_superuser (bool): Indicates whether the user has superuser privileges.
+           is_verified (bool): Indicates whether the user's email address is verified.
+
+       """
     __tablename__ = 'user'
 
     id: Mapped[int] = mapped_column(

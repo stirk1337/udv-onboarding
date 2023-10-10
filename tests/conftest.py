@@ -47,5 +47,5 @@ client = TestClient(app)
 
 @pytest.fixture(scope='session')
 async def ac() -> AsyncGenerator[AsyncClient, None]:
-    async with AsyncClient(app=app, base_url='http://test') as asyncClient:
-        yield asyncClient
+    async with AsyncClient(app=app, base_url='http://test') as a_client:
+        yield a_client
