@@ -22,7 +22,8 @@ class UserCreate(schemas.BaseUserCreate):
         email (str): The email address of the user being created.
         password (str): The password for the user.
         is_active (bool, optional): Indicates whether the user is active (optional).
-        is_superuser (bool, optional): Indicates whether the user has superuser privileges (optional).
+        is_superuser (bool, optional):
+            Indicates whether the user has superuser privileges (optional).
 
     """
 
