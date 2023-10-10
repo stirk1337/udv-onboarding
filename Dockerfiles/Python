@@ -10,4 +10,6 @@ COPY . .
 
 CMD alembic upgrade head
 
-CMD gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 main:app
+# CMD gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 main:app
+
+CMD python3 main.py
