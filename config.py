@@ -8,7 +8,6 @@ class Settings(BaseSettings):
 
     secret: SecretStr
     postgres: PostgresDsn
-    postgres_test: PostgresDsn
 
 
 settings = Settings()

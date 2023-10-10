@@ -8,11 +8,10 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
-from config import settings
 from main import app
 from src.db import Base, get_async_session
 
-DATABASE_URL_TEST = str(settings.postgres_test)
+DATABASE_URL_TEST = 'postgresql+asyncpg://postgres_test:postgres_test@localhost:5433/postgres_test'
 
 
 engine_test = create_async_engine(DATABASE_URL_TEST, poolclass=NullPool)
