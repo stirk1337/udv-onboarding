@@ -2,10 +2,12 @@
 
 ## Документация
 
-http://localhost:8000/docs (сервер напрямую)
+http://localhost:8000/docs (сервер напрямую)  
+
 или
 http://localhost/api/v1/docs (через прокси-сервер nginx)
 
 ## Тесты
-coverage run -m pytest
+coverage run -m pytest  
+
 coverage report
