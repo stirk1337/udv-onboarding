@@ -10,8 +10,9 @@ from sqlalchemy.pool import NullPool
 
 from main import app
 from src.db import Base, get_async_session
+from config import settings
 
-DATABASE_URL_TEST = 'postgresql+asyncpg://postgres_test:postgres_test@localhost:5433/postgres_test'
+DATABASE_URL_TEST = str(settings.postgres_test)
 
 
 engine_test = create_async_engine(DATABASE_URL_TEST, poolclass=NullPool)
