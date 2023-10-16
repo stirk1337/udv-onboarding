@@ -44,7 +44,7 @@ jobs:
       run: |
         touch .env
         echo POSTGRES='postgresql+asyncpg://postgres:postgres@db:5432/postgres' >> .env
-        echo POSTGRES_TEST='postgresql+asyncpg://postgres_test:postgres_test@db_test/postgres_test' >> .env
+        echo POSTGRES_TEST='postgresql+asyncpg://postgres_test:postgres_test@localhost:5433/postgres_test' >> .env
         echo SECRET='no_secret_key_here' >> .env
         cat .env
 
