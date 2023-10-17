@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
 from fastapi_users import FastAPIUsers
+from pydantic import BaseModel, EmailStr
 
 from src.auth.auth import auth_backend
 from src.auth.manager import get_user_manager
 from src.auth.models import User
-from pydantic import BaseModel, EmailStr
 from src.auth.router import Response401
+
 
 router = APIRouter(
     prefix='/user',
