@@ -1,11 +1,17 @@
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
-function RegisterPage({changeRegistered}: any) {
+type RegisterPageProps = {
+    isAuth: boolean;
+  }
+
+function RegisterPage({isAuth}: RegisterPageProps) {
     let [userData, setFormData] = useState({
         email: '',
         password: ''
     })
+    const navigate = useNavigate();
 
     let {email, password} = userData
 
@@ -22,7 +28,7 @@ function RegisterPage({changeRegistered}: any) {
           })
           .then(function (response) {
             console.log(response);
-            changeRegistered()
+            navigate("/login");
           })
           .catch(function (error) {
             console.log(error);
@@ -31,6 +37,7 @@ function RegisterPage({changeRegistered}: any) {
 
     return ( 
         <>
+            {isAuth && <Navigate to="/"/>}
             <h1>Регистрация</h1>
             <form>
                 <label htmlFor="email">Введите почту</label>

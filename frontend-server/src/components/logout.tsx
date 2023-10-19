@@ -1,13 +1,13 @@
 import axios from "axios";
 
-function LogoutPage({changeRegistered}: any) {
+function Logout({onLogin}: any) {
     function handleFormSubmit(evt: any){
         evt.preventDefault();
         axios.post('http://localhost/api/v1/auth/jwt/logout', {
-          })
+          }, {withCredentials: true})
           .then(function (response) {
             console.log(response);
-            changeRegistered()
+            onLogin()
           })
           .catch(function (error) {
             console.log(error);
@@ -24,4 +24,4 @@ function LogoutPage({changeRegistered}: any) {
      );
 }
 
-export default LogoutPage;
+export default Logout;
