@@ -5,7 +5,7 @@ from pydantic import BaseModel, EmailStr
 from src.auth.auth import auth_backend
 from src.auth.manager import get_user_manager
 from src.auth.models import User
-from src.auth.router import Response401
+from src.request_codes import responses
 
 
 router = APIRouter(
@@ -28,6 +28,6 @@ class UserOut(BaseModel):
 
 @router.get('/get_current_user_info',
             response_model=UserOut,
-            responses={401: {'model': Response401}})
+            responses=responses)
 async def get_current_user_info(user: User = Depends(current_user)) -> UserOut:
     return UserOut(id=user.id, email=user.email)

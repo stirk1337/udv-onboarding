@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi_users import FastAPIUsers
-from pydantic import BaseModel
 
 from src.auth.auth import auth_backend
 from src.auth.manager import get_user_manager
@@ -11,10 +10,6 @@ fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
     [auth_backend],
 )
-
-
-class Response401(BaseModel):
-    detail: str = 'Unauthorized'
 
 
 def include_auth_routers(app: FastAPI) -> None:

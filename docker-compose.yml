@@ -55,3 +55,15 @@ services:
     depends_on:
       - python
       - react
+
+  redis:
+    container_name: "redis"
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    ports:
+      - "15672:15672"
