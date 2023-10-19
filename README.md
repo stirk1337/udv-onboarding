@@ -11,3 +11,9 @@ http://localhost/api/v1/docs (через прокси-сервер nginx)
 coverage run -m pytest  
 
 coverage report
+
+
+## dont forget  
+убрать cors  
+убрать 60 sec cookie
+
