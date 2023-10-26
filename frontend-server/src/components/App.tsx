@@ -1,25 +1,61 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import LoginPage from "../pages/login-page"
 import RegisterPage from "../pages/register-page"
-import LogoutPage from "../pages/logout-page"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import MainPage from "../pages/main-page"
+import AuthChecker from "./auth-checker"
+import axios from "axios"
+import EnterPage from "../pages/enter-page"
 
 
 function App() {
-  let [isRegistered, setRegisteredData] = useState(false)
+  let [isRegistered, setRegisteredData] = useState(true)
+
+
+  async function checkStatus(): Promise<boolean> {
+    let status = false
+    await axios.get('http://localhost/api/v1/user/get_current_user_info', {
+      withCredentials: true
+    })
+    .then(function (response) {
+      status = true
+    })
+    .catch(function (error) {
+      status = false
+    })
+    return status
+  }
+
+  useEffect(() => {
+    handleRegisteredUser()
+  })
 
   function handleRegisteredUser(){
-    setRegisteredData(!isRegistered)
+    checkStatus().then(function(response) {
+      console.log('1')
+      setRegisteredData(response)
+    })
   }
 
   return (
-    <>
-      {
-        isRegistered ? <LoginPage/> : <RegisterPage changeRegistered={handleRegisteredUser}/>
-      }
-      {
-        isRegistered && <LogoutPage changeRegistered={handleRegisteredUser}/>
-      }
-    </>
+      <BrowserRouter>
+      <Routes>
+        <Route>
+            <Route index element={
+              <AuthChecker isAuth={isRegistered}>
+                <MainPage
+                  onLogin={handleRegisteredUser}
+                  isAuth={isRegistered}
+                />
+              </AuthChecker>
+            }
+          />
+          <Route path="/enter-page" element={<EnterPage/>}></Route>
+          <Route path="/registrations" element={<RegisterPage isAuth={isRegistered}/>}/>
+          <Route path="/login" element={<LoginPage isAuth={isRegistered} onLogin={handleRegisteredUser}/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

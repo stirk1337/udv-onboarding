@@ -1,8 +1,14 @@
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
+import { Navigate } from "react-router-dom";
+
+type LoginPageProps = {
+  onLogin: () => void;
+  isAuth: boolean;
+}
 
 
-function LoginPage() {
+function LoginPage({onLogin, isAuth}: LoginPageProps) {
     let [userData, setFormData] = useState({
         email: '',
         password: ''
@@ -21,12 +27,14 @@ function LoginPage() {
             username : email,
             password: password
           }, {
+            withCredentials: true,
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then(function (response) {
             console.log(response);
+            onLogin()
           })
           .catch(function (error) {
             console.log(error);
@@ -35,6 +43,7 @@ function LoginPage() {
 
     return ( 
         <>
+            {isAuth && <Navigate to="/"/>}
             <h1>Логин</h1>
             <form>
                 <label htmlFor="email">Введите почту</label>
