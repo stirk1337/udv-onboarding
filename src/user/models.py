@@ -1,31 +1,32 @@
 import enum
+from typing import List
 
 from sqlalchemy import ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
 
 
 class Product(enum.Enum):
-    DATAPK_INDUSTRIAL_KIT = 'datapk_industrial_kit'
-    INDUSTRIAL_FIREWALL = 'industrial_firewall'
-    INDUSTRIAL_HONEYPOT = 'industrial_honeypot'
-    DATA_DIODE = 'data_diode'
-    ITM = 'itm'
-    EPLAT4M_PASS = 'eplat4m_pass'
-    EPLAT4M_SOAR = 'eplat4m_soar'
-    EPLAT4M_SGRC = 'eplat4m_sgrc'
-    EPLAT4M_KII = 'eplat4m_kii'
-    EPLAT4M = 'eplat4m'
-    SIEM = 'siem'
+    datapk_industrial_kit = 'datapk_industrial_kit'
+    industrial_firewall = 'industrial_firewall'
+    industrial_honeypot = 'industrial_honeypot'
+    data_diode = 'data_diode'
+    itm = 'itm'
+    eplat4m_pass = 'eplat4m_pass'
+    eplat4m_soar = 'eplat4m_soar'
+    eplat4m_sgrc = 'eplat4m_sgrc'
+    eplat4m_kii = 'eplat4m_kii'
+    eplat4m = 'eplat4m'
+    siem = 'siem'
 
 
 class ProductRole(enum.Enum):
-    FRONTEND = 'frontend'
-    BACKEND = 'backend'
-    ANALYST = 'analyst'
-    TEST = 'test'
-    DEVOPS = 'devops'
+    frontend = 'frontend'
+    backend = 'backend'
+    analyst = 'analyst'
+    test = 'test'
+    devops = 'devops'
 
 
 class Curator(Base):
@@ -37,6 +38,9 @@ class Curator(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey('user.id', ondelete='CASCADE')
     )
+    user: Mapped['User'] = relationship(back_populates='curator')
+    employee: Mapped[List['Employee']] = (
+        relationship(back_populates='curator'))
 
 
 class Employee(Base):
@@ -48,11 +52,11 @@ class Employee(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey('user.id', ondelete='CASCADE')
     )
-    curator_id = mapped_column(
-        ForeignKey('curator.id', ondelete='SET NULL')
-    )
+    user: Mapped['User'] = relationship(back_populates='employee')
+    curator_id = mapped_column(ForeignKey('curator.id', ondelete='SET NULL'))
+    curator: Mapped['Curator'] = relationship(back_populates='employee')
     product: Mapped[Product]
     product_role_id: Mapped[ProductRole]
     udv_coins: Mapped[int] = mapped_column(
-        Integer
+        Integer, default=0
     )
