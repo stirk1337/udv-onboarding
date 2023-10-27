@@ -37,5 +37,5 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_verified: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )
-    employee: Mapped[List['Employee']] = (relationship(back_populates='user'))  # noqa: F821
-    curator: Mapped[List['Curator']] = (relationship(back_populates='user'))
+    employee: Mapped[List['Employee']] = relationship(back_populates='user')
+    curator: Mapped[List['Curator']] = relationship(back_populates='user')
