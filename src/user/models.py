@@ -7,25 +7,25 @@ from src.db import Base
 
 
 class Product(enum.Enum):
-    DatapkIndustrialKit = 'datapk_industrial_kit'
-    IndustrialFirewall = 'industrial_firewall'
-    IndustrialHoneypot = 'industrial_honeypot'
-    DataDiode = 'data_diode'
-    Itm = 'itm'
-    Eplat4mPass = 'eplat4m_pass'
-    Eplat4mSoar = 'eplat4m_soar'
-    Eplat4mSgrc = 'eplat4m_sgrc'
-    Eplat4mKii = 'eplat4m_kii'
-    Eplat4m = 'eplat4m'
-    Siem = 'siem'
+    DATAPK_INDUSTRIAL_KIT = 'datapk_industrial_kit'
+    INDUSTRIAL_FIREWALL = 'industrial_firewall'
+    INDUSTRIAL_HONEYPOT = 'industrial_honeypot'
+    DATA_DIODE = 'data_diode'
+    ITM = 'itm'
+    EPLAT4M_PASS = 'eplat4m_pass'
+    EPLAT4M_SOAR = 'eplat4m_soar'
+    EPLAT4M_SGRC = 'eplat4m_sgrc'
+    EPLAT4M_KII = 'eplat4m_kii'
+    EPLAT4M = 'eplat4m'
+    SIEM = 'siem'
 
 
 class ProductRole(enum.Enum):
-    Frontend = 'frontend'
-    Backend = 'backend'
-    Analyst = 'analyst'
-    Test = 'test'
-    Devops = 'devops'
+    FRONTEND = 'frontend'
+    BACKEND = 'backend'
+    ANALYST = 'analyst'
+    TEST = 'test'
+    DEVOPS = 'devops'
 
 
 class Curator(Base):

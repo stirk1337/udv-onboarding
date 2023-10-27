@@ -8,8 +8,8 @@ from src.db import Base
 
 
 class Role(enum.Enum):
-    Employee = 'employee'
-    Curator = 'curator'
+    EMPLOYEE = 'employee'
+    CURATOR = 'curator'
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
