@@ -4,7 +4,7 @@ from fastapi_users import FastAPIUsers
 from src.auth.auth import auth_backend
 from src.auth.manager import get_user_manager
 from src.auth.models import User
-from src.auth.schemas import UserRead, UserCreate
+from src.auth.schemas import UserCreate, UserRead
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
@@ -27,12 +27,12 @@ def include_auth_routers(app: FastAPI) -> None:
 
     app.include_router(
         fastapi_users.get_verify_router(UserRead),
-        prefix="/auth",
-        tags=["auth"],
+        prefix='/auth',
+        tags=['auth'],
     )
 
     app.include_router(
         fastapi_users.get_reset_password_router(),
-        prefix="/auth",
-        tags=["auth"],
+        prefix='/auth',
+        tags=['auth'],
     )

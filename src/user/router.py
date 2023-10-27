@@ -7,7 +7,6 @@ from src.auth.manager import get_user_manager
 from src.auth.models import User
 from src.request_codes import responses
 
-
 router = APIRouter(
     prefix='/user',
     tags=['User']

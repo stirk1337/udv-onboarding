@@ -16,4 +16,3 @@ coverage report
 ## dont forget  
 убрать cors  
 убрать 60 sec cookie
-
