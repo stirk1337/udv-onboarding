@@ -1,41 +1,36 @@
 from fastapi_users import schemas
+from pydantic import Field
+
+from src.auth.models import Role
 
 
 class UserRead(schemas.BaseUser[int]):
-    """
-    Represents a user for reading purposes.
-
-    Attributes:
-        id (int): The unique identifier for the user.
-        email (str): The user's email address.
-        is_active (bool): Indicates whether the user is active.
-        is_superuser (bool): Indicates whether the user has superuser privileges.
-
-    """
+    pass
 
 
 class UserCreate(schemas.BaseUserCreate):
-    """
-    Represents user creation data.
+    name: str = Field(examples=['Иванов Иван Игоревич'])
+    role: Role = Field(examples=['curator', 'employee'])
 
-    Attributes:
-        email (str): The email address of the user being created.
-        password (str): The password for the user.
-        is_active (bool, optional): Indicates whether the user is active (optional).
-        is_superuser (bool, optional):
-            Indicates whether the user has superuser privileges (optional).
-
-    """
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
+                    'email': 'astafieva@example.com',
+                    'password': 'string',
+                    'name': 'Астафьева Анна Викторовна',
+                    'role': 'curator || employee'
+                },
+                {
+                    'email': 'vovag@example.com',
+                    'password': 'string',
+                    'name': 'Гришмановский Владимир Андреевич',
+                    'role': 'employee'
+                }
+            ]
+        }
+    }
 
 
 class UserUpdate(schemas.BaseUserUpdate):
-    """
-    Represents user update data.
-
-    Attributes:
-        email (str, optional): The updated email address (optional).
-        password (str, optional): The updated password (optional).
-        is_active (bool, optional): The updated active status (optional).
-        is_superuser (bool, optional): The updated superuser status (optional).
-
-    """
+    pass

@@ -5,7 +5,8 @@ from config import settings
 
 SECRET = settings.secret
 
-cookie_transport = CookieTransport(cookie_max_age=60)
+cookie_transport = CookieTransport(
+    cookie_max_age=60, cookie_name='udv-onboarding')
 
 
 def get_jwt_strategy() -> JWTStrategy:

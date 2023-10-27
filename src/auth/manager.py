@@ -1,8 +1,8 @@
 from typing import Optional
 
 from fastapi import Depends, Request
-from fastapi_users import (BaseUserManager, IntegerIDMixin,
-                           exceptions, models, schemas)
+from fastapi_users import (BaseUserManager, IntegerIDMixin, exceptions, models,
+                           schemas)
 
 from config import settings
 from src.auth.models import User
@@ -12,31 +12,6 @@ SECRET = settings.secret
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
-    """
-        UserManager handles user-related operations, including registration, password resetting,
-        and verification.
-
-        Attributes:
-            reset_password_token_secret (str): The secret key for generating reset password tokens.
-            verification_token_secret (str): The secret key for generating verification tokens.
-
-        Methods:
-            on_after_register(self, user: User, request: Optional[Request] = None) -> None:
-                Handle actions to be taken after a user registers.
-
-            create(self, user_create: schemas.UC, safe: bool = False,
-                   request: Optional[Request] = None) -> models.UP:
-                Create a new user based on the provided user creation data.
-
-            on_after_forgot_password(self, user: User, token: str,
-                                     request: Optional[Request] = None) -> None:
-                Handle actions to be taken after a user requests a password reset.
-
-            on_after_request_verify(self, user: User, token: str,
-                                    request: Optional[Request] = None) -> None:
-                Handle actions to be taken after a user requests email verification.
-
-        """
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
