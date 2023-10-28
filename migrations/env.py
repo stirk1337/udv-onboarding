@@ -7,8 +7,9 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from main import Base
-from src.auth.models import User
 # imports for alembic migrations
+from src.auth.models import User
+from src.task.models import EmployeePlanet, Planet, Task, TaskDifficulty
 from src.user.models import Curator, Employee
 
 sys.path.append(os.path.join(sys.path[0], 'src'))
