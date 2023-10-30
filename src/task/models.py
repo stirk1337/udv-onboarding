@@ -48,22 +48,10 @@ class TaskStatus(enum.Enum):
     completed = 'completed'
 
 
-class TaskReward(enum.Enum):
-    easy = 5
-    medium = 10
-    hard = 20
-
-
-class TaskDifficulty(Base):
-    __tablename__ = 'task_difficulty'
-    id: Mapped[int] = mapped_column(
-        Integer, primary_key=True
-    )
-    name: Mapped[str] = mapped_column(
-        String(length=100), nullable=False
-    )
-    reward: Mapped[TaskReward]
-    task: Mapped[List['Task']] = relationship(back_populates='task_difficulty')
+class TaskDifficulty(enum.Enum):
+    easy = 1
+    medium = 2
+    hard = 3
 
 
 class Task(Base):
@@ -82,11 +70,7 @@ class Task(Base):
         String(length=500), nullable=True
     )
     task_status: Mapped[TaskStatus]
-    task_difficulty_id: Mapped[int] = mapped_column(
-        ForeignKey('task_difficulty.id', ondelete='CASCADE')
-    )
-    task_difficulty: Mapped['TaskDifficulty'] = relationship(
-        back_populates='task')
+    task_difficulty: Mapped['TaskDifficulty']
     planet_id: Mapped[int] = mapped_column(
         ForeignKey('planet.id', ondelete='CASCADE')
     )

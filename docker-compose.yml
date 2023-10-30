@@ -48,7 +48,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: DockerFiles/Nginx
+      dockerfile: Dockerfiles/Nginx
     restart: "always"
     ports:
       - "80:80"

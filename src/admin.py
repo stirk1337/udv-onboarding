@@ -3,7 +3,7 @@ from sqladmin import Admin, ModelView
 
 from src.auth.models import User
 from src.db import engine
-from src.task.models import EmployeePlanet, Planet, Task, TaskDifficulty
+from src.task.models import EmployeePlanet, Planet, Task
 from src.user.models import Curator, Employee
 
 
@@ -33,14 +33,9 @@ class PlanetAdmin(ModelView, model=Planet):
 class TaskAdmin(ModelView, model=Task):
     column_list = [Task.id, Task.name,
                    Task.description, Task.file_link,
-                   Task.task_difficulty_id, Task.task_difficulty,
-                   Task.task_status, Task.planet_id, Task.planet,
+                   Task.task_difficulty, Task.task_status,
+                   Task.planet_id, Task.planet,
                    Task.updated_at, Task.created_at]
-
-
-class TaskDifficultyAdmin(ModelView, model=TaskDifficulty):
-    column_list = [TaskDifficulty.id, TaskDifficulty.name,
-                   TaskDifficulty.task, TaskDifficulty.reward]
 
 
 class EmployeePlanetAdmin(ModelView, model=EmployeePlanet):
@@ -55,5 +50,4 @@ def add_admin_views(app: FastAPI) -> None:
     admin.add_view(CuratorAdmin)
     admin.add_view(PlanetAdmin)
     admin.add_view(TaskAdmin)
-    admin.add_view(TaskDifficultyAdmin)
     admin.add_view(EmployeePlanetAdmin)

@@ -5,6 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 from src.admin import add_admin_views
 from src.auth.router import include_auth_routers
 from src.db import Base  # noqa: F401
+from src.task.router import router as task_router
 from src.user.router import router as user_router
 
 app = FastAPI(title='UDV onboarding API')
@@ -12,6 +13,7 @@ app = FastAPI(title='UDV onboarding API')
 
 include_auth_routers(app)
 app.include_router(user_router)
+app.include_router(task_router)
 
 log_config = uvicorn.config.LOGGING_CONFIG
 log_config['formatters']['access']['fmt'] = \
@@ -34,4 +36,4 @@ add_admin_views(app)
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000,
-                log_config=log_config, root_path='/api/v1/')
+                log_config=log_config, root_path='/api/v1')
