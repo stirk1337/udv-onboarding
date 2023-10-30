@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import LoginPage from "../pages/login-page"
 import RegisterPage from "../pages/register-page"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
@@ -26,13 +26,12 @@ function App() {
     return status
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     handleRegisteredUser()
-  })
+  })*/
 
   function handleRegisteredUser(){
     checkStatus().then(function(response) {
-      console.log('1')
       setRegisteredData(response)
     })
   }
@@ -42,12 +41,12 @@ function App() {
       <Routes>
         <Route>
             <Route index element={
-              <AuthChecker isAuth={isRegistered}>
+              //<AuthChecker isAuth={isRegistered}>
                 <MainPage
                   onLogin={handleRegisteredUser}
                   isAuth={isRegistered}
                 />
-              </AuthChecker>
+              //</AuthChecker>
             }
           />
           <Route path="/enter-page" element={<EnterPage/>}></Route>
