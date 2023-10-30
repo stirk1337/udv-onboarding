@@ -1,15 +1,18 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi_users import FastAPIUsers
 
 from src.auth.auth import auth_backend
 from src.auth.manager import get_user_manager
 from src.auth.models import User
 from src.auth.schemas import UserCreate, UserRead
+from src.request_codes import responses
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
     [auth_backend],
 )
+
+current_superuser = fastapi_users.current_user(active=True, superuser=True)
 
 
 def include_auth_routers(app: FastAPI) -> None:
@@ -23,6 +26,8 @@ def include_auth_routers(app: FastAPI) -> None:
         fastapi_users.get_register_router(UserRead, UserCreate),
         prefix='/auth',
         tags=['Auth'],
+        dependencies=[Depends(current_superuser)],
+        responses=responses
     )
 
     app.include_router(

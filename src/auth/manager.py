@@ -5,8 +5,10 @@ from fastapi_users import (BaseUserManager, IntegerIDMixin, exceptions, models,
                            schemas)
 
 from config import settings
-from src.auth.models import User
+from src.auth.models import Role, User
 from src.auth.utils import get_user_db
+from src.db import async_session_maker
+from src.user.dals import CuratorDAL
 
 SECRET = settings.secret
 
@@ -18,6 +20,12 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_register(self,
                                 user: User,
                                 request: Optional[Request] = None) -> None:
+        if user.role == Role.curator:
+            async with async_session_maker() as session:
+                curator_dal = CuratorDAL(session)
+                await curator_dal.create_curator(user)
+        else:
+            pass  # TODO
         print(f'User {user.id} has registered.')
 
     async def create(

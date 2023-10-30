@@ -19,6 +19,7 @@ class CreatePlanet(BaseModel):
 class ShowPlanetAfterCreation(BaseModel):
     id: int
     name: str
+    curator_id: int
 
 
 @router.post('/create_planet',
@@ -26,5 +27,5 @@ class ShowPlanetAfterCreation(BaseModel):
 async def create_planet(body: CreatePlanet, session: AsyncSession = Depends(get_async_session),
                         user: User = Depends(curator_user)) -> ShowPlanetAfterCreation:
     planet_dal = PlanetDAL(session)
-    planet = await planet_dal.create_planet(name=body.name)
-    return ShowPlanetAfterCreation(id=planet.id, name=planet.name)
+    planet = await planet_dal.create_planet(name=body.name, user=user)
+    return ShowPlanetAfterCreation(id=planet.id, name=planet.name, curator_id=planet.curator_id)
