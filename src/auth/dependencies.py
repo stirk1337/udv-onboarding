@@ -1,14 +1,7 @@
 from fastapi import Depends, HTTPException, status
-from fastapi_users import FastAPIUsers
 
-from src.auth.auth import auth_backend
-from src.auth.manager import get_user_manager
 from src.auth.models import Role, User
-
-fastapi_users = FastAPIUsers[User, int](
-    get_user_manager,
-    [auth_backend],
-)
+from src.auth.router import fastapi_users
 
 current_user = fastapi_users.current_user()
 

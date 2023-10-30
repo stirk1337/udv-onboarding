@@ -5,7 +5,6 @@ from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
-from src.task.models import EmployeePlanet
 
 
 class Product(enum.Enum):
@@ -42,6 +41,8 @@ class Curator(Base):
     user: Mapped['User'] = relationship(back_populates='curator')
     employee: Mapped[List['Employee']] = (
         relationship(back_populates='curator'))
+    planet: Mapped[List['Planet']] = (
+        relationship(back_populates='curator'))
 
 
 class Employee(Base):
@@ -61,5 +62,5 @@ class Employee(Base):
     udv_coins: Mapped[int] = mapped_column(
         Integer, default=0
     )
-    employee_planet: Mapped[List['EmployeePlanet']
-                            ] = relationship(back_populates='employee')
+    employee_planet: Mapped[List['EmployeePlanet']] = (
+        relationship(back_populates='employee'))

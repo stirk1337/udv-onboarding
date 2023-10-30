@@ -23,9 +23,14 @@ class Planet(Base):
     updated_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())")
     )
-    employee_planet: Mapped[List['EmployeePlanet']
-                            ] = relationship(back_populates='planet')
+    employee_planet: Mapped[List['EmployeePlanet']] = (
+        relationship(back_populates='planet'))
     task: Mapped[List['Task']] = relationship(back_populates='planet')
+    curator_id: Mapped[int] = mapped_column(
+        ForeignKey('curator.id', ondelete='CASCADE')
+    )
+    curator: Mapped['Curator'] = relationship(
+        back_populates='planet')
 
 
 class EmployeePlanet(Base):
