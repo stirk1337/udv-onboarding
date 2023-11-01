@@ -17,7 +17,7 @@ class UserAdmin(ModelView, model=User):
 class EmployeeAdmin(ModelView, model=Employee):
     column_list = [Employee.id, Employee.user_id,
                    Employee.curator_id, Employee.product,
-                   Employee.product_role_id]
+                   Employee.product_role]
 
 
 class CuratorAdmin(ModelView, model=Curator):

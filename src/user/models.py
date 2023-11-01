@@ -58,7 +58,7 @@ class Employee(Base):
     curator_id = mapped_column(ForeignKey('curator.id', ondelete='SET NULL'))
     curator: Mapped['Curator'] = relationship(back_populates='employee')
     product: Mapped[Product]
-    product_role_id: Mapped[ProductRole]
+    product_role: Mapped[ProductRole]
     udv_coins: Mapped[int] = mapped_column(
         Integer, default=0
     )

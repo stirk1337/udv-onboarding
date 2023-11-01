@@ -9,7 +9,7 @@ from src.request_codes import responses
 from src.task.dals import PlanetDAL
 
 router = APIRouter(prefix='/task',
-                   tags=['Task'])
+                   tags=['task'])
 
 
 class CreatePlanet(BaseModel):
