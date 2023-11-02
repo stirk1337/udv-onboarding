@@ -1,6 +1,5 @@
 import datetime
-import enum
-from typing import List
+from enum import Enum
 
 from sqlalchemy import ForeignKey, Integer, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -8,52 +7,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db import Base
 
 
-class Planet(Base):
-    __tablename__ = 'planet'
-
-    id: Mapped[int] = mapped_column(
-        Integer, primary_key=True
-    )
-    name: Mapped[str] = mapped_column(
-        String(length=100), nullable=False
-    )
-    created_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())")
-    )
-    updated_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())")
-    )
-    employee_planet: Mapped[List['EmployeePlanet']] = (
-        relationship(back_populates='planet'))
-    task: Mapped[List['Task']] = relationship(back_populates='planet')
-    curator_id: Mapped[int] = mapped_column(
-        ForeignKey('curator.id', ondelete='CASCADE')
-    )
-    curator: Mapped['Curator'] = relationship(
-        back_populates='planet')
-
-
-class EmployeePlanet(Base):
-    __tablename__ = 'employee_planet'
-
-    employee_id: Mapped[int] = mapped_column(
-        ForeignKey('employee.id', ondelete='CASCADE'), primary_key=True
-    )
-    employee: Mapped['Employee'] = relationship(
-        back_populates='employee_planet')
-    planet_id: Mapped[int] = mapped_column(
-        ForeignKey('planet.id', ondelete='CASCADE'), primary_key=True
-    )
-    planet: Mapped['Planet'] = relationship(back_populates='employee_planet')
-
-
-class TaskStatus(enum.Enum):
+class TaskStatus(Enum):
     in_progress = 'in_progress'
     being_checked = 'being_checked'
     completed = 'completed'
 
 
-class TaskDifficulty(enum.Enum):
+class TaskDifficulty(Enum):
     easy = 1
     medium = 2
     hard = 3

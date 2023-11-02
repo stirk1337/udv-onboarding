@@ -12,7 +12,7 @@ from src.auth.models import Role, User
 from src.auth.schemas import UserCreate
 from src.auth.utils import get_user_db
 from src.db import async_session_maker, get_async_session
-from src.user.dals import CuratorDAL, EmployeeDAL
+from src.user.dals import CuratorDAL
 
 SECRET = settings.secret
 
@@ -28,11 +28,6 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             async with async_session_maker() as session:
                 curator_dal = CuratorDAL(session)
                 await curator_dal.create_curator(user)
-
-        elif user.role == Role.employee:
-            async with async_session_maker() as session:
-                employee_dal = EmployeeDAL(session)
-                await employee_dal.create_employee(user)
 
     async def create(
             self,

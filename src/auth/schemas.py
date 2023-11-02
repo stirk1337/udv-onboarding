@@ -10,7 +10,7 @@ class UserRead(schemas.BaseUser[int]):
 
 class UserCreate(schemas.BaseUserCreate):
     name: str = Field(examples=['Иванов Иван Игоревич'])
-    role: Role = Field(examples=['curator', 'employee'])
+    role: Role = Field(examples=['curator'])
 
     model_config = {
         'json_schema_extra': {

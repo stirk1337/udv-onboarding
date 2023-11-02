@@ -62,5 +62,5 @@ class Employee(Base):
     udv_coins: Mapped[int] = mapped_column(
         Integer, default=0
     )
-    employee_planet: Mapped[List['EmployeePlanet']] = (
-        relationship(back_populates='employee'))
+    planets: Mapped[List['Planet']] = (
+        relationship(secondary='employee_planet', back_populates='employees'))
