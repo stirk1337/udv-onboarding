@@ -14,9 +14,9 @@ class TaskStatus(Enum):
 
 
 class TaskDifficulty(Enum):
-    easy = 1
-    medium = 2
-    hard = 3
+    easy = 'easy'
+    medium = 'medium'
+    hard = 'hard'
 
 
 class Task(Base):
@@ -39,7 +39,8 @@ class Task(Base):
     planet_id: Mapped[int] = mapped_column(
         ForeignKey('planet.id', ondelete='CASCADE')
     )
-    planet: Mapped['Planet'] = relationship(back_populates='task')
+    planet: Mapped['Planet'] = relationship(
+        back_populates='task', cascade='all, delete')
     created_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())")
     )

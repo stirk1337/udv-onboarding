@@ -24,7 +24,8 @@ class Planet(Base):
     )
     employees: Mapped[List['Employee']] = (
         relationship(secondary='employee_planet', back_populates='planets'))
-    task: Mapped[List['Task']] = relationship(back_populates='planet')
+    task: Mapped[List['Task']] = relationship(
+        back_populates='planet', cascade='all, delete')
     curator_id: Mapped[int] = mapped_column(
         ForeignKey('curator.id', ondelete='CASCADE')
     )

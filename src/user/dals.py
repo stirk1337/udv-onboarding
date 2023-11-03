@@ -45,6 +45,13 @@ class EmployeeDAL:
         await self.db_session.commit()
         return new_employee
 
+    async def get_employee_by_user(self, user: User) -> Employee:
+        employee = await self.db_session.scalar(
+            select(Employee)
+            .where(Employee.user_id == user.id)
+        )
+        return employee
+
     async def get_employees_by_ids(self, ids: List[int]) -> List[Employee]:
         employees = await self.db_session.scalars(
             select(Employee)

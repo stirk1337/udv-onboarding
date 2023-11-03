@@ -1,15 +1,16 @@
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.dependencies import curator_user
-from src.auth.models import User
+from src.auth.dependencies import curator_user, current_user
+from src.auth.models import Role, User
 from src.db import get_async_session
 from src.planet.dals import PlanetDAL
 from src.request_codes import planet_responses, responses
-from src.user.dals import EmployeeDAL
+from src.user.dals import CuratorDAL, EmployeeDAL
 
 router = APIRouter(prefix='/planet',
                    tags=['planet'])
@@ -23,6 +24,31 @@ class ShowPlanet(BaseModel):
     id: int
     name: str
     curator_id: int
+    created_at: datetime
+
+
+@router.get('/get_planets', responses=responses)
+async def get_planets(user: User = Depends(current_user),
+                      session: AsyncSession = Depends(get_async_session)) -> List[ShowPlanet]:
+    planet_dal = PlanetDAL(session)
+    planets = list()
+    if user.role == Role.curator:
+        curator_dal = CuratorDAL(session)
+        curator = await curator_dal.get_curator_by_user(user)
+        planets = await planet_dal.get_planets_for_curator(curator)
+
+    elif user.role == Role.employee:
+        employee_dal = EmployeeDAL(session)
+        employee = await employee_dal.get_employee_by_user(user)
+        planets = await planet_dal.get_planets_for_employee(employee)
+
+    planets = [
+        ShowPlanet(id=planet.id,
+                   name=planet.name,
+                   curator_id=planet.curator_id,
+                   created_at=planet.created_at) for planet in planets
+    ]
+    return planets
 
 
 @router.post('/create_planet',
@@ -31,7 +57,10 @@ async def create_planet(body: CreatePlanet, session: AsyncSession = Depends(get_
                         user: User = Depends(curator_user)) -> ShowPlanet:
     planet_dal = PlanetDAL(session)
     planet = await planet_dal.create_planet(name=body.name, user=user)
-    return ShowPlanet(id=planet.id, name=planet.name, curator_id=planet.curator_id)
+    return ShowPlanet(id=planet.id,
+                      name=planet.name,
+                      curator_id=planet.curator_id,
+                      created_at=planet.created_at)
 
 
 class EmployeesIdItem(BaseModel):
@@ -53,4 +82,15 @@ async def set_employee(planet_id: int,
             status_code=404, detail=f'Planet with id {planet_id} not found')
     return ShowPlanet(id=planet.id,
                       name=planet.name,
-                      curator_id=planet.curator_id)
+                      curator_id=planet.curator_id,
+                      created_at=planet.created_at)
+
+
+@router.delete('/delete_planet',
+               dependencies=[Depends(curator_user)],
+               responses=responses)
+async def delete_planet_by_id(planet_id: int,
+                              session: AsyncSession = Depends(get_async_session)):
+    planet_dal = PlanetDAL(session)
+    await planet_dal.delete_planet(planet_id)
+    return {'detail': 'success'}

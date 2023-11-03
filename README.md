@@ -18,3 +18,4 @@ coverage report
 ## dont forget  
 убрать cors  
 убрать 60 sec cookie
+admin aut-register in startup.py

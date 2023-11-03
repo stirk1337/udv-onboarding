@@ -13,6 +13,27 @@ class PlanetDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
+    async def get_planets_for_employee(self, employee: Employee) -> List[Planet]:
+        employees = await self.db_session.scalar(
+            select(Employee)
+            .where(Employee.id == employee.id)
+            .options(
+                selectinload(Employee.planets),
+            )
+        )
+        return list(employees.planets)
+
+    async def get_planets_for_curator(self, curator: Curator) -> List[Planet]:
+        planets = await self.db_session.scalars(
+            select(Planet)
+            .where(Planet.curator_id == curator.id)
+        )
+        return list(planets)
+
+    async def get_planet_by_id(self, planet_id: int) -> Union[Planet, None]:
+        planet = await self.db_session.get(Planet, planet_id)
+        return planet
+
     async def create_planet(self, name: str, user: User) -> Planet:
         curator = await self.db_session.scalar(
             select(Curator)
@@ -42,3 +63,12 @@ class PlanetDAL:
         planet.employees = list(set(planet.employees + employees))
         await self.db_session.commit()
         return planet
+
+    async def delete_planet(self, planet_id: int):
+        planet = await self.db_session.scalar(
+            select(Planet)
+            .where(Planet.id == planet_id)
+        )
+        if planet:
+            await self.db_session.delete(planet)
+            await self.db_session.commit()
