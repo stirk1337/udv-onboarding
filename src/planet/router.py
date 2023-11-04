@@ -27,17 +27,51 @@ class ShowPlanet(BaseModel):
     created_at: datetime
 
 
+@router.get('/get_planet',
+            responses=planet_responses)
+async def get_planet_by_id(planet_id: int,
+                           session: AsyncSession = Depends(get_async_session),
+                           user: User = Depends(current_user)) -> ShowPlanet:
+    """Get planet by its id. Rights: you must have this planet (employee or curator)"""
+    planet_dal = PlanetDAL(session)
+    planet = await planet_dal.get_planet_with_employees(planet_id)
+
+    if planet is None:
+        raise HTTPException(
+            status_code=404, detail=f'Planet with id {planet_id} not found')
+
+    show_planet = ShowPlanet(id=planet.id,
+                             name=planet.name,
+                             curator_id=planet.curator_id,
+                             created_at=planet.created_at)
+
+    if user.role == Role.curator:  # check if you are curator and you have this planet
+        curator_dal = CuratorDAL(session)
+        curator = await curator_dal.get_curator_by_user(user)
+        if planet.curator_id == curator.id:
+            return show_planet
+
+    elif user.role == Role.employee:  # check if you are employee and you have this planet
+        employee_dal = EmployeeDAL(session)
+        employee = await employee_dal.get_employee_by_user(user)
+        if employee in planet.employees:
+            return show_planet
+
+    raise HTTPException(status_code=403, detail='Forbidden')
+
+
 @router.get('/get_planets', responses=responses)
 async def get_planets(user: User = Depends(current_user),
                       session: AsyncSession = Depends(get_async_session)) -> List[ShowPlanet]:
     planet_dal = PlanetDAL(session)
     planets = list()
-    if user.role == Role.curator:
+
+    if user.role == Role.curator:  # get planets if you are curator
         curator_dal = CuratorDAL(session)
         curator = await curator_dal.get_curator_by_user(user)
         planets = await planet_dal.get_planets_for_curator(curator)
 
-    elif user.role == Role.employee:
+    elif user.role == Role.employee:  # get planets if you are employee
         employee_dal = EmployeeDAL(session)
         employee = await employee_dal.get_employee_by_user(user)
         planets = await planet_dal.get_planets_for_employee(employee)
@@ -61,6 +95,31 @@ async def create_planet(body: CreatePlanet, session: AsyncSession = Depends(get_
                       name=planet.name,
                       curator_id=planet.curator_id,
                       created_at=planet.created_at)
+
+
+@router.patch('/update_planet',
+              responses=planet_responses)
+async def patch_planet(planet_id: int,
+                       name: str,
+                       session: AsyncSession = Depends(get_async_session),
+                       user: User = Depends(curator_user)) -> ShowPlanet:
+    planet_dal = PlanetDAL(session)
+    planet = await planet_dal.get_planet_by_id(planet_id)
+
+    if planet is None:
+        raise HTTPException(
+            status_code=404, detail=f'Planet with id {planet_id} not found')
+
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    if curator.id == planet.curator_id:
+        planet = await planet_dal.patch_planet(planet, name)
+        return ShowPlanet(id=planet.id,
+                          name=planet.name,
+                          curator_id=planet.curator_id,
+                          created_at=planet.created_at)
+
+    raise HTTPException(status_code=403, detail='Forbidden')
 
 
 class EmployeesIdItem(BaseModel):

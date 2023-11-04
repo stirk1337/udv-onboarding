@@ -64,6 +64,11 @@ class PlanetDAL:
         await self.db_session.commit()
         return planet
 
+    async def patch_planet(self, planet: Planet, name: str) -> Planet:
+        planet.name = name
+        await self.db_session.commit()
+        return planet
+
     async def delete_planet(self, planet_id: int):
         planet = await self.db_session.scalar(
             select(Planet)

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +10,10 @@ from src.task.models import Task, TaskDifficulty, TaskStatus
 class TaskDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
+
+    async def get_task_by_id(self, task_id: int) -> Union[Task, None]:
+        task = await self.db_session.get(Task, task_id)
+        return task
 
     async def create_task(self, name: str,
                           description: str,
@@ -32,6 +36,18 @@ class TaskDAL:
             .where(Task.planet_id == planet.id)
         )
         return list(tasks)
+
+    async def patch_task(self, task: Task,
+                         name: str,
+                         description: str,
+                         file_link: str,
+                         task_difficulty: TaskDifficulty) -> Task:
+        task.name = name
+        task.description = description
+        task.file_link = file_link
+        task.task_difficulty = task_difficulty
+        await self.db_session.commit()
+        return task
 
     async def delete_task(self, task_id: int):
         task = await self.db_session.scalar(
