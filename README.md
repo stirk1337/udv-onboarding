@@ -19,3 +19,4 @@ coverage report
 убрать cors  
 убрать 60 sec cookie
 admin aut-register in startup.py
+make password verify harder in manager.py

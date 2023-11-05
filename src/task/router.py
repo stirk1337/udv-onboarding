@@ -110,6 +110,7 @@ async def create_new_task(name: str,
                           task_difficulty: TaskDifficulty,
                           planet_id: int,
                           session: AsyncSession = Depends(get_async_session)) -> TaskOut:
+    """Create task linked to planet. Rights: curator, you must have this planet"""
     planet_dal = PlanetDAL(session)
     planet = await planet_dal.get_planet_by_id(planet_id)
     if planet is None:
@@ -134,6 +135,7 @@ async def patch_task(task_id: int,
                      task_difficulty: TaskDifficulty,
                      session: AsyncSession = Depends(get_async_session),
                      user: User = Depends(curator_user)) -> TaskOut:
+    """Update task info by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
     task = await task_dal.get_task_by_id(task_id)
 
@@ -160,6 +162,7 @@ async def patch_task(task_id: int,
                responses=responses)
 async def delete_task_by_id(task_id: int,
                             session: AsyncSession = Depends(get_async_session)):
+    """Delete task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
     await task_dal.delete_task(task_id)
     return {'detail': 'success'}

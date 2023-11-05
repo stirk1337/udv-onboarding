@@ -28,6 +28,10 @@ class TaskResponse404(BaseModel):
     detail: str = 'Task with provided id not found'
 
 
+class EmployeeResponse404(BaseModel):
+    detail: str = 'Employee with provided id not found'
+
+
 responses = {
     200: {'model': Response200},
     401: {'model': Response401},
@@ -44,4 +48,11 @@ task_responses = {
     401: {'model': Response401},
     403: {'model': Response403},
     404: {'model': TaskResponse404}
+}
+
+
+employee_responses = {
+    401: {'model': Response401},
+    403: {'model': Response403},
+    404: {'model': EmployeeResponse404}
 }

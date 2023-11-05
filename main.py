@@ -13,31 +13,27 @@ from src.user.router import router as user_router
 tags_metadata = [
     {
         'name': 'auth',
-        'description': 'Всё связанное с авторизацией и регистрацией. '
-                       'Создание Куратора (Curator) и суперпользователя (Superuser) находится здесь! '
-                       'Создание Сотрудника (Employee) находится НЕ ЗДЕСЬ (a в user),'
-                       'Создать аккаунт для сотрудника (Employee) здесь можно, '
-                       'но тогда сущность Employee не создастся! ',
+        'description': 'All about auth is here. Create Curators is also here (/register)'
     },
     {
         'name': 'user',
-        'description': 'Пути для управления Сотрудниками (Employee) и Кураторами (Curator)',
+        'description': 'Endpoints for managing Employees and Curators',
     },
     {
         'name': 'planet',
-        'description': 'Пути для управления Планетами (Planet)',
+        'description': 'Endpoints for managing Planets',
     },
     {
         'name': 'task',
-        'description': 'Пути для управления Задачами (Task)',
+        'description': 'Endpoints for managing Tasks',
     },
 ]
 
 app = FastAPI(title='UDV Onboarding API',
-              description='Документация API',
+              description='API Documentaion',
               version='0.0.1',
               contact={
-                  'name': 'Рамиль Мавлютов',
+                  'name': 'Ramil Mavliutov',
                   'url': 'https://t.me/stirk1337',
                   'email': 'stirk-delovoy@mail.ru',
               },

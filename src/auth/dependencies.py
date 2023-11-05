@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException, status
 from src.auth.models import Role, User
 from src.auth.router import fastapi_users
 
-current_user = fastapi_users.current_user()
+current_user = fastapi_users.current_user(active=True)
 
 
 async def curator_user(user: User = Depends(current_user)) -> User:

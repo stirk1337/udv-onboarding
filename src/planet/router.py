@@ -63,6 +63,7 @@ async def get_planet_by_id(planet_id: int,
 @router.get('/get_planets', responses=responses)
 async def get_planets(user: User = Depends(current_user),
                       session: AsyncSession = Depends(get_async_session)) -> List[ShowPlanet]:
+    """Get your planets. Rights: employee or curator"""
     planet_dal = PlanetDAL(session)
     planets = list()
 
@@ -89,6 +90,7 @@ async def get_planets(user: User = Depends(current_user),
              responses=responses)
 async def create_planet(body: CreatePlanet, session: AsyncSession = Depends(get_async_session),
                         user: User = Depends(curator_user)) -> ShowPlanet:
+    """Create a new planet. Rights: curator"""
     planet_dal = PlanetDAL(session)
     planet = await planet_dal.create_planet(name=body.name, user=user)
     return ShowPlanet(id=planet.id,
@@ -103,6 +105,7 @@ async def patch_planet(planet_id: int,
                        name: str,
                        session: AsyncSession = Depends(get_async_session),
                        user: User = Depends(curator_user)) -> ShowPlanet:
+    """Update a planet. Rights: curator, you must have this planet"""
     planet_dal = PlanetDAL(session)
     planet = await planet_dal.get_planet_by_id(planet_id)
 
@@ -132,6 +135,7 @@ class EmployeesIdItem(BaseModel):
 async def set_employee(planet_id: int,
                        ids: EmployeesIdItem,
                        session: AsyncSession = Depends(get_async_session)):
+    """Add new employees to a planet. Rights: curator, you must have this planet"""
     planet_dal = PlanetDAL(session)
     employee_dal = EmployeeDAL(session)
     employees = await employee_dal.get_employees_by_ids(ids.employee_ids)
@@ -150,6 +154,7 @@ async def set_employee(planet_id: int,
                responses=responses)
 async def delete_planet_by_id(planet_id: int,
                               session: AsyncSession = Depends(get_async_session)):
+    """Delete a planet. Rights: curator, you must have this planet"""
     planet_dal = PlanetDAL(session)
     await planet_dal.delete_planet(planet_id)
     return {'detail': 'success'}

@@ -3,4 +3,4 @@ from src.auth.models import Role
 
 
 async def start_up():
-    await create_user('admin@admin.ru', 'admin', True, role=Role.curator)
+    await create_user('admin@admin.ru', 'adminadmin', True, role=Role.curator)
