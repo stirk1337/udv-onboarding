@@ -9,6 +9,7 @@ from src.auth.dals import UserDAL
 from src.auth.dependencies import curator_user, current_user
 from src.auth.manager import create_user
 from src.auth.models import Role, User
+from src.auth.router import current_superuser
 from src.db import get_async_session
 from src.request_codes import employee_responses, responses
 from src.user.dals import CuratorDAL, EmployeeDAL
@@ -64,7 +65,24 @@ async def get_curator_employees(user: User = Depends(curator_user),
     return employees
 
 
-@router.post('/create_new_employee')
+class UserOut(BaseModel):
+    id: int
+    name: str
+    email: str
+
+
+@router.post('/register_new_curator',
+             dependencies=[Depends(current_superuser)],
+             responses=responses)
+async def register_curator(email: EmailStr,
+                           name: str) -> UserOut:
+    user = await create_user(email=email, name=name, role=Role.curator)
+    if user is None:
+        raise HTTPException(status_code=409, detail='User already exists')
+    return UserOut(id=user.id, name=user.name, email=user.email)
+
+
+@router.post('/register_new_employee')
 async def create_new_employee(email: EmailStr,
                               name: str,
                               product: Product,
@@ -83,6 +101,9 @@ async def create_new_employee(email: EmailStr,
     else:
         user_dal = UserDAL(session)
         employee_user = await user_dal.get_user_by_email(email)
+        if employee_user.role == Role.curator:
+            raise HTTPException(
+                status_code=409, detail=f'User with email {email} is curator')
         employee = await employee_dal.get_employee_by_user(employee_user)
         if employee.employee_status == EmployeeStatus.disabled:
             await employee_dal.enable_employee(employee, curator.id)

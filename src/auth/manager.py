@@ -12,9 +12,8 @@ from config import settings
 from src.auth.models import Role, User
 from src.auth.schemas import UserCreate
 from src.auth.utils import get_user_db
-from src.db import async_session_maker, get_async_session
-from src.user.dals import CuratorDAL, EmployeeDAL
-from src.user.models import EmployeeStatus
+from src.db import get_async_session
+from src.user.dals import CuratorDAL
 
 SECRET = settings.secret
 
@@ -26,12 +25,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_register(self,
                                 user: User,
                                 request: Optional[Request] = None) -> None:
-        if user.role == Role.curator:
-            async with async_session_maker() as session:
-                curator_dal = CuratorDAL(session)
-                await curator_dal.create_curator(user)
-        if user.role == Role.employee:
-            await self.forgot_password(user, request)
+        print(f'User {user} registered')
 
     async def validate_password(
             self,
@@ -76,20 +70,8 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     ) -> None:
         print(f'User {user.id} has forgot their password. Reset token: {token}')  # noqa: E501
 
-    async def on_after_request_verify(
-            self, user: User, token: str, request: Optional[Request] = None
-    ) -> None:
-        print(
-            f'Verification requested for user {user.id}. Verification token: {token}')  # noqa: E501
-
     async def on_after_reset_password(self, user: User, request: Optional[Request] = None):
-        if user.role == Role.employee:  # activate employee on first password reset
-            async with async_session_maker() as session:
-                employee_dal = EmployeeDAL(session)
-                employee = await employee_dal.get_employee_by_user(user)
-                if employee.employee_status == EmployeeStatus.invited:
-                    employee.employee_status = EmployeeStatus.active
-                    await session.commit()
+        pass
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
@@ -112,7 +94,12 @@ async def create_user(email: str, password: str = token_urlsafe(16), is_superuse
                             email=email, password=password, is_superuser=is_superuser, role=role, name=name
                         )
                     )
+                    if user.role == Role.curator:
+                        curator_dal = CuratorDAL(session)
+                        await curator_dal.create_curator(user)
+                        await session.commit()
                     print(f'User created {user}')
+                    print(f'Password: {password}')
                     return user
     except UserAlreadyExists:
         print(f'User {email} already exists')

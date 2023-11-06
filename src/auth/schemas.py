@@ -12,25 +12,6 @@ class UserCreate(schemas.BaseUserCreate):
     name: str = Field(examples=['Иванов Иван Игоревич'])
     role: Role = Field(examples=['curator'])
 
-    model_config = {
-        'json_schema_extra': {
-            'examples': [
-                {
-                    'email': 'astafieva@example.com',
-                    'password': 'string',
-                    'name': 'Астафьева Анна Викторовна',
-                    'role': 'curator || employee'
-                },
-                {
-                    'email': 'vovag@example.com',
-                    'password': 'string',
-                    'name': 'Гришмановский Владимир Андреевич',
-                    'role': 'employee'
-                }
-            ]
-        }
-    }
-
 
 class UserUpdate(schemas.BaseUserUpdate):
     pass
