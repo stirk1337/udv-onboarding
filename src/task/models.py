@@ -40,10 +40,13 @@ class Task(Base):
         ForeignKey('planet.id', ondelete='CASCADE')
     )
     planet: Mapped['Planet'] = relationship(
-        back_populates='task', cascade='all, delete')
+        back_populates='task')
     created_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())")
     )
     updated_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())")
+    )
+    employee_answer: Mapped[str] = mapped_column(
+        String(1000), nullable=True
     )

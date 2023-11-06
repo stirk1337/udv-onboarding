@@ -8,7 +8,7 @@ from src.auth.dependencies import curator_user, current_user
 from src.auth.models import Role, User
 from src.db import get_async_session
 from src.planet.dals import PlanetDAL
-from src.request_codes import planet_responses, responses, task_responses
+from src.request_codes import planet_responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.models import TaskDifficulty
 from src.user.dals import CuratorDAL, EmployeeDAL
@@ -24,6 +24,7 @@ class TaskOut(BaseModel):
     file_link: AnyHttpUrl
     task_difficulty: TaskDifficulty
     planet_id: int
+    employee_answer: str
 
 
 @router.get('/get_task',
@@ -46,7 +47,8 @@ async def get_task_by_id(task_id: int,
                        description=task.description,
                        file_link=task.file_link,
                        task_difficulty=task.task_difficulty,
-                       planet_id=task.planet_id)
+                       planet_id=task.planet_id,
+                       employee_answer=task.employee_answer)
 
     if user.role == Role.curator:  # check if you are curator and you have this task
         curator_dal = CuratorDAL(session)
@@ -84,7 +86,8 @@ async def get_tasks_by_planet_id(planet_id: int,
                      description=task.description,
                      file_link=AnyHttpUrl(task.file_link),
                      task_difficulty=task.task_difficulty,
-                     planet_id=task.planet_id) for task in tasks
+                     planet_id=task.planet_id,
+                     employee_answer=task.employee_answer) for task in tasks
              ]
 
     if user.role == Role.curator:  # check if you are curator and you have this planet
@@ -123,7 +126,8 @@ async def create_new_task(name: str,
                    description=task.description,
                    file_link=task.file_link,
                    task_difficulty=task.task_difficulty,
-                   planet_id=task.planet_id)
+                   planet_id=task.planet_id,
+                   employee_answer=task.employee_answer)
 
 
 @router.patch('/update_task',
@@ -137,7 +141,7 @@ async def patch_task(task_id: int,
                      user: User = Depends(curator_user)) -> TaskOut:
     """Update task info by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    task = await task_dal.get_task_by_id(task_id)
+    task = await task_dal.get_task_with_planet(task_id)
 
     if task is None:
         raise HTTPException(
@@ -145,9 +149,7 @@ async def patch_task(task_id: int,
 
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
-    planet_dal = PlanetDAL(session)
-    planet = await planet_dal.get_planet_by_id(task.planet_id)
-    if curator.id == planet.curator_id:
+    if curator.id == task.planet.curator_id:
         task = await task_dal.patch_task(task,
                                          name,
                                          description,
@@ -159,10 +161,92 @@ async def patch_task(task_id: int,
 
 @router.delete('/delete_task',
                dependencies=[Depends(curator_user)],
-               responses=responses)
+               responses=task_responses)
 async def delete_task_by_id(task_id: int,
-                            session: AsyncSession = Depends(get_async_session)):
+                            session: AsyncSession = Depends(get_async_session),
+                            user: User = Depends(curator_user)):
     """Delete task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    await task_dal.delete_task(task_id)
+    task = await task_dal.get_task_with_planet(task_id)
+
+    if task is None:
+        raise HTTPException(
+            status_code=404, detail=f'Task with {task_id} not found')
+
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    if curator.id == task.planet.curator_id:
+        await task_dal.delete_task(task)
     return {'detail': 'success'}
+
+
+@router.patch('/answer_task',
+              dependencies=[Depends(current_user)],
+              responses=task_responses)
+async def answer_on_task_by_its_id(task_id: int,
+                                   answer: str,
+                                   session: AsyncSession = Depends(
+                                       get_async_session),
+                                   user: User = Depends(current_user)) -> TaskOut:
+    """Answer on your task. Rights: employee or curator, you must have this task"""
+    task_dal = TaskDAL(session)
+    task = await task_dal.get_task_by_id(task_id)
+
+    if task is None:
+        raise HTTPException(
+            status_code=404, detail=f'Task with {task_id} not found')
+
+    planet_dal = PlanetDAL(session)
+    planet = await planet_dal.get_planet_with_employees(task.planet_id)
+
+    task_out = TaskOut(id=task.id,
+                       name=task.name,
+                       description=task.description,
+                       file_link=task.file_link,
+                       task_difficulty=task.task_difficulty,
+                       planet_id=task.planet_id,
+                       employee_answer=task.employee_answer)
+
+    if user.role == Role.curator:  # check if you are curator and you have this planet
+        curator_dal = CuratorDAL(session)
+        curator = await curator_dal.get_curator_by_user(user)
+        if planet.curator_id == curator.id:
+            await task_dal.answer_on_task(task, answer)
+            return task_out
+
+    elif user.role == Role.employee:  # check if you are employee and you have this planet
+        employee_dal = EmployeeDAL(session)
+        employee = await employee_dal.get_employee_by_user(user)
+        if employee in planet.employees:
+            await task_dal.answer_on_task(task, answer)
+            return task_out
+
+    raise HTTPException(status_code=403, detail='Forbidden')
+
+
+@router.patch('/check_task',
+              responses=task_responses)
+async def check_task_by_its_id(task_id: int,
+                               accept: bool,
+                               user: User = Depends(curator_user),
+                               session: AsyncSession = Depends(get_async_session)) -> TaskOut:
+    """Check competed employee task by its id. Rights: curator, you must have this task"""
+    task_dal = TaskDAL(session)
+    task = await task_dal.get_task_with_planet(task_id)
+
+    if task is None:
+        raise HTTPException(
+            status_code=404, detail=f'Task with {task_id} not found')
+
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    if curator.id == task.planet.curator_id:
+        await task_dal.check_task(task, accept)
+        return TaskOut(id=task.id,
+                       name=task.name,
+                       description=task.description,
+                       file_link=task.file_link,
+                       task_difficulty=task.task_difficulty,
+                       planet_id=task.planet_id,
+                       employee_answer=task.employee_answer)
+    raise HTTPException(status_code=403, detail='Forbidden')

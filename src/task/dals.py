@@ -2,6 +2,7 @@ from typing import List, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from src.planet.models import Planet
 from src.task.models import Task, TaskDifficulty, TaskStatus
@@ -13,6 +14,16 @@ class TaskDAL:
 
     async def get_task_by_id(self, task_id: int) -> Union[Task, None]:
         task = await self.db_session.get(Task, task_id)
+        return task
+
+    async def get_task_with_planet(self, task_id: int) -> Union[Task, None]:
+        task = await self.db_session.scalar(
+            select(Task)
+            .where(Task.id == task_id)
+            .options(
+                selectinload(Task.planet)
+            )
+        )
         return task
 
     async def create_task(self, name: str,
@@ -49,11 +60,16 @@ class TaskDAL:
         await self.db_session.commit()
         return task
 
-    async def delete_task(self, task_id: int):
-        task = await self.db_session.scalar(
-            select(Task)
-            .where(Task.id == task_id)
-        )
-        if task:
-            await self.db_session.delete(task)
-            await self.db_session.commit()
+    async def delete_task(self, task: Task):
+        await self.db_session.delete(task)
+        await self.db_session.commit()
+
+    async def answer_on_task(self, task: Task,
+                             answer: str) -> None:
+        task.employee_answer = answer
+        task.task_status = TaskStatus.being_checked
+        await self.db_session.commit()
+
+    async def check_task(self, task: Task, accept: bool) -> None:
+        task.task_status = TaskStatus.completed if accept else TaskStatus.in_progress
+        await self.db_session.commit()

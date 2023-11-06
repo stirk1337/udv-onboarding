@@ -5,11 +5,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.auth.dals import UserDAL
 from src.auth.dependencies import curator_user, current_user
 from src.auth.manager import create_user
 from src.auth.models import Role, User
 from src.db import get_async_session
-from src.request_codes import details, employee_responses, responses
+from src.request_codes import employee_responses, responses
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import EmployeeStatus, Product, ProductRole
 
@@ -70,14 +71,25 @@ async def create_new_employee(email: EmailStr,
                               product_role: ProductRole,
                               user: User = Depends(curator_user),
                               session: AsyncSession = Depends(get_async_session)) -> EmployeeOut:
-    """Create new employee linked to curator. Rights: curator"""
-    employee_user = await create_user(email=email, name=name, role=Role.employee)
-    if employee_user is None:
-        raise HTTPException(status_code=400, detail=details[400])
+    """Create new employee linked to curator or re-activate old employee with curator.
+     Rights: curator, employee must be disabled"""
     employee_dal = EmployeeDAL(session)
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
-    employee = await employee_dal.create_employee(employee_user, curator.id, product, product_role)
+
+    employee_user = await create_user(email=email, name=name, role=Role.employee)
+    if employee_user is not None:  # if user already exists
+        employee = await employee_dal.create_employee(employee_user, curator.id, product, product_role)
+    else:
+        user_dal = UserDAL(session)
+        employee_user = await user_dal.get_user_by_email(email)
+        employee = await employee_dal.get_employee_by_user(employee_user)
+        if employee.employee_status == EmployeeStatus.disabled:
+            await employee_dal.enable_employee(employee, curator.id)
+        else:
+            raise HTTPException(
+                status_code=403, detail=f'Employee with email {email} is active.')
+
     return EmployeeOut(id=employee.id,
                        name=employee.user.name,
                        email=employee.user.email,
@@ -105,34 +117,6 @@ async def disable_employee_by_id(employee_id: int,
     curator = await curator_dal.get_curator_by_user(user)
     if curator.id == employee.curator_id:  # if curator linked to this employee
         await employee_dal.disable_employee(employee)
-        return EmployeeOut(id=employee.id,
-                           name=employee.user.name,
-                           email=employee.user.email,
-                           product=employee.product,
-                           product_role=employee.product_role,
-                           employee_status=employee.employee_status,
-                           created_at=employee.created_at)
-    raise HTTPException(status_code=403, detail='Forbidden')
-
-
-@router.patch('/enable_employee',
-              responses=employee_responses)
-async def enable_employee_by_id(employee_id: int,
-                                session: AsyncSession = Depends(
-                                    get_async_session),
-                                user: User = Depends(curator_user)) -> EmployeeOut:
-    """Enable employee by its id. Rights: curator, you must be linked to this employee"""
-    employee_dal = EmployeeDAL(session)
-    employee = await employee_dal.get_employee_by_id_with_user(employee_id)
-
-    if employee is None:
-        raise HTTPException(
-            status_code=404, detail=f'Employee with id {employee_id} not found')
-
-    curator_dal = CuratorDAL(session)
-    curator = await curator_dal.get_curator_by_user(user)
-    if curator.id == employee.curator_id:  # if curator linked to this employee
-        await employee_dal.enable_employee(employee)
         return EmployeeOut(id=employee.id,
                            name=employee.user.name,
                            email=employee.user.email,

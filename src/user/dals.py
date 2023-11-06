@@ -92,8 +92,10 @@ class EmployeeDAL:
         await self.db_session.commit()
         return employee
 
-    async def enable_employee(self, employee: Employee) -> Employee:
+    async def enable_employee(self, employee: Employee,
+                              curator_id: int) -> Employee:
         employee.employee_status = EmployeeStatus.active
         employee.user.is_active = True
+        employee.curator_id = curator_id
         await self.db_session.commit()
         return employee
