@@ -78,7 +78,7 @@ async def register_curator(email: EmailStr,
                              password=password)
     if user is None:
         raise HTTPException(status_code=409, detail='User already exists')
-    return UserOut(id=user.id, name=user.name, email=user.email)
+    return UserOut(id=user.id, name=user.name, email=user.email, role=user.role)
 
 
 @router.post('/register_new_employee')
