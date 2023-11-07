@@ -2,12 +2,14 @@
 
 ## Документация
 
-http://localhost:8000/docs (сервер напрямую)  
+http://localhost/api/v1/docs 
 
-или
-http://localhost/api/v1/docs (через прокси-сервер nginx)
+## Админка
+
+http://localhost/api/v1/admin
 
 ## Тесты
+
 coverage run -m pytest  
 
 coverage report
@@ -16,3 +18,5 @@ coverage report
 ## dont forget  
 убрать cors  
 убрать 60 sec cookie
+admin aut-register in startup.py
+make password verify harder in manager.py

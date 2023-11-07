@@ -14,7 +14,6 @@ from src.db import Base, get_async_session
 
 DATABASE_URL_TEST = str(settings.postgres_test)
 
-
 engine_test = create_async_engine(DATABASE_URL_TEST, poolclass=NullPool)
 async_session_maker = sessionmaker(
     engine_test, class_=AsyncSession, expire_on_commit=False)
@@ -24,6 +23,7 @@ async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
 
+
 app.dependency_overrides[get_async_session] = override_get_async_session
 
 
@@ -31,6 +31,7 @@ app.dependency_overrides[get_async_session] = override_get_async_session
 async def prepare_database():
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
     yield
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

@@ -1,7 +1,8 @@
+import datetime
 import enum
 from typing import List
 
-from sqlalchemy import ForeignKey, Integer
+from sqlalchemy import ForeignKey, Integer, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
@@ -29,6 +30,12 @@ class ProductRole(enum.Enum):
     devops = 'devops'
 
 
+class EmployeeStatus(enum.Enum):
+    invited = 'invited'
+    active = 'active'
+    disabled = 'disabled'
+
+
 class Curator(Base):
     __tablename__ = 'curator'
 
@@ -40,6 +47,8 @@ class Curator(Base):
     )
     user: Mapped['User'] = relationship(back_populates='curator')
     employee: Mapped[List['Employee']] = (
+        relationship(back_populates='curator'))
+    planet: Mapped[List['Planet']] = (
         relationship(back_populates='curator'))
 
 
@@ -56,7 +65,13 @@ class Employee(Base):
     curator_id = mapped_column(ForeignKey('curator.id', ondelete='SET NULL'))
     curator: Mapped['Curator'] = relationship(back_populates='employee')
     product: Mapped[Product]
-    product_role_id: Mapped[ProductRole]
+    product_role: Mapped[ProductRole]
     udv_coins: Mapped[int] = mapped_column(
         Integer, default=0
     )
+    employee_status: Mapped[EmployeeStatus]
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())")
+    )
+    planets: Mapped[List['Planet']] = (
+        relationship(secondary='employee_planet', back_populates='employees'))
