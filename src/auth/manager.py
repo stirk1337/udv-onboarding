@@ -7,6 +7,7 @@ from fastapi_users import (BaseUserManager, IntegerIDMixin, exceptions, models,
                            schemas)
 from fastapi_users.exceptions import (InvalidPasswordException,
                                       UserAlreadyExists)
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
 from src.auth.models import Role, User
@@ -83,8 +84,35 @@ get_user_db_context = contextlib.asynccontextmanager(get_user_db)
 get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
 
 
-async def create_user(email: str, password: str = token_urlsafe(16), is_superuser: bool = False,
-                      role: Role = Role.employee, name: str = 'SomeUser') -> Optional[User]:
+async def create_user(session: AsyncSession,
+                      email: str,
+                      password: str = token_urlsafe(16),
+                      is_superuser: bool = False,
+                      role: Role = Role.employee,
+                      name: str = 'SomeUser') -> Optional[User]:
+    try:
+        if password is None:
+            password = token_urlsafe(16)
+        async with get_user_db_context(session) as user_db:
+            async with get_user_manager_context(user_db) as user_manager:
+                user = await user_manager.create(
+                    UserCreate(
+                        email=email, password=password, is_superuser=is_superuser, role=role, name=name
+                    )
+                )
+                if user.role == Role.curator:
+                    curator_dal = CuratorDAL(session)
+                    await curator_dal.create_curator(user)
+                    await session.commit()
+                print(f'User created {user}')
+                print(f'Password: {password}')
+                return user
+    except UserAlreadyExists:
+        print(f'User {email} already exists')
+
+
+async def create_user_without_depends(email: str, password: str = token_urlsafe(16), is_superuser: bool = False,
+                                      role: Role = Role.employee, name: str = 'SomeUser') -> Optional[User]:
     try:
         async with get_async_session_context() as session:
             async with get_user_db_context(session) as user_db:
@@ -94,12 +122,7 @@ async def create_user(email: str, password: str = token_urlsafe(16), is_superuse
                             email=email, password=password, is_superuser=is_superuser, role=role, name=name
                         )
                     )
-                    if user.role == Role.curator:
-                        curator_dal = CuratorDAL(session)
-                        await curator_dal.create_curator(user)
-                        await session.commit()
                     print(f'User created {user}')
-                    print(f'Password: {password}')
                     return user
     except UserAlreadyExists:
         print(f'User {email} already exists')

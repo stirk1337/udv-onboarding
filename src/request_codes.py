@@ -33,7 +33,6 @@ class EmployeeResponse404(BaseModel):
 
 
 responses = {
-    200: {'model': Response200},
     401: {'model': Response401},
     403: {'model': Response403},
 }

@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Union
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr
@@ -39,11 +39,10 @@ class EmployeeOut(BaseModel):
 
 
 @router.get('/get_current_user_info',
-            response_model=UserOut,
             responses=responses)
 async def get_current_user_info(user: User = Depends(current_user)) -> UserOut:
     """Get current user info. Rights: authorized"""
-    return UserOut(id=user.id, name=user.name, email=user.email, role=user.role)
+    return user
 
 
 @router.get('/get_employees',
@@ -75,8 +74,14 @@ class UserOut(BaseModel):
              dependencies=[Depends(current_superuser)],
              responses=responses)
 async def register_curator(email: EmailStr,
-                           name: str) -> UserOut:
-    user = await create_user(email=email, name=name, role=Role.curator)
+                           name: str,
+                           password: Union[str, None] = None,
+                           session: AsyncSession = Depends(get_async_session)) -> UserOut:
+    user = await create_user(session=session,
+                             email=email,
+                             name=name,
+                             role=Role.curator,
+                             password=password)
     if user is None:
         raise HTTPException(status_code=409, detail='User already exists')
     return UserOut(id=user.id, name=user.name, email=user.email)
@@ -88,14 +93,21 @@ async def create_new_employee(email: EmailStr,
                               product: Product,
                               product_role: ProductRole,
                               user: User = Depends(curator_user),
-                              session: AsyncSession = Depends(get_async_session)) -> EmployeeOut:
+                              session: AsyncSession = Depends(
+                                  get_async_session),
+                              password: Union[str, None] = None
+                              ) -> EmployeeOut:
     """Create new employee linked to curator or re-activate old employee with curator.
      Rights: curator, employee must be disabled"""
     employee_dal = EmployeeDAL(session)
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
 
-    employee_user = await create_user(email=email, name=name, role=Role.employee)
+    employee_user = await create_user(session=session,
+                                      email=email,
+                                      name=name,
+                                      role=Role.employee,
+                                      password=password)
     if employee_user is not None:  # if user already exists
         employee = await employee_dal.create_employee(employee_user, curator.id, product, product_role)
     else:

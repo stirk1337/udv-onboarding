@@ -20,88 +20,80 @@ def test_register_curator():
         'username': 'admin@admin.ru',
         'password': 'adminadmin'
     })
-    response = client.post('/auth/register',
-                           json={
+
+    response = client.post('/user/register_new_curator',
+                           params={
                                'email': 'test2222@ussc.com',
-                               'password': 'adminka1337',
                                'name': 'Anna',
-                               'role': 'curator'
+                               'password': 'this_is_password'
                            },
                            cookies=dict(response.cookies))
 
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
-def test_register_with_wrong_role():
+def send_reset_token_for_curator():
+    response = client.post('/auth/forgot-password', json={
+        'email': 'test2222@ussc.com',
+    })
+    assert response.status_code == 202
+
+
+def test_register_curator_with_wrong_email():
     response = client.post('/auth/jwt/login', data={
         'username': 'admin@admin.ru',
         'password': 'adminadmin'
     })
-    response = client.post('/auth/register',
-                           json={
-                               'email': 'artem-yakunin@mail.ru',
-                               'password': 'this_is_a_good_password',
-                               'name': 'Artem Yakunin',
-                               'role': 'adminka'
-                           },
-                           cookies=dict(response.cookies))
 
-    assert response.status_code == 422
-
-
-def test_register_with_wrong_email():
-    response = client.post('/auth/jwt/login', data={
-        'username': 'admin@admin.ru',
-        'password': 'adminadmin'
-    })
-    response = client.post('/auth/register',
-                           json={
+    response = client.post('/user/register_new_curator',
+                           params={
                                'email': 'xd',
-                               'password': 'this_is_a_good_password',
-                               'name': 'Artem Yakunin',
-                               'role': 'administrator'
+                               'name': 'Anna2',
                            },
                            cookies=dict(response.cookies))
 
     assert response.status_code == 422
 
 
-def test_login_as_curator():
+def test_login_curator():
     response = client.post('/auth/jwt/login', data={
-        'username': 'admin@admin.ru',
-        'password': 'adminadmin'
+        'username': 'test2222@ussc.com',
+        'password': 'this_is_password'
     })
-
-    response = client.post('/auth/register',
-                           json={
-                               'email': 'xd@mail.ru',
-                               'password': 'curator_password',
-                               'name': 'Artem Yakunin',
-                               'role': 'curator'
-                           },
-                           cookies=dict(response.cookies))
-
-    response = client.post('/auth/jwt/login', data={
-        'username': 'xd@mail.ru',
-        'password': 'curator_password'
-    })
-
     assert response.status_code == 204
 
 
 def test_login_wrong_credentials():
     response = client.post('/auth/jwt/login', data={
-        'username': 'there_is_no_such_user@example.com',
-        'password': 'some_password'
+        'username': 'there_is_no_such-user@ussc.com',
+        'password': 'this_is_password'
+    })
+    assert response.status_code == 400
+
+
+def test_register_employee():
+    response = client.post('/auth/jwt/login', data={
+        'username': 'test2222@ussc.com',
+        'password': 'this_is_password'
     })
 
-    assert response.status_code == 400
+    response = client.post('/user/register_new_employee',
+                           params={
+                               'email': 'employee@ussc.ru',
+                               'name': 'Employee',
+                               'product': 'datapk_industrial_kit',
+                               'product_role': 'backend',
+                               'password': 'this_is_password'
+                           },
+                           cookies=dict(response.cookies))
+
+    assert response.status_code == 200
 
 
 def test_logout():
     response = client.post('/auth/jwt/login', data={
-        'username': 'xd@mail.ru',
-        'password': 'curator_password'
+        'username': 'test2222@ussc.com',
+        'password': 'this_is_password'
     })
 
     response = client.post('/auth/jwt/logout', cookies=dict(response.cookies))
@@ -113,3 +105,15 @@ def test_unauthorized_logout():
     response = client.post('/auth/jwt/logout')
 
     assert response.status_code == 401
+
+
+def test_get_current_user_info():
+    response = client.post('/auth/jwt/login', data={
+        'username': 'test2222@ussc.com',
+        'password': 'this_is_password'
+    })
+
+    response = client.get('/user/get_current_user_info',
+                          cookies=dict(response.cookies))
+
+    assert response.status_code == 200
