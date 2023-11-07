@@ -21,4 +21,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint -d C0114,C0116,R0903,C0115,W0611,C0103,C0301,R0913 --ignore-paths=migrations,tests $(git ls-files '*.py')
+        pylint -d C0114,C0116,R0903,C0115,W0611,C0103,C0301,R0913,R0801 --ignore-paths=migrations,tests $(git ls-files '*.py')

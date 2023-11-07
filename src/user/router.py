@@ -42,7 +42,7 @@ class EmployeeOut(BaseModel):
             responses=responses)
 async def get_current_user_info(user: User = Depends(current_user)) -> UserOut:
     """Get current user info. Rights: authorized"""
-    return user
+    return UserOut(id=user.id, name=user.name, email=user.email, role=user.role)
 
 
 @router.get('/get_employees',
