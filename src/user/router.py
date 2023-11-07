@@ -64,12 +64,6 @@ async def get_curator_employees(user: User = Depends(curator_user),
     return employees
 
 
-class UserOut(BaseModel):
-    id: int
-    name: str
-    email: str
-
-
 @router.post('/register_new_curator',
              dependencies=[Depends(current_superuser)],
              responses=responses)

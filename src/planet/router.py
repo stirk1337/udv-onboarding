@@ -65,7 +65,7 @@ async def get_planets(user: User = Depends(current_user),
                       session: AsyncSession = Depends(get_async_session)) -> List[ShowPlanet]:
     """Get your planets. Rights: employee or curator"""
     planet_dal = PlanetDAL(session)
-    planets = list()
+    planets = []
 
     if user.role == Role.curator:  # get planets if you are curator
         curator_dal = CuratorDAL(session)
