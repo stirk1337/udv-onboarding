@@ -151,10 +151,25 @@ async def set_employee(planet_id: int,
 
 @router.delete('/delete_planet',
                dependencies=[Depends(curator_user)],
-               responses=responses)
+               responses=planet_responses)
 async def delete_planet_by_id(planet_id: int,
-                              session: AsyncSession = Depends(get_async_session)):
+                              session: AsyncSession = Depends(
+                                  get_async_session),
+                              user: User = Depends(curator_user)) -> ShowPlanet:
     """Delete a planet. Rights: curator, you must have this planet"""
     planet_dal = PlanetDAL(session)
-    await planet_dal.delete_planet(planet_id)
-    return {'detail': 'success'}
+    planet = await planet_dal.get_planet_by_id(planet_id)
+
+    if planet is None:
+        raise HTTPException(
+            status_code=404, detail=f'Planet with id {planet_id} not found')
+
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    if curator.id == planet.curator_id:
+        await planet_dal.delete_planet(planet_id)
+        return ShowPlanet(id=planet.id,
+                          name=planet.name,
+                          curator_id=planet.curator_id,
+                          created_at=planet.created_at)
+    raise HTTPException(status_code=403, detail='Forbidden')
