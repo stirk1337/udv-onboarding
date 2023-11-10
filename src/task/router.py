@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import AnyHttpUrl, BaseModel
@@ -10,7 +10,7 @@ from src.db import get_async_session
 from src.planet.dals import PlanetDAL
 from src.request_codes import planet_responses, task_responses
 from src.task.dals import TaskDAL
-from src.task.models import TaskDifficulty
+from src.task.models import TaskDifficulty, TaskStatus
 from src.user.dals import CuratorDAL, EmployeeDAL
 
 router = APIRouter(prefix='/task',
@@ -24,7 +24,8 @@ class TaskOut(BaseModel):
     file_link: AnyHttpUrl
     task_difficulty: TaskDifficulty
     planet_id: int
-    employee_answer: str
+    employee_answer: Optional[str]
+    task_status: TaskStatus
 
 
 @router.get('/get_task',
@@ -42,25 +43,18 @@ async def get_task_by_id(task_id: int,
 
     planet_dal = PlanetDAL(session)
     planet = await planet_dal.get_planet_with_employees(task.planet_id)
-    task_out = TaskOut(id=task.id,
-                       name=task.name,
-                       description=task.description,
-                       file_link=task.file_link,
-                       task_difficulty=task.task_difficulty,
-                       planet_id=task.planet_id,
-                       employee_answer=task.employee_answer)
 
     if user.role == Role.curator:  # check if you are curator and you have this task
         curator_dal = CuratorDAL(session)
         curator = await curator_dal.get_curator_by_user(user)
         if planet.curator_id == curator.id:
-            return task_out
+            return task
 
     elif user.role == Role.employee:  # check if you are employee and you have this task
         employee_dal = EmployeeDAL(session)
         employee = await employee_dal.get_employee_by_user(user)
         if employee in planet.employees:
-            return task_out
+            return task
 
     raise HTTPException(status_code=403, detail='Forbidden')
 
@@ -87,7 +81,8 @@ async def get_tasks_by_planet_id(planet_id: int,
                      file_link=AnyHttpUrl(task.file_link),
                      task_difficulty=task.task_difficulty,
                      planet_id=task.planet_id,
-                     employee_answer=task.employee_answer) for task in tasks
+                     employee_answer=task.employee_answer,
+                     task_status=task.task_status) for task in tasks
              ]
 
     if user.role == Role.curator:  # check if you are curator and you have this planet
@@ -127,7 +122,8 @@ async def create_new_task(name: str,
                    file_link=task.file_link,
                    task_difficulty=task.task_difficulty,
                    planet_id=task.planet_id,
-                   employee_answer=task.employee_answer)
+                   employee_answer=task.employee_answer,
+                   task_status=task.task_status)
 
 
 @router.patch('/update_task',
@@ -164,7 +160,7 @@ async def patch_task(task_id: int,
                responses=task_responses)
 async def delete_task_by_id(task_id: int,
                             session: AsyncSession = Depends(get_async_session),
-                            user: User = Depends(curator_user)):
+                            user: User = Depends(curator_user)) -> TaskOut:
     """Delete task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
     task = await task_dal.get_task_with_planet(task_id)
@@ -177,7 +173,15 @@ async def delete_task_by_id(task_id: int,
     curator = await curator_dal.get_curator_by_user(user)
     if curator.id == task.planet.curator_id:
         await task_dal.delete_task(task)
-    return {'detail': 'success'}
+        return TaskOut(id=task.id,
+                       name=task.name,
+                       description=task.description,
+                       file_link=task.file_link,
+                       task_difficulty=task.task_difficulty,
+                       planet_id=task.planet_id,
+                       employee_answer=task.employee_answer,
+                       task_status=task.task_status)
+    raise HTTPException(status_code=403, detail='Forbidden')
 
 
 @router.patch('/answer_task',
@@ -199,27 +203,19 @@ async def answer_on_task_by_its_id(task_id: int,
     planet_dal = PlanetDAL(session)
     planet = await planet_dal.get_planet_with_employees(task.planet_id)
 
-    task_out = TaskOut(id=task.id,
-                       name=task.name,
-                       description=task.description,
-                       file_link=task.file_link,
-                       task_difficulty=task.task_difficulty,
-                       planet_id=task.planet_id,
-                       employee_answer=task.employee_answer)
-
     if user.role == Role.curator:  # check if you are curator and you have this planet
         curator_dal = CuratorDAL(session)
         curator = await curator_dal.get_curator_by_user(user)
         if planet.curator_id == curator.id:
             await task_dal.answer_on_task(task, answer)
-            return task_out
+            return task
 
     elif user.role == Role.employee:  # check if you are employee and you have this planet
         employee_dal = EmployeeDAL(session)
         employee = await employee_dal.get_employee_by_user(user)
         if employee in planet.employees:
             await task_dal.answer_on_task(task, answer)
-            return task_out
+            return task
 
     raise HTTPException(status_code=403, detail='Forbidden')
 
@@ -248,5 +244,6 @@ async def check_task_by_its_id(task_id: int,
                        file_link=task.file_link,
                        task_difficulty=task.task_difficulty,
                        planet_id=task.planet_id,
-                       employee_answer=task.employee_answer)
+                       employee_answer=task.employee_answer,
+                       task_status=task.task_status)
     raise HTTPException(status_code=403, detail='Forbidden')
