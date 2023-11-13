@@ -96,7 +96,7 @@ class EmployeeDAL:
         )
         if employee is None:
             raise HTTPException(
-                status_code=404, detail=f'Employee with id {employee_id} not found')
+                status_code=404, detail=f'Employee with that user {user} not found')
         return employee
 
     async def get_employees_by_ids(self, ids: List[int]) -> List[Employee]:
