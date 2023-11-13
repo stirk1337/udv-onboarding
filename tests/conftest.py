@@ -106,7 +106,6 @@ def login_employee2():
 def register_employee(email: str,
                       product: str = 'datapk_industrial_kit',
                       product_role: str = 'backend'):
-    curator1 = login_curator1()
     return client.post('/user/register_new_employee',
                        params={
                            'email': email,
@@ -115,11 +114,11 @@ def register_employee(email: str,
                            'product_role': product_role,
                            'password': 'password'
                        },
-                       cookies=dict(curator1.cookies))
+                       cookies=dict(login_curator1().cookies))
 
 
 def create_planet(name: str = 'no name', login=login_curator1):  # delegate
-    return client.post('/planet/create_planet', json={
+    return client.post('/planet/create_planet', params={
         'name': name,
     }, cookies=dict(login().cookies))
 

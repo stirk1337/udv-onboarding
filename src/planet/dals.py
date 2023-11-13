@@ -1,5 +1,6 @@
-from typing import List, Union
+from typing import List
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -30,8 +31,11 @@ class PlanetDAL:
         )
         return list(planets)
 
-    async def get_planet_by_id(self, planet_id: int) -> Union[Planet, None]:
+    async def get_planet_by_id(self, planet_id: int) -> Planet:
         planet = await self.db_session.get(Planet, planet_id)
+        if planet is None:
+            raise HTTPException(
+                status_code=404, detail=f'Planet with id {planet_id} not found')
         return planet
 
     async def create_planet(self, name: str, user: User) -> Planet:
@@ -50,23 +54,30 @@ class PlanetDAL:
             select(Planet)
             .where(Planet.id == planet_id)
             .options(
-                selectinload(Planet.employees),
+                selectinload(Planet.employees)
+                .selectinload(Employee.user),
             )
         )
+        if planet is None:
+            raise HTTPException(
+                status_code=404, detail=f'Planet with id {planet_id} not found')
         return planet
 
-    async def add_employees_to_planet(self, planet_id: int, employees: List[Employee]) -> Union[Planet, None]:
-        planet = await self.get_planet_with_employees(planet_id)
-        if planet is None:
-            return None
-
+    async def add_employees_to_planet(self, planet: Planet, employees: List[Employee]) -> Planet:
         planet.employees = list(set(planet.employees + employees))
         await self.db_session.commit()
+        return planet
+
+    async def exclude_employee_from_planet(self, planet: Planet, employee: Employee) -> Planet:
+        if employee in planet.employees:
+            planet.employees.remove(employee)
+            await self.db_session.commit()
         return planet
 
     async def patch_planet(self, planet: Planet, name: str) -> Planet:
         planet.name = name
         await self.db_session.commit()
+        await self.db_session.refresh(planet)
         return planet
 
     async def delete_planet(self, planet_id: int):
