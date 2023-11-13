@@ -66,7 +66,7 @@ def test_patch_task():
     create = create_planet('planet', login_curator1)
     task = create_task(planet_id=create.json()['id'], name='4')
     patch = patch_task(task_id=task.json()[
-                       'id'], name='xd1337', login=login_curator1)
+        'id'], name='xd1337', login=login_curator1)
     assert patch.json()['name'] == 'xd1337'
 
 
@@ -79,7 +79,7 @@ def test_patch_task_with_no_rights():
     create = create_planet('planet', login_curator1)
     task = create_task(planet_id=create.json()['id'], name='4')
     patch = patch_task(task_id=task.json()[
-                       'id'], name='xd1337', login=login_curator2)
+        'id'], name='xd1337', login=login_curator2)
     assert patch.status_code == 403
 
 
@@ -119,14 +119,14 @@ def test_delete_task_with_no_rights():
 
 def test_answer_task_employee1():
     create = create_planet('planet', login_curator1)
-    client.post('/planet/add_employees_to_planet',
-                json={
-                    'employee_ids': [1]
-                },
-                params={
-                    'planet_id': create.json()['id']
-                },
-                cookies=dict(login_curator1().cookies))
+    client.patch('/planet/add_employees_to_planet',
+                 json={
+                     'employee_ids': [1]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 cookies=dict(login_curator1().cookies))
     task = create_task(planet_id=create.json()['id'], name='5')
     answer_task = client.patch('/task/answer_task',
                                params={

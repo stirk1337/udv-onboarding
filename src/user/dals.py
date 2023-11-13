@@ -1,6 +1,7 @@
 from typing import List
 
-from sqlalchemy import select
+from fastapi import HTTPException
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -37,7 +38,23 @@ class EmployeeDAL:
             .where(Employee.id == employee_id)
             .options(selectinload(Employee.user))
         )
+        if employee is None:
+            raise HTTPException(
+                status_code=404, detail=f'Employee with id {employee_id} not found')
         return employee
+
+    async def get_employees_by_product_and_product_role(self,
+                                                        product: Product,
+                                                        product_role: ProductRole) -> List[Employee]:
+        query = select(Employee).options(selectinload(Employee.user))
+
+        if product is not None:
+            query = query.where(Employee.product == product)
+
+        if product_role is not None:
+            query = query.where(and_(Employee.product_role == product_role))
+
+        return list(await self.db_session.scalars(query))
 
     async def create_employee(self, user: User,
                               curator_id: int = None,
@@ -77,6 +94,9 @@ class EmployeeDAL:
             select(Employee)
             .where(Employee.user_id == user.id)
         )
+        if employee is None:
+            raise HTTPException(
+                status_code=404, detail=f'Employee with id {employee_id} not found')
         return employee
 
     async def get_employees_by_ids(self, ids: List[int]) -> List[Employee]:
@@ -90,6 +110,7 @@ class EmployeeDAL:
         employee.employee_status = EmployeeStatus.disabled
         employee.user.is_active = False
         await self.db_session.commit()
+        await self.db_session.refresh(employee)
         return employee
 
     async def enable_employee(self, employee: Employee,

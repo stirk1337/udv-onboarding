@@ -73,5 +73,8 @@ class Employee(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())")
     )
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
+    )
     planets: Mapped[List['Planet']] = (
         relationship(secondary='employee_planet', back_populates='employees'))

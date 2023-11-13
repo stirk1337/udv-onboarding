@@ -1,5 +1,6 @@
 from tests.conftest import (client, create_planet, login_curator1,
-                            login_curator2, login_employee1, login_employee2)
+                            login_curator2, login_employee1, login_employee2,
+                            register_employee)
 
 
 def test_create_planet():
@@ -49,14 +50,52 @@ def test_create_and_delete_planet():
 
 def test_add_employee1_to_created_planet():
     create = create_planet('planet', login_curator1)
-    response = client.post('/planet/add_employees_to_planet',
-                           json={
-                               'employee_ids': [1]
-                           },
-                           params={
-                               'planet_id': create.json()['id']
-                           },
-                           cookies=dict(login_curator1().cookies))
+    response = client.patch('/planet/add_employees_to_planet',
+                            json={
+                                'employee_ids': [1]
+                            },
+                            params={
+                                'planet_id': create.json()['id']
+                            },
+                            cookies=dict(login_curator1().cookies))
+    assert response.json()['id'] == create.json()['id']
+
+
+def test_add_employees_by_params():
+    create = create_planet('planet', login_curator1)
+    register_employee(
+        'xd1337@mail.ru', 'datapk_indistrial_kit', 'backend')
+    register_employee(
+        'xd1337@mail.ru', 'datapk_indistrial_kit', 'backend')
+    response = client.patch('/planet/add_employees_to_planet_by_params',
+                            params={
+                                'planet_id': create.json()['id'],
+                                'product': 'datapk_industrial_kit',
+                                'product_role': 'backend'
+                            },
+                            cookies=dict(login_curator1().cookies))
+    assert response.json()['id'] == create.json()['id']
+
+
+def test_remove_employee_from_planet():
+    create = create_planet('planet', login_curator1)
+    employee = register_employee('test_remove_from@mail.ru',
+                                 'datapk_industrial_kit',
+                                 'backend')
+    client.patch('/planet/add_employees_to_planet',
+                 json={
+                     'employee_ids': [employee.json()['id']]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 cookies=dict(login_curator1().cookies))
+    response = client.patch('/planet/remove_employee_from_planet',
+                            params={
+                                'planet_id': create.json()['id'],
+                                'employee_id': employee.json()['id']
+                            },
+                            cookies=dict(login_curator1().cookies))
     assert response.json()['id'] == create.json()['id']
 
 

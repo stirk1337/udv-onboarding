@@ -20,7 +20,7 @@ class Planet(Base):
         server_default=text("TIMEZONE('utc', now())")
     )
     updated_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())")
+        server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
     )
     employees: Mapped[List['Employee']] = (
         relationship(secondary='employee_planet', back_populates='planets'))
