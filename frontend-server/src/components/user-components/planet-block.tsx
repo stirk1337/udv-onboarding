@@ -7,7 +7,7 @@ type PlanetBlockProps = {
 
 function PlanetBlock({id, onPlanetClick}: PlanetBlockProps) {
     return ( 
-        <div>
+        <div className="planet">
             <Planet id={id} onPlanetClick={onPlanetClick}/>
         </div>
      );
