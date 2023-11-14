@@ -1,27 +1,33 @@
 type ProfileButtonsProps = {
     onClickLinks: () => void;
-    onClickGroupTable: () => void;
+    onClickProgress: () => void;
+    onClickAchievements: () => void;
 }
 
-function ProfileButtons({onClickLinks, onClickGroupTable}: ProfileButtonsProps) {
+function ProfileButtons({onClickLinks, onClickProgress, onClickAchievements}: ProfileButtonsProps) {
     return (     
-        <div>
-            <button onClick={onClickLinks}>
-                <img src="" alt="" width={57} height={52}></img>
-                <p>Ссылки</p>
-            </button>
-            <button onClick={onClickGroupTable}>
-                <img src="" alt="" width={57} height={52}></img>
-                <p>Группа</p>
-            </button>
-            <button>
-                <img src="" alt="" width={57} height={52}></img>
-                <p>UDV COINS</p>
-            </button>
-            <button>
-                <img src="" alt="" width={57} height={52}></img>
-                <p>Выход</p>
-            </button>
+        <div className="profile-buttons">
+            <p className="user-name">Иван Иванов</p>
+            <div className="flex">
+                <button onClick={onClickAchievements}>
+                    <img src="/achievments-icon.svg" alt="" width={57} height={52}></img>
+                    <p>Достижения</p>
+                </button>
+                <button onClick={onClickProgress}>
+                    <img src="/progress-icon.svg" alt="" width={57} height={52}></img>
+                    <p>Прогресс</p>
+                </button>
+            </div>
+            <div className="flex">
+                <button onClick={onClickLinks}>
+                    <img src="/useful-links-icon.svg" alt="" width={57} height={52}></img>
+                    <p>Полезные ссылки</p>
+                </button>
+                <button>
+                    <img src="/exit-icon.svg" alt="" width={57} height={52}></img>
+                    <p>Выход</p>
+                </button>
+            </div>
         </div>
      );
 }

@@ -1,23 +1,17 @@
 import { Navigate } from "react-router-dom";
 import Logout from "../components/logout";
-import Header from "../components/header";
-import Content from "../components/content";
-import { useState } from "react";
+import Header from "../components/user-components/header";
+import Content from "../components/user-components/content";
 
-function MainPage({onLogin, isAuth} : any) {
-    const [isVisibleProfileButtons, setVisibleProfileButtons] = useState(false)
-    
-    function profileClickHandler(){
-        setVisibleProfileButtons(!isVisibleProfileButtons); 
-    }
+function MainPage({onLogin, isAuth, userRole} : any) {
 
     return ( 
-        <>
+        <div>
             {!isAuth && <Navigate to="/"/>}
-            <Header onClickProfile={profileClickHandler}/>
-            <Content isVisibleProfileButtons={isVisibleProfileButtons} />
+            {userRole === 'curator' && <Navigate to="/curator"/>}
+            <Content />
             {/*<Logout onLogin={onLogin}/>*/}
-        </>
+        </div>
      );
 }
 

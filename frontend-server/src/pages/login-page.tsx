@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
+import InputComponent from "../components/input-component";
 
 type LoginPageProps = {
   onLogin: () => void;
@@ -9,16 +10,15 @@ type LoginPageProps = {
 
 
 function LoginPage({onLogin, isAuth}: LoginPageProps) {
-    let [userData, setFormData] = useState({
-        email: '',
-        password: ''
-    })
+    let [email, setEmail] = useState('')
+    let [password, setPassword] = useState('')
 
-    let {email, password} = userData
+    function handleEmail(evt: ChangeEvent<HTMLInputElement>){
+      setEmail(evt.target.value)
+    }
 
-    function handleUserData(evt: ChangeEvent<HTMLInputElement>){
-        const {name, value} = evt.target;
-        setFormData({...userData, [name]: value});
+    function handlePassword(evt: ChangeEvent<HTMLInputElement>){
+      setPassword(evt.target.value)
     }
 
     function handleSubmit(evt: any){
@@ -42,17 +42,19 @@ function LoginPage({onLogin, isAuth}: LoginPageProps) {
     }
 
     return ( 
-        <>
+        <div className="enter-page">
             {isAuth && <Navigate to="/"/>}
-            <h1>Логин</h1>
+            <img src="logo.svg" alt="" width={299} height={57}></img>
             <form>
-                <label htmlFor="email">Введите почту</label>
-                <input type="text" name="email" value={email} onChange={handleUserData}></input>
-                <label htmlFor="password">Введите пароль</label>
-                <input type="text" name="password" value={password} onChange={handleUserData}></input>
-                <button type="submit" onClick={handleSubmit}>Войти</button>
+                <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' onchange={handleEmail}/>
+                <InputComponent name="Пароль" icon='password-icon.svg' value={password} placeholder='Введите пароль' onchange={handlePassword}/>
+                <div className="assistance-block">
+                  <span className="error-message"></span>
+                  <button className="forget-password-button">Забыли пароль?</button>
+                </div>
+                <button type="submit" className="send-button" onClick={handleSubmit}>Войти</button>
             </form>
-        </>
+        </div>
      );
 }
 

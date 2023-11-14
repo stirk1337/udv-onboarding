@@ -6,11 +6,16 @@ import MainPage from "../pages/main-page"
 import AuthChecker from "./auth-checker"
 import axios from "axios"
 import EnterPage from "../pages/enter-page"
-
+import TaskConstructor from "./curator-components/task-constructor"
+import CuratorPageLayout from "./curator-components/curator-page-layout"
+import TaskEditor from "./curator-components/task-editor"
+import TaskBlock from "./user-components/task-block"
+import TaskForVerification from "./curator-components/task-for-verification"
+import Personal from "./curator-components/personal"
 
 function App() {
-  let [isRegistered, setRegisteredData] = useState(true)
-
+  let [isRegistered, setRegisteredData] = useState(false)
+  let userRole = 'curator'
 
   async function checkStatus(): Promise<boolean> {
     let status = false
@@ -39,16 +44,31 @@ function App() {
   return (
       <BrowserRouter>
       <Routes>
-        <Route>
+        <Route path="/">
+          <Route index element={
+            <Navigate to={`/${userRole}`}></Navigate>
+          }/>
+          <Route path={`/user`} element={
+            <AuthChecker isAuth={isRegistered} userRole={userRole}>
+              <CuratorPageLayout userRole={userRole}/>
+            </AuthChecker>
+          }>
             <Route index element={
-              //<AuthChecker isAuth={isRegistered}>
-                <MainPage
-                  onLogin={handleRegisteredUser}
-                  isAuth={isRegistered}
-                />
-              //</AuthChecker>
-            }
-          />
+              <MainPage onLogin={handleRegisteredUser} isAuth={isRegistered} userRole={userRole}/>
+            }/>
+            <Route path=":planetId/:taskId" element={<TaskBlock/>}/>
+          </Route>
+
+          <Route path="/curator" element={
+            <AuthChecker isAuth={isRegistered} userRole={userRole}>
+              <CuratorPageLayout userRole={userRole}/>
+            </AuthChecker>
+          }>
+            <Route index element={<TaskConstructor/>}/>
+            <Route path="tasks-for-verification" element={<TaskForVerification/>}/>
+            <Route path="personal" element={<Personal/>}/>
+            <Route path="tasks/:id" element={<TaskEditor/>}/>
+          </Route>
           <Route path="/enter-page" element={<EnterPage/>}></Route>
           <Route path="/registrations" element={<RegisterPage isAuth={isRegistered}/>}/>
           <Route path="/login" element={<LoginPage isAuth={isRegistered} onLogin={handleRegisteredUser}/>}/>
