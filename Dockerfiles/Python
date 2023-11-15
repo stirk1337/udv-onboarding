@@ -9,5 +9,6 @@ RUN pip install -r /app/requirements.txt
 COPY . .
 
 # CMD gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 main:app
-
+RUN mkdir /app/static
+RUN mkdir /app/static/avatars
 CMD alembic upgrade head && python3 main.py

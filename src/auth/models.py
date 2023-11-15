@@ -34,8 +34,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_superuser: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )
-    is_verified: Mapped[bool] = mapped_column(
-        Boolean, default=False, nullable=False
+    image_url: Mapped[str] = mapped_column(
+        String(200), nullable=True
     )
     employee: Mapped[List['Employee']] = relationship(back_populates='user')
     curator: Mapped[List['Curator']] = relationship(back_populates='user')

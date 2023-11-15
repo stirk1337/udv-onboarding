@@ -1,3 +1,4 @@
+aiofiles==23.2.1
 alembic==1.12.0
 alembic-postgresql-enum==0.2.1
 annotated-types==0.5.0
@@ -62,7 +63,9 @@ tomli==2.0.1
 typing_extensions==4.8.0
 ujson==5.8.0
 uvicorn==0.23.2
+uvloop==0.19.0
 virtualenv==20.24.6
 watchfiles==0.20.0
 websockets==11.0.3
+WTForms==3.0.1
 zipp==3.17.0

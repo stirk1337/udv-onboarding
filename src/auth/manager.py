@@ -2,11 +2,10 @@ import contextlib
 from secrets import token_urlsafe
 from typing import Optional, Union
 
-from fastapi import Depends, Request
+from fastapi import Depends, HTTPException, Request
 from fastapi_users import (BaseUserManager, IntegerIDMixin, exceptions, models,
                            schemas)
-from fastapi_users.exceptions import (InvalidPasswordException,
-                                      UserAlreadyExists)
+from fastapi_users.exceptions import UserAlreadyExists
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
@@ -34,13 +33,11 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             user: Union[UserCreate, User],
     ) -> None:
         if len(password) < 8:
-            raise InvalidPasswordException(
-                reason='Password should be at least 8 characters'
-            )
+            raise HTTPException(
+                status_code=400, detail='Password should be at least 8 characters')
         if user.email in password:
-            raise InvalidPasswordException(
-                reason='Password should not contain e-mail'
-            )
+            raise HTTPException(
+                status_code=400, detail='Password should not contain e-mail')
 
     async def create(
             self,
