@@ -1,35 +1,42 @@
 import Task from "./task";
 import TaskData from "./task-data";
-import { BlockData } from "../../mocks/planet";
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAppSelector } from "../hooks";
+import { useEffect, useState } from "react";
 
 function TaskBlock() {
+
     const navigate = useNavigate();
     const  {planetId, taskId} = useParams()
     const tId = Number(taskId)
     const pId = Number(planetId)
-    const tasks = BlockData[pId].tasks
+    const tasks = useAppSelector((state) => state.planetTasks);
+
+    const [currentTask, setCurrentTask] =  useState(tasks.find((task) => task.id === tId) || tasks[0])
+
+    useEffect(() =>{
+        setCurrentTask(tasks.find((task) => task.id === tId) || tasks[0])
+    }, [tasks])
 
     function taskClickHandler(id: number){
-        navigate(`/user/${pId}/${id - 1}`)
+        setCurrentTask(tasks.find((task) => task.id === id) || tasks[0])
+        navigate(`/employee/${pId}/${id}`)
     }
 
     return ( 
         <div className="task-block">
             <div className="monsters">
                 <div className="monster-header">
-                    <button onClick={() => navigate('/user')}>
+                    <button onClick={() => navigate('/employee')}>
                         <p><img src="/back-arrow.svg" alt=""></img> Вернуться к блокам</p>
                     </button>
                 </div>
                 <div className="monster-content">
-                    {tasks.map(task => <Task key={task.id} id={task.id} isCompleted={task.completed} taskClick={taskClickHandler}/>)}
+                    {tasks.map(task => <Task key={task.id} id={task.id} name={task.name} isCompleted={task.task_status} taskClick={taskClickHandler}/>)}
                 </div>
             </div>
             <div className="task-content">
-                <TaskData name={tasks[tId].name} data={tasks[tId].data}/>
-                <button className="approve-button">Завершить</button>
+                <TaskData name={currentTask.name} id={currentTask.id} planetId={pId} data={currentTask.description} currentAnswer={currentTask.employee_answer} taskStatus={currentTask.task_status}/>
             </div>
         </div>
      );

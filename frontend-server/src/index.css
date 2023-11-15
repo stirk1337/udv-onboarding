@@ -566,7 +566,7 @@ main{
     height: 38px;
 }
 
-.button-to-tasks, .decline-button, .approve-button{
+.button-to-tasks, .decline-button, .approve-button, .completed-button, .being-checked{
     display: block;
     background-color: #02392B;
     width: fit-content;
@@ -840,6 +840,14 @@ main{
 
 .approve-button{
     background-color: #02392B;
+}
+
+.completed-button{
+    background-color: #00C996;
+}
+
+.being-checked{
+    background-color: #F9A22F;
 }
 
 .decline-comment-dialog{
