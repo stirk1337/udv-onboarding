@@ -10,6 +10,7 @@ from src.auth.dals import UserDAL
 from src.auth.manager import get_user_manager
 from src.auth.models import User
 from src.db import get_async_session
+from src.request_codes import avatar_responses
 from src.user.validators import UserOut
 
 fastapi_users = FastAPIUsers[User, int](
@@ -39,13 +40,15 @@ router = APIRouter(prefix='/auth',
                    tags=['auth'])
 
 
-@router.patch('/update_image')
+@router.patch('/update_image',
+              responses=avatar_responses)
 async def update_avatar(file: UploadFile,
                         user: User = Depends(current_user),
                         session: AsyncSession = Depends(get_async_session)) -> UserOut:
     file_path = 'static/avatars/'
     if file.content_type not in ['image/jpeg', 'image/png']:
-        raise HTTPException(400, detail='Invalid document type')
+        raise HTTPException(
+            400, detail='There was an error uploading the file. Did you upload png/jpg?')
     try:
         contents = await file.read()
         file_extension = file.filename.split('.')[-1]
@@ -55,7 +58,7 @@ async def update_avatar(file: UploadFile,
     except Exception as e:
         print(e)
         raise HTTPException(
-            status_code=400, detail='There was an error uploading the file') from e
+            status_code=400, detail='There was an error uploading the file. Did you upload png/jpg?') from e
     finally:
         await file.close()
     user_dal = UserDAL(session)
