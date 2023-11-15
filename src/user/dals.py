@@ -103,6 +103,9 @@ class EmployeeDAL:
         employees = await self.db_session.scalars(
             select(Employee)
             .where(Employee.id.in_(ids))
+            .options(
+                selectinload(Employee.user)
+            )
         )
         return list(employees)
 

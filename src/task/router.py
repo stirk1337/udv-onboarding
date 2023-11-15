@@ -12,7 +12,7 @@ from src.request_codes import planet_responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
 from src.task.models import Task, TaskDifficulty
-from src.task.validators import TaskOut
+from src.task.validators import EmptyTaskOut, TaskOut
 
 router = APIRouter(prefix='/task',
                    tags=['task'])
@@ -40,11 +40,11 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
              responses=planet_responses,
              dependencies=[Depends(curator_user)])
 async def create_new_empty_task(session: AsyncSession = Depends(get_async_session),
-                                planet: Planet = Depends(have_planet)) -> TaskOut:
+                                planet: Planet = Depends(have_planet)) -> EmptyTaskOut:
     """Create task linked to planet. Rights: curator, you must have this planet"""
     task_dal = TaskDAL(session)
     task = await task_dal.create_empty_task(planet)
-    return TaskOut.parse(task)
+    return EmptyTaskOut.parse(task)
 
 
 @router.post('/create_task',

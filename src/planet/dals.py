@@ -66,12 +66,14 @@ class PlanetDAL:
     async def add_employees_to_planet(self, planet: Planet, employees: List[Employee]) -> Planet:
         planet.employees = list(set(planet.employees + employees))
         await self.db_session.commit()
+        await self.db_session.refresh(planet)
         return planet
 
     async def exclude_employee_from_planet(self, planet: Planet, employee: Employee) -> Planet:
         if employee in planet.employees:
             planet.employees.remove(employee)
             await self.db_session.commit()
+            await self.db_session.refresh(planet)
         return planet
 
     async def patch_planet(self, planet: Planet, name: str) -> Planet:

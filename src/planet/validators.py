@@ -39,7 +39,8 @@ class ShowPlanetWithEmployees(BaseModel):
                                  product=employee.product,
                                  product_role=employee.product_role,
                                  employee_status=employee.employee_status,
-                                 created_at=employee.created_at) for employee in
+                                 created_at=employee.created_at,
+                                 updated_at=employee.updated_at) for employee in
                      planet.employees]
         return ShowPlanetWithEmployees(id=planet.id,
                                        name=planet.name,
