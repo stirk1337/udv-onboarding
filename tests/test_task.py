@@ -9,6 +9,16 @@ def test_create_task():
     assert task.json()['name'] == '1'
 
 
+def test_create_empty_task():
+    create = create_planet('planet', login_curator1)
+    task = client.post('/task/create_empty_task',
+                       params={
+                           'planet_id': create.json()['id']
+                       },
+                       cookies=dict(login_curator1().cookies))
+    assert task.json()['planet_id'] == create.json()['id']
+
+
 def test_get_created_task():
     create = create_planet('planet', login_curator1)
     task = create_task(planet_id=create.json()['id'], name='2')

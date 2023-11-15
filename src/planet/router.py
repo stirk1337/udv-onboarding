@@ -83,7 +83,7 @@ class EmployeesIdItem(BaseModel):
 async def set_employee(ids: EmployeesIdItem,
                        session: AsyncSession = Depends(get_async_session),
                        user: User = Depends(curator_user),
-                       planet: Planet = Depends(have_planet)) -> ShowPlanet:
+                       planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployees:
     """Add new employees to a planet. Rights: curator, you must have this planet, you must have linked to this
     employees"""
     planet_dal = PlanetDAL(session)
@@ -94,7 +94,7 @@ async def set_employee(ids: EmployeesIdItem,
     filtered_employees = list(
         filter(lambda x: x.curator_id == curator.id, employees))
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
-    return ShowPlanet.parse(planet)
+    return ShowPlanetWithEmployees.parse(planet)
 
 
 @router.patch('/add_employees_to_planet_by_params',
@@ -104,7 +104,7 @@ async def set_employee_by_param(product: Optional[Product] = None,
                                 session: AsyncSession = Depends(
                                     get_async_session),
                                 user: User = Depends(curator_user),
-                                planet: Planet = Depends(have_planet)) -> ShowPlanet:
+                                planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployees:
     """Add new employees to a planet by params (product, product role). Rights: curator, you must have this planet,
     you must have linked to this employees"""
     planet_dal = PlanetDAL(session)
@@ -115,7 +115,7 @@ async def set_employee_by_param(product: Optional[Product] = None,
     filtered_employees = list(
         filter(lambda x: x.curator_id == curator.id, employees))
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
-    return ShowPlanet.parse(planet)
+    return ShowPlanetWithEmployees.parse(planet)
 
 
 @router.patch('/remove_employee_from_planet',
@@ -123,13 +123,13 @@ async def set_employee_by_param(product: Optional[Product] = None,
               dependencies=[Depends(curator_user)])
 async def exclude_employee(employee_id: int,
                            session: AsyncSession = Depends(get_async_session),
-                           planet: Planet = Depends(have_planet)) -> ShowPlanet:
+                           planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployees:
     """Delete employee from planet. Rights: curator, you must have this planet"""
     planet_dal = PlanetDAL(session)
     employee_dal = EmployeeDAL(session)
     employee = await employee_dal.get_employee_by_id_with_user(employee_id)
     await planet_dal.exclude_employee_from_planet(planet, employee)
-    return ShowPlanet.parse(planet)
+    return ShowPlanetWithEmployees.parse(planet)
 
 
 @router.delete('/delete_planet',

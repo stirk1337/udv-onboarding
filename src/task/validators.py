@@ -29,3 +29,13 @@ class TaskOut(BaseModel):
                        task_status=task.task_status,
                        created_at=task.created_at,
                        updated_at=task.updated_at)
+
+
+class EmptyTaskOut(BaseModel):
+    id: int
+    planet_id: int
+
+    @staticmethod
+    def parse(task: Task):
+        return EmptyTaskOut(id=task.id,
+                            planet_id=task.planet_id)
