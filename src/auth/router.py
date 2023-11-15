@@ -55,7 +55,7 @@ async def update_avatar(file: UploadFile,
     except Exception as e:
         print(e)
         raise HTTPException(
-            status_code=400, detail='There was an error uploading the file')
+            status_code=400, detail='There was an error uploading the file') from e
     finally:
         await file.close()
     user_dal = UserDAL(session)
