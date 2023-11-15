@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
@@ -11,13 +12,15 @@ class UserOut(BaseModel):
     name: str
     email: EmailStr
     role: Role
+    image_url: Optional[str] = None
 
     @staticmethod
     def parse(user: User):
         return UserOut(id=user.id,
                        name=user.name,
                        email=user.email,
-                       role=user.role)
+                       role=user.role,
+                       image_url=user.image_url)
 
 
 class EmployeeOut(BaseModel):
