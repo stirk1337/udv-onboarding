@@ -49,13 +49,28 @@ class PlanetDAL:
         await self.db_session.commit()
         return new_planet
 
-    async def get_planet_with_employees(self, planet_id: int):
+    async def get_planet_with_employees(self, planet_id: int) -> Planet:
         planet = await self.db_session.scalar(
             select(Planet)
             .where(Planet.id == planet_id)
             .options(
                 selectinload(Planet.employees)
                 .selectinload(Employee.user),
+            )
+        )
+        if planet is None:
+            raise HTTPException(
+                status_code=404, detail=f'Planet with id {planet_id} not found')
+        return planet
+
+    async def get_planet_with_employees_and_tasks(self, planet_id: int) -> Planet:
+        planet = await self.db_session.scalar(
+            select(Planet)
+            .where(Planet.id == planet_id)
+            .options(
+                selectinload(Planet.employees)
+                .selectinload(Employee.user),
+                selectinload(Planet.task)
             )
         )
         if planet is None:

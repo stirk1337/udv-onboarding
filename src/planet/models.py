@@ -14,7 +14,7 @@ class Planet(Base):
         Integer, primary_key=True
     )
     name: Mapped[str] = mapped_column(
-        String(length=100), nullable=False
+        String(length=100), nullable=True
     )
     created_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())")

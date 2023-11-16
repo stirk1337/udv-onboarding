@@ -33,8 +33,7 @@ class PlanetAdmin(ModelView, model=Planet):
 
 class TaskAdmin(ModelView, model=Task):
     column_list = [Task.id, Task.name,
-                   Task.description, Task.file_link,
-                   Task.task_difficulty, Task.task_status,
+                   Task.description, Task.task_status,
                    Task.planet_id, Task.planet,
                    Task.updated_at, Task.created_at]
 

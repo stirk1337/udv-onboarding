@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.planet.models import Planet
-from src.task.models import Task, TaskDifficulty, TaskStatus
+from src.task.models import Task, TaskStatus
 
 
 class TaskDAL:
@@ -36,13 +36,9 @@ class TaskDAL:
 
     async def create_task(self, name: str,
                           description: str,
-                          file_link: str,
-                          task_difficulty: TaskDifficulty,
                           planet: Planet) -> Task:
         new_task = Task(name=name,
                         description=description,
-                        file_link=file_link,
-                        task_difficulty=task_difficulty,
                         task_status=TaskStatus.in_progress,
                         planet_id=planet.id)
         self.db_session.add(new_task)
@@ -64,13 +60,9 @@ class TaskDAL:
 
     async def patch_task(self, task: Task,
                          name: str,
-                         description: str,
-                         file_link: str,
-                         task_difficulty: TaskDifficulty) -> Task:
+                         description: str) -> Task:
         task.name = name
         task.description = description
-        task.file_link = file_link
-        task.task_difficulty = task_difficulty
         await self.db_session.commit()
         await self.db_session.refresh(task)
         return task
