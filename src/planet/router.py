@@ -10,7 +10,8 @@ from src.db import get_async_session
 from src.planet.dals import PlanetDAL
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
-from src.planet.validators import ShowPlanet, ShowPlanetWithEmployees
+from src.planet.validators import (ShowPlanet, ShowPlanetWithEmployees,
+                                   ShowPlanetWithEmployeesAndTasks)
 from src.request_codes import planet_responses, responses
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import Product, ProductRole
@@ -22,11 +23,11 @@ router = APIRouter(prefix='/planet',
 @router.get('/get_planet',
             responses=planet_responses)
 async def get_planet_by_id(session: AsyncSession = Depends(get_async_session),
-                           planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployees:
+                           planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployeesAndTasks:
     """Get planet by its id. Rights: you must have this planet (employee or curator)"""
     planet_dal = PlanetDAL(session)
-    planet = await planet_dal.get_planet_with_employees(planet.id)
-    return ShowPlanetWithEmployees.parse(planet)
+    planet = await planet_dal.get_planet_with_employees_and_tasks(planet.id)
+    return ShowPlanetWithEmployeesAndTasks.parse(planet)
 
 
 @router.get('/get_planets', responses=responses)
@@ -49,12 +50,14 @@ async def get_planets(user: User = Depends(current_user),
     planets = [
         ShowPlanet.parse(planet) for planet in planets
     ]
+    planets = sorted(planets, key=lambda x: x.id)
     return planets
 
 
 @router.post('/create_planet',
              responses=responses)
-async def create_planet(name: str, session: AsyncSession = Depends(get_async_session),
+async def create_planet(name: Optional[str] = None,
+                        session: AsyncSession = Depends(get_async_session),
                         user: User = Depends(curator_user)) -> ShowPlanet:
     """Create a new planet. Rights: curator"""
     planet_dal = PlanetDAL(session)

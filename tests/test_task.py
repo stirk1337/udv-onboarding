@@ -9,16 +9,6 @@ def test_create_task():
     assert task.json()['name'] == '1'
 
 
-def test_create_empty_task():
-    create = create_planet('planet', login_curator1)
-    task = client.post('/task/create_empty_task',
-                       params={
-                           'planet_id': create.json()['id']
-                       },
-                       cookies=dict(login_curator1().cookies))
-    assert task.json()['planet_id'] == create.json()['id']
-
-
 def test_get_created_task():
     create = create_planet('planet', login_curator1)
     task = create_task(planet_id=create.json()['id'], name='2')
@@ -102,7 +92,7 @@ def test_delete_task():
                                 },
                                 cookies=dict(login_curator1().cookies)
                                 )
-    assert delete_task.json()['file_link'] == task.json()['file_link']
+    assert delete_task.json()['id'] == task.json()['id']
 
 
 def test_delete_task_that_doesnt_exist():

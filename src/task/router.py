@@ -1,7 +1,6 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
-from pydantic import AnyHttpUrl
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dependencies import curator_user, current_user
@@ -11,8 +10,8 @@ from src.planet.models import Planet
 from src.request_codes import planet_responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
-from src.task.models import Task, TaskDifficulty
-from src.task.validators import EmptyTaskOut, TaskOut
+from src.task.models import Task
+from src.task.validators import TaskOut
 
 router = APIRouter(prefix='/task',
                    tags=['task'])
@@ -33,32 +32,20 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
     task_dal = TaskDAL(session)
     tasks = await task_dal.get_tasks_by_planet(planet)
     tasks = [TaskOut.parse(task) for task in tasks]
+    tasks = sorted(tasks, key=lambda x: x.id)
     return tasks
-
-
-@router.post('/create_empty_task',
-             responses=planet_responses,
-             dependencies=[Depends(curator_user)])
-async def create_new_empty_task(session: AsyncSession = Depends(get_async_session),
-                                planet: Planet = Depends(have_planet)) -> EmptyTaskOut:
-    """Create task linked to planet. Rights: curator, you must have this planet"""
-    task_dal = TaskDAL(session)
-    task = await task_dal.create_empty_task(planet)
-    return EmptyTaskOut.parse(task)
 
 
 @router.post('/create_task',
              responses=planet_responses,
              dependencies=[Depends(curator_user)])
-async def create_new_task(name: str,
-                          description: str,
-                          file_link: AnyHttpUrl,
-                          task_difficulty: TaskDifficulty,
+async def create_new_task(name: Optional[str] = None,
+                          description: Optional[str] = None,
                           session: AsyncSession = Depends(get_async_session),
                           planet: Planet = Depends(have_planet)) -> TaskOut:
     """Create task linked to planet. Rights: curator, you must have this planet"""
     task_dal = TaskDAL(session)
-    task = await task_dal.create_task(name, description, str(file_link), task_difficulty, planet)
+    task = await task_dal.create_task(name, description, planet)
     return TaskOut.parse(task)
 
 
@@ -67,17 +54,11 @@ async def create_new_task(name: str,
               dependencies=[Depends(curator_user)])
 async def patch_task(name: str,
                      description: str,
-                     file_link: AnyHttpUrl,
-                     task_difficulty: TaskDifficulty,
                      session: AsyncSession = Depends(get_async_session),
                      task: Task = Depends(have_task)) -> TaskOut:
     """Update task info by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    task = await task_dal.patch_task(task,
-                                     name,
-                                     description,
-                                     str(file_link),
-                                     task_difficulty)
+    task = await task_dal.patch_task(task, name, description)
     return TaskOut.parse(task)
 
 

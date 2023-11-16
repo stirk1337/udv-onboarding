@@ -13,12 +13,6 @@ class TaskStatus(enum.Enum):
     completed = 'completed'
 
 
-class TaskDifficulty(enum.Enum):
-    easy = 'easy'
-    medium = 'medium'
-    hard = 'hard'
-
-
 class Task(Base):
     __tablename__ = 'task'
 
@@ -31,14 +25,8 @@ class Task(Base):
     description: Mapped[str] = mapped_column(
         String(length=10000), nullable=True
     )
-    file_link: Mapped[str] = mapped_column(
-        String(length=500), nullable=True
-    )
     task_status: Mapped[TaskStatus] = mapped_column(
-        Enum(TaskStatus), nullable=True
-    )
-    task_difficulty: Mapped['TaskDifficulty'] = mapped_column(
-        Enum(TaskDifficulty), nullable=True
+        Enum(TaskStatus), nullable=False
     )
     planet_id: Mapped[int] = mapped_column(
         ForeignKey('planet.id', ondelete='CASCADE')
