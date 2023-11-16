@@ -1,11 +1,11 @@
 type PlanetProps = {
     onPlanetClick: (id:number) => void;
-    id:string;
+    id:number;
 }
 
 function Planet({id, onPlanetClick}: PlanetProps) {
     return ( 
-        <button onClick={() => onPlanetClick(Number(id))}>
+        <button onClick={() => onPlanetClick(id)}>
             <img src="/planet-icon.svg" alt="Блок"></img>
         </button>
      );

@@ -9,7 +9,7 @@ type CuratorPageLayoutProps = {
 function CuratorPageLayout({userRole}: CuratorPageLayoutProps) {
     return ( 
         <>
-            {userRole === 'user' ? <Header/> : <CuratorHeader/>}
+            {userRole === 'employee' ? <Header/> : <CuratorHeader/>}
             <Outlet/>
         </>
      );

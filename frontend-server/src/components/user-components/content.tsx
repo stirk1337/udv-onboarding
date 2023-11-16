@@ -1,24 +1,19 @@
-import { useState } from "react";
 import PlanetBlock from "./planet-block";
-import TaskBlock from "./task-block";
-import { BlockData } from "../../mocks/planet"
-import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getPlanetTasks } from "../store/api-actions/get-actions";
 
 
 function Content() {
-    const navigate = useNavigate();
+    const dispatch = useAppDispatch()
+    const blockData = useAppSelector((state) => state.planets);
 
     function PlanetClickHandler(id: number){
-        let task = BlockData[id - 1].tasks.find(task => task.completed === false)
-        if(task === undefined){
-            task = BlockData[id - 1].tasks[0]
-        }
-        navigate(`${id - 1}/${Number(task.id) - 1}`)
+        dispatch(getPlanetTasks(id))
     }
 
     return ( 
         <main>
-            {BlockData.map((block) => <PlanetBlock key={block.id} id={block.id} onPlanetClick={PlanetClickHandler}/>)}
+            {blockData.map((block) => <PlanetBlock key={block.id} id={block.id} onPlanetClick={PlanetClickHandler}/>)}
         </main>
      );
 }

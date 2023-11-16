@@ -2,7 +2,7 @@ import Planet from "./planet";
 
 type PlanetBlockProps = {
     onPlanetClick: (id:number) => void;
-    id: string;
+    id: number;
 }
 
 function PlanetBlock({id, onPlanetClick}: PlanetBlockProps) {
