@@ -86,7 +86,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'task/updateTask',
     async (data, {dispatch, extra: api}) => {
         try {
-            await api.patch(`/task/update_task/?task_id=${data.taskId}&description=${data.description}&name=${data.name}`);
+            await api.patch(`/task/update_task/?task_id=${data.taskId}`, {description: data.description, name: data.name});
             dispatch(changeTaskData({name: data.name, description: data.description, idTask: data.taskId}))
         } catch {
             dispatch(login(false));

@@ -25,7 +25,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: Se
 
     useEffect(() => {
         dispatch(getEmployees())
-        setName(blockName)
+        setName(blockName ? blockName : '')
     }, [idBlock])
 
     const [isSoloSelection, setIsSoloSelection] = useState(true)
