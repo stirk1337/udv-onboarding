@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlanetBlockConstructor from "./planet-block-constructor";
 import SelectedBlockContent from "./selected-block-content";
 import { useAppSelector } from "../hooks";
@@ -12,6 +12,10 @@ function TaskConstructor() {
     const constructorPlanets = useAppSelector((state) => state.planets);
     const currentConstructorPlanet = useAppSelector((state) => state.currentPlanet);
     const dispatch = useDispatch<AppDispatch>()
+
+    useEffect(() => {
+        
+    }, [])
 
     let personalList = currentConstructorPlanet.employees
 

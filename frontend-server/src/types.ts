@@ -22,7 +22,7 @@ export enum EmployeeStatus {
 }
 
 export type UserOnPlanetData = {
-    id: string,
+    id: number,
     name: string,
     email: string,
     product: string,
@@ -90,4 +90,12 @@ export enum ProductRoles {
     analyst = 'analyst',
     test = 'test',
     devops = 'devops',
+}
+
+export enum SortTypes {
+    created_at = 'created_at',
+    name = 'name',
+    email = 'email',
+    product = 'product',
+    product_role = 'product_role',
 }

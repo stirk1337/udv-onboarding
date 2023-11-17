@@ -1,11 +1,13 @@
 type StatisticEmployeesProps = {
+    id: number;
     avatar: string,
     name: string,
     completedTasks: string[],
     clickExit: (id:number) => void
+    onDelete: (id:number) => void
 }
 
-function StatisticEmployee({avatar, name, completedTasks, clickExit}: StatisticEmployeesProps) {
+function StatisticEmployee({id, onDelete, avatar, name, completedTasks, clickExit}: StatisticEmployeesProps) {
     return ( 
         <div className="employee-data">
             <div className="useful-links-header">
@@ -25,7 +27,7 @@ function StatisticEmployee({avatar, name, completedTasks, clickExit}: StatisticE
                         {completedTasks.map((task) => <li>{task}</li>)}
                     </ul>
                 </div>
-                <button className="decline-button">Деактивировать</button>
+                <button className="decline-button" onClick={()=> onDelete(id)}>Деактивировать</button>
             </div>
         </div>
      );

@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
-import { UpdateAnswer } from "../../../types";
-import { getEmployees, getPlanetTasks } from "./get-actions";
+import { Id, UpdateAnswer } from "../../../types";
+import { getEmployees, getPlanet, getPlanetTasks } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     dispatch: AppDispatch;
@@ -47,7 +47,8 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'planet/addEmployeeToPlanet',
     async (data, {dispatch, extra: api}) => {
         try {
-            await api.patch(`/planet/add_employees_to_planet/?planet_id=${data.planetId}`, {employee_ids: [data.employeeId]});
+          await api.patch(`/planet/add_employees_to_planet/?planet_id=${data.planetId}`, {employee_ids: [data.employeeId]});
+          await dispatch(getPlanet(data.planetId))
             dispatch(getEmployees())
         } catch {
             dispatch(login(false));
@@ -65,8 +66,8 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
             const product = data.product !== 'all' ? data.product.split(' ').join('_') : null;
             const role = data.productRole !== 'all' ? data.productRole.split(' ').join('_') : null;
-            const {data: planetData} = await api.patch(`/planet/add_employees_to_planet_by_params?planet_id=${data.planetId}`, {product: product, role: role});
-            dispatch(setPlanet(planetData))
+            await api.patch(`/planet/add_employees_to_planet_by_params?planet_id=${data.planetId}`, {product: product, role: role});
+            await dispatch(getPlanet(data.planetId))
             dispatch(getEmployees())
         } catch {
             dispatch(login(false));
@@ -84,6 +85,39 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
             await api.patch(`/task/update_task/?task_id=${data.taskId}`, {description:data.description, name:data.name});
             dispatch(changeTaskData({name: data.name, description: data.description, idTask: data.taskId}))
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const updateEmployeeOnPlanet = createAsyncThunk<void, {planetId: number, employeeId: number}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'planet/updateEmployeeOnPlanet',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/planet/remove_employee_from_planet/?planet_id=${data.planetId}`, {employee_id: data.employeeId});
+          await dispatch(getPlanet(data.planetId))
+          dispatch(getEmployees())
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const disableEmployee = createAsyncThunk<void, Id, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/disableEmployee',
+    async (id, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/user/disable_employee`, {employee_id: id});
+          dispatch(getEmployees())
         } catch {
             dispatch(login(false));
         }

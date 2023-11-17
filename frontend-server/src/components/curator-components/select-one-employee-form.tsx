@@ -24,7 +24,9 @@ function SelectOneEmployeeForm({idBlock}: SelectedBlockContentProps) {
     }
 
     function submitHandle(evt: SyntheticEvent){
-        evt.preventDefault();
+        evt.preventDefault()
+        setEmployee('')
+        setEmployeeId(-1)
         dispatch(updateEmployeeToPlanet({employeeId: employeeId, planetId: idBlock}))
     }
     

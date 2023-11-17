@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Id, Login, Planet, PlanetTask } from "../../../types";
 import { changeCurrentTask, logOut, login } from "../action";
-import { getCurrentUserInfo, getPlanet, getPlanetTasks, getPlanets } from "./get-actions";
+import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetTasks, getPlanets } from "./get-actions";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -66,6 +66,24 @@ export const loginAction = createAsyncThunk<void, Login, {
           const {data: planet} = await api.post<PlanetTask>(`/task/create_task/?planet_id=${id}`, {name: null, description: null})
             dispatch(getPlanetTasks(id))
             dispatch(changeCurrentTask(planet))
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const registerNewEmployee = createAsyncThunk<void, {email: string, name: string, product: string, productRole: string}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/registerNewEmployee',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          const product = data.product.split(' ').join('_')
+          const role = data.productRole.split(' ').join('_')
+          await api.post<PlanetTask>(`/user/register_new_employee`, {email: data.email, name: data.name, product: product, product_role: role})
+          dispatch(getEmployees())
         } catch {
             dispatch(login(false));
         }

@@ -1,10 +1,41 @@
-import { useState } from "react"
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react"
+import { ProductRoles, Products } from "../../types";
+import { useAppDispatch } from "../hooks";
+import { registerNewEmployee } from "../store/api-actions/post-actions";
 
 type AddEmployeeFormProps = {
     onDialogClick: () => void
 }
 
 function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
+
+    const dispatch = useAppDispatch()
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [product, setProduct] = useState('')
+    const [role, setRole] = useState('')
+
+    function nameChangeHandler(evt: ChangeEvent<HTMLInputElement>){
+        setName(evt.target.value)
+    }
+
+    function emailChangeHandler(evt: ChangeEvent<HTMLInputElement>){
+        setEmail(evt.target.value)
+    }
+
+    function productSelectHandler(evt: ChangeEvent<HTMLSelectElement>){
+        setProduct(evt.target.value)
+    }
+
+    function roleSelectHandler(evt: ChangeEvent<HTMLSelectElement>){
+        setRole(evt.target.value)
+    }
+
+    function submitHandle(evt: SyntheticEvent){
+        evt.preventDefault();
+        dispatch(registerNewEmployee({email: email, name: name, product: product, productRole: role}))
+        onDialogClick()
+    }
 
     return ( 
         <div className="add-employee-form">
@@ -14,23 +45,18 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
                     </button>
                     <p>Добавить нового сотрудника</p>
                 </div>
-                <form>
-                    <input placeholder="Фио сотрудника"></input>
-                    <input placeholder="Email сотрудника"></input>
-                    <select>
-                        <option value="" disabled selected>Выбор команды</option>
-                        <option>Дизайн</option>
-                        <option>Бэк</option>
+                <form onSubmit={submitHandle}>
+                    <input value={name} onChange={nameChangeHandler} placeholder="Фио сотрудника"></input>
+                    <input value={email} onChange={emailChangeHandler} placeholder="Email сотрудника"></input>
+                    <select name="Выбор продукта" required value={product} onChange={productSelectHandler}>
+                        <option value="" disabled>Выбор продукта</option>
+                        <option value="all">Все</option>
+                        {(Object.values(Products) as Array<keyof typeof Products>).map((product) => <option key={product} value={product}>{product}</option>)}
                     </select>
-                    <select>
-                        <option value="" disabled selected>Выбор продукта</option>
-                        <option>Дизайн</option>
-                        <option>Бэк</option>
-                    </select>
-                    <select>
-                        <option value="" disabled selected>Выбор роли</option>
-                        <option>Дизайн</option>
-                        <option>Бэк</option>
+                    <select name="Выбор роли" required value={role} onChange={roleSelectHandler}>
+                        <option value="" disabled>Выбор роли</option>
+                        <option value="all">Все</option>
+                        {(Object.values(ProductRoles) as Array<keyof typeof ProductRoles>).map((role) => <option key={role} value={role}>{role}</option>)}
                     </select>
                     <button type="submit">Отправить</button>
                 </form>

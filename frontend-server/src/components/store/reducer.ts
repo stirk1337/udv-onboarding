@@ -62,10 +62,18 @@ export const reducer = createReducer(initialState, (builder) => {
         state.planetTasks = action.payload;
       })
       .addCase(setPlanet,(state,action) => {
-        state.currentPlanet = action.payload;
+        const tasks = action.payload.tasks
+        if(tasks) {
+          state.currentPlanet = action.payload;
+        }
+        else{
+          state.currentPlanet = action.payload;
+          state.currentPlanet.tasks = tasks
+        }
+        console.log(tasks)
       })
       .addCase(clearCurrentPlanet,(state) => {
-        state.currentPlanet.id = -1
+        state.currentPlanet = initialState.currentPlanet
       })
       .addCase(clearCurrentTask,(state) => {
         state.currentTask.id = -1

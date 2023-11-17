@@ -6,7 +6,7 @@ import { UserOnPlanetData } from "../../types";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 import { changePlanetName } from "../store/action";
-import { updatePlanetName } from "../store/api-actions/patch-action";
+import { updateEmployeeOnPlanet, updatePlanetName } from "../store/api-actions/patch-action";
 import { getEmployees } from "../store/api-actions/get-actions";
 import SelectOneEmployeeForm from "./select-one-employee-form";
 import SelectGroupForm from "./select-group-form";
@@ -32,6 +32,10 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: Se
 
     function blockNameHandler(evt: ChangeEvent<HTMLInputElement>){
         setName(evt.target.value);
+    }
+
+    function onDeleteEmployeeHandler(id: number){
+        dispatch(updateEmployeeOnPlanet({planetId: idBlock, employeeId: id}))
     }
 
     return ( 
@@ -64,7 +68,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: Se
                 <div className="added-employee-block">
                     <p className="header-task-form">Добавленные сотрудники</p>
                     <ul className="added-employee-list">
-                        {personalList.map(employee => <AddedEmployee key={employee.id} id={employee.id} avatar={"profile-logo.png"} data={employee.name}/>)}
+                        {personalList.map(employee => <AddedEmployee key={employee.id} id={employee.id} avatar={"profile-logo.png"} data={employee.name} onDelete={onDeleteEmployeeHandler}/>)}
                     </ul>
                     <button className="button-to-tasks" onClick={() => navigate(`/curator/tasks/${idBlock}`)}>
                         Перейти к задачам
