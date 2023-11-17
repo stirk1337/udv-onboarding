@@ -107,7 +107,7 @@ def register_employee(email: str,
                       product: str = 'datapk_industrial_kit',
                       product_role: str = 'backend'):
     return client.post('/user/register_new_employee',
-                       params={
+                       json={
                            'email': email,
                            'name': 'Employee1',
                            'product': product,
@@ -118,7 +118,7 @@ def register_employee(email: str,
 
 
 def create_planet(name: str = 'no name', login=login_curator1):  # delegate
-    return client.post('/planet/create_planet', params={
+    return client.post('/planet/create_planet', json={
         'name': name,
     }, cookies=dict(login().cookies))
 
@@ -126,17 +126,15 @@ def create_planet(name: str = 'no name', login=login_curator1):  # delegate
 def create_task(planet_id: int,
                 name: str = '123',
                 description: str = '123',
-                file_link: str = 'http://localhost/api/v1/docs#/task/create_new_task_task_create_task_post',
-                task_difficulty: str = 'easy',
                 login=login_curator1
                 ):
     return client.post('/task/create_task',
                        params={
+                           'planet_id': planet_id
+                       },
+                       json={
                            'name': name,
                            'description': description,
-                           'file_link': file_link,
-                           'task_difficulty': task_difficulty,
-                           'planet_id': planet_id
                        },
                        cookies=dict(login().cookies))
 
@@ -144,24 +142,22 @@ def create_task(planet_id: int,
 def patch_task(task_id: int,
                name: str = '123',
                description: str = '123',
-               file_link: str = 'http://localhost/api/v1/docs#/task/create_new_task_task_create_task_post',
-               task_difficulty: str = 'easy',
                login=login_curator1
                ):
     return client.patch('/task/update_task',
-                        params={
-                            'task_id': task_id,
+                        json={
                             'name': name,
                             'description': description,
-                            'file_link': file_link,
-                            'task_difficulty': task_difficulty,
+                        },
+                        params={
+                            'task_id': task_id
                         },
                         cookies=dict(login().cookies))
 
 
 def register_curator(email: str):
     return client.post('/user/register_new_curator',
-                       params={
+                       json={
                            'email': email,
                            'name': 'Curator',
                            'password': 'password'
@@ -173,7 +169,7 @@ def register_curator(email: str):
 def test_register_curator1(email: str = 'curator1@ussc.com'):
     superuser = login_superuser()
     return client.post('/user/register_new_curator',
-                       params={
+                       json={
                            'email': email,
                            'name': 'Curator1',
                            'password': 'password'
@@ -185,7 +181,7 @@ def test_register_curator1(email: str = 'curator1@ussc.com'):
 def test_register_curator2():
     superuser = login_superuser()
     return client.post('/user/register_new_curator',
-                       params={
+                       json={
                            'email': 'curator2@ussc.com',
                            'name': 'Curator2',
                            'password': 'password'
@@ -197,7 +193,7 @@ def test_register_curator2():
 def test_register_employee1():
     curator1 = login_curator1()
     return client.post('/user/register_new_employee',
-                       params={
+                       json={
                            'email': 'employee1@ussc.com',
                            'name': 'Employee1',
                            'product': 'datapk_industrial_kit',
@@ -211,7 +207,7 @@ def test_register_employee1():
 def test_register_employee2():
     curator2 = login_curator2()
     return client.post('/user/register_new_employee',
-                       params={
+                       json={
                            'email': 'employee2@ussc.com',
                            'name': 'Employee2',
                            'product': 'eplat4m',

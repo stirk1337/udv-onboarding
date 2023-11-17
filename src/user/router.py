@@ -1,7 +1,6 @@
-from typing import List, Union
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dals import UserDAL
@@ -12,8 +11,9 @@ from src.auth.router import current_superuser
 from src.db import get_async_session
 from src.request_codes import employee_responses, responses
 from src.user.dals import CuratorDAL, EmployeeDAL
-from src.user.models import EmployeeStatus, Product, ProductRole
-from src.user.validators import EmployeeOut, UserOut
+from src.user.models import EmployeeStatus
+from src.user.validators import (CuratorInCreate, EmployeeIdItem,
+                                 EmployeeInCreate, EmployeeOut, UserOut)
 
 router = APIRouter(
     prefix='/user',
@@ -44,30 +44,23 @@ async def get_curator_employees(user: User = Depends(curator_user),
 @router.post('/register_new_curator',
              dependencies=[Depends(current_superuser)],
              responses=responses)
-async def register_curator(email: EmailStr,
-                           name: str,
-                           password: Union[str, None] = None,
+async def register_curator(curator_in: CuratorInCreate,
                            session: AsyncSession = Depends(get_async_session)) -> UserOut:
     user = await create_user(session=session,
-                             email=email,
-                             name=name,
+                             email=curator_in.email,
+                             name=curator_in.name,
                              role=Role.curator,
-                             password=password)
+                             password=curator_in.password)
     if user is None:
         raise HTTPException(status_code=409, detail='User already exists')
     return UserOut.parse(user)
 
 
 @router.post('/register_new_employee')
-async def create_new_employee(email: EmailStr,
-                              name: str,
-                              product: Product,
-                              product_role: ProductRole,
+async def create_new_employee(employee_in: EmployeeInCreate,
                               user: User = Depends(curator_user),
                               session: AsyncSession = Depends(
-                                  get_async_session),
-                              password: Union[str, None] = None
-                              ) -> EmployeeOut:
+                                  get_async_session)) -> EmployeeOut:
     """Create new employee linked to curator or re-activate old employee with curator.
      Rights: curator, employee must be disabled"""
     employee_dal = EmployeeDAL(session)
@@ -75,37 +68,40 @@ async def create_new_employee(email: EmailStr,
     curator = await curator_dal.get_curator_by_user(user)
 
     employee_user = await create_user(session=session,
-                                      email=email,
-                                      name=name,
+                                      email=employee_in.email,
+                                      name=employee_in.name,
                                       role=Role.employee,
-                                      password=password)
+                                      password=employee_in.password)
     if employee_user is not None:  # if user already exists
-        employee = await employee_dal.create_employee(employee_user, curator.id, product, product_role)
+        employee = await employee_dal.create_employee(
+            employee_user,
+            curator.id,
+            employee_in.product,
+            employee_in.product_role)
     else:
         user_dal = UserDAL(session)
-        employee_user = await user_dal.get_user_by_email(email)
+        employee_user = await user_dal.get_user_by_email(employee_in.email)
         if employee_user.role == Role.curator:
             raise HTTPException(
-                status_code=409, detail=f'User with email {email} is curator')
+                status_code=409, detail=f'User with email {employee_in.email} is curator')
         employee = await employee_dal.get_employee_by_user(employee_user)
         if employee.employee_status == EmployeeStatus.disabled:
             await employee_dal.enable_employee(employee, curator.id)
         else:
             raise HTTPException(
-                status_code=403, detail=f'Employee with email {email} is active.')
-
+                status_code=403, detail=f'Employee with email {employee_in.email} is active.')
     return EmployeeOut.parse(employee)
 
 
 @router.patch('/disable_employee',
               responses=employee_responses)
-async def disable_employee_by_id(employee_id: int,
+async def disable_employee_by_id(employee_in: EmployeeIdItem,
                                  session: AsyncSession = Depends(
                                      get_async_session),
                                  user: User = Depends(curator_user)) -> EmployeeOut:
     """Disable employee by its id. Rights: curator, you must be linked to this employee"""
     employee_dal = EmployeeDAL(session)
-    employee = await employee_dal.get_employee_by_id_with_user(employee_id)
+    employee = await employee_dal.get_employee_by_id_with_user(employee_in.employee_id)
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     if curator.id == employee.curator_id:  # if curator linked to this employee
