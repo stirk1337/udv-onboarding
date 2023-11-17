@@ -34,7 +34,7 @@ function TaskConstructor() {
                 </ul>
                 <button type="submit" onClick={() => dispatch(createPlanet())}><img src="/add-icon.svg" alt=""/><p>Добавить новый блок</p></button>
             </div>
-            {currentConstructorPlanet.id !== -1 && <SelectedBlockContent numberTask={currentConstructorPlanet.tasks.length} personalList={personalList} idBlock={currentConstructorPlanet.id} blockName={currentConstructorPlanet.name}/>}
+            {currentConstructorPlanet.id !== -1 && <SelectedBlockContent numberTask={currentConstructorPlanet.tasks ? currentConstructorPlanet.tasks.length: 0} personalList={personalList} idBlock={currentConstructorPlanet.id} blockName={currentConstructorPlanet.name}/>}
         </div>
     );
 }

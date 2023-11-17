@@ -42,7 +42,7 @@ export type Planet = {
 
 export type CuratorPlanetData = Planet & {
     employees: UserOnPlanetData[]
-    tasks: PlanetTasks[]
+    tasks: PlanetTask[]
 }
 
 export type Id = number;
@@ -53,11 +53,10 @@ export enum TaskStatus {
     completed = 'completed',
 }
 
-export type PlanetTasks = {
+export type PlanetTask = {
     id: number,
     name: string,
     description: string,
-    file_link: string,
     planet_id: number,
     employee_answer: null | string,
     task_status: TaskStatus,

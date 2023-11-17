@@ -1,9 +1,9 @@
 import { AxiosInstance } from "axios";
 import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Id, Login, Planet } from "../../../types";
-import { logOut, login } from "../action";
-import { getCurrentUserInfo, getPlanet, getPlanets } from "./get-actions";
+import { Id, Login, Planet, PlanetTask } from "../../../types";
+import { changeCurrentTask, logOut, login } from "../action";
+import { getCurrentUserInfo, getPlanet, getPlanetTasks, getPlanets } from "./get-actions";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -46,7 +46,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     'planet/createPlanet',
     async (_arg, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<Planet>(`/planet/create_planet`)
+          const {data: planet} = await api.post<Planet>(`/planet/create_planet`, {name: null})
             dispatch(getPlanets())
             dispatch(getPlanet(planet.id))
         } catch {
@@ -61,11 +61,11 @@ export const loginAction = createAsyncThunk<void, Login, {
     extra: AxiosInstance;
   }>(
     'planet/createTask',
-    async (_arg, {dispatch, extra: api}) => {
+    async (id, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<Planet>(`/task/create_task`)
-            dispatch(getPlanets())
-            dispatch(getPlanet(planet.id))
+          const {data: planet} = await api.post<PlanetTask>(`/task/create_task/?planet_id=${id}`, {name: null, description: null})
+            dispatch(getPlanetTasks(id))
+            dispatch(changeCurrentTask(planet))
         } catch {
             dispatch(login(false));
         }

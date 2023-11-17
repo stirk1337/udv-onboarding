@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance, AxiosRequestConfig } from "axios";
 import { login, redirectToRoute, setEmployees, setPlanet, setPlanetTasks, setPlanets, setUserData } from "../action";
-import { Planet, UserData, Id, PlanetTasks, TaskStatus, CuratorPlanetData, UserOnPlanetData } from "../../../types";
+import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData } from "../../../types";
 
 export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     dispatch: AppDispatch;
@@ -46,7 +46,7 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     'user/get-planet-task',
     async (id, {dispatch, extra: api}) => {
       try {
-        const {data: tasks} = await api.get<PlanetTasks[]>(`/task/get_tasks/`, {params: {planet_id: id}});
+        const {data: tasks} = await api.get<PlanetTask[]>(`/task/get_tasks/`, {params: {planet_id: id}});
         dispatch(setPlanetTasks(tasks))
         let task = tasks.find(task => task.task_status === TaskStatus.completed)
         if(task === undefined){
