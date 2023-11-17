@@ -16,7 +16,7 @@ function TaskEditor() {
     const [description, setDescription] = useState('');
     const tasks = useAppSelector((state) => state.planetTasks);
     const [currentTask, setCurrentTask] =  useState(tasks[0])
-    const [name, setName] = useState(currentTask.name);
+    const [name, setName] = useState('');
 
     useEffect(() => {
       if(id){
@@ -26,6 +26,7 @@ function TaskEditor() {
     }, [])
 
     useEffect(() => {
+      setName(currentTask ? currentTask.name : '')
       setDescription(currentTask ? currentTask.description : '')
     }, [currentTask])
 
