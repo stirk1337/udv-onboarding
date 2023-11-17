@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { TaskStatus } from "../../types";
 import { useDispatch } from "react-redux";
-import { UpdateAnswerTask } from "../store/api-actions/patch-action";
+import { updateAnswerTask } from "../store/api-actions/patch-action";
 import { store } from "../store";
 import { getPlanetTasks } from "../store/api-actions/get-actions";
 
@@ -59,7 +59,7 @@ function TaskData({id, planetId, name, data, currentAnswer, taskStatus}: TaskDat
           task_id: id,
           planet_id: planetId
         }
-        store.dispatch(UpdateAnswerTask(data))
+        store.dispatch(updateAnswerTask(data))
     }
 
     return ( 

@@ -1,9 +1,9 @@
 import { AxiosInstance } from "axios";
 import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Login } from "../../../types";
-import { login } from "../action";
-import { getCurrentUserInfo, getPlanets } from "./get-actions";
+import { Login, Planet } from "../../../types";
+import { logOut, login } from "../action";
+import { getCurrentUserInfo, getPlanet, getPlanets } from "./get-actions";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -31,6 +31,24 @@ export const loginAction = createAsyncThunk<void, Login, {
         try {
             await api.post('/auth/jwt/logout')
             dispatch(login(false));
+            dispatch(logOut())
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const createPlanet = createAsyncThunk<void, undefined, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'planet/createPlanet',
+    async (_arg, {dispatch, extra: api}) => {
+        try {
+          const {data: planet} = await api.post<Planet>(`/planet/create_planet`)
+            dispatch(getPlanets())
+            dispatch(getPlanet(planet.id))
         } catch {
             dispatch(login(false));
         }
