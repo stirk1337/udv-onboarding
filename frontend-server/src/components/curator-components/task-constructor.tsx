@@ -1,29 +1,40 @@
 import { useState } from "react";
-import { ConstructorData, PersonalData } from "../../mocks/constructor-data";
 import PlanetBlockConstructor from "./planet-block-constructor";
 import SelectedBlockContent from "./selected-block-content";
+import { useAppSelector } from "../hooks";
+import { AppDispatch } from "../store";
+import { useDispatch } from "react-redux";
+import { deletePlanet } from "../store/api-actions/delete-action";
+import { getPlanet } from "../store/api-actions/get-actions";
+import { createPlanet } from "../store/api-actions/post-actions";
 
 function TaskConstructor() {
-    const [currentIdBlockConstructor, setCurrentIdBlockConstructor] = useState(-1)
+    const constructorPlanets = useAppSelector((state) => state.planets);
+    const currentConstructorPlanet = useAppSelector((state) => state.currentPlanet);
+    const dispatch = useDispatch<AppDispatch>()
 
-    let personalList:PersonalData[] = []
-    if(currentIdBlockConstructor !== -1){
-        personalList = ConstructorData[currentIdBlockConstructor].personal
+    let personalList = currentConstructorPlanet.employees
+
+    function blockClickHandler(evt: React.MouseEvent<HTMLLIElement>,id: number) {
+        const element = (evt.target as Element).classList.value
+        if(element !== 'delete-icon'){
+            dispatch(getPlanet(id))
+        }
     }
 
-    function blockClickHandler(id: number){
-        setCurrentIdBlockConstructor(id - 1)
+    function deletePlanetHandler(id: number){
+        dispatch(deletePlanet(id))
     }
 
     return ( 
         <div className="constructor-block">
             <div className="constructor-planet-list">
                 <ul>
-                    {ConstructorData.map(data => <PlanetBlockConstructor key={data.id} id={data.id} icon={data.icon} type={data.type} date={data.date} onClickBlock={blockClickHandler}/>)}
+                    {constructorPlanets.map(data => <PlanetBlockConstructor key={data.id} id={data.id} icon={"/planet-icon.svg"} type={data.name} date={data.created_at} onClickBlock={blockClickHandler} onDelete={deletePlanetHandler}/>)}
                 </ul>
-                <button type="submit"><img src="/add-icon.svg" alt=""/><p>Добавить новый блок</p></button>
+                <button type="submit" onClick={() => dispatch(createPlanet())}><img src="/add-icon.svg" alt=""/><p>Добавить новый блок</p></button>
             </div>
-            {currentIdBlockConstructor !== -1 && <SelectedBlockContent personalList={personalList} idBlock={currentIdBlockConstructor}/>}
+            {currentConstructorPlanet.id !== -1 && <SelectedBlockContent numberTask={currentConstructorPlanet.tasks.length} personalList={personalList} idBlock={currentConstructorPlanet.id} blockName={currentConstructorPlanet.name}/>}
         </div>
     );
 }

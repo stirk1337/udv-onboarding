@@ -4,6 +4,7 @@ export type Login = {
 }
 
 export enum UserRoles {
+    undefined = "undefined",
     employee = "employee",
     curator = "curator"
 }
@@ -39,6 +40,11 @@ export type Planet = {
     updated_at: string,
 }
 
+export type CuratorPlanetData = Planet & {
+    employees: UserOnPlanetData[]
+    tasks: PlanetTasks[]
+}
+
 export type Id = number;
 
 export enum TaskStatus {
@@ -63,4 +69,26 @@ export type UpdateAnswer = {
     task_id: number,
     planet_id: number
     answer: string,
+}
+
+export enum Products {
+    datapkIndustrialKit = 'datapk industrial kit',
+    industrialFirewall = 'industrial firewall',
+    industrialHoneypot = 'industrial honeypot',
+    dataDiode = 'data diode',
+    itm = 'itm',
+    eplat4mPass = 'eplat4m pass',
+    eplat4mSoar = 'eplat4m soar',
+    eplat4mSgrc = 'eplat4m sgrc',
+    eplat4mKii = 'eplat4m kii',
+    eplat4m = 'eplat4m',
+    siem = 'siem',
+}
+
+export enum ProductRoles {
+    frontend = 'frontend',
+    backend = 'backend',
+    analyst = 'analyst',
+    test = 'test',
+    devops = 'devops',
 }

@@ -621,6 +621,7 @@ main{
 }
 
 .constructor-planet-list-item, .selected-block-monster-list-item, .task-for-verification-list-item{
+    cursor: pointer;
     padding: 15px;
     display: flex;
     border-radius: 13px;
@@ -637,6 +638,7 @@ main{
 }
 
 .delete-icon{
+    cursor: pointer;
     margin-left: auto;
 }
 
@@ -712,14 +714,21 @@ main{
     padding: 20px 40px 0 40px;
 }
 
+.add-task-form-choice .active-select{
+    color: #00C996;
+    stroke: #00C996;
+    border-bottom: 1px solid #00C996;
+}
+
 .add-task-form-choice p{
+    cursor: pointer;
     position: relative;
 }
 
-.add-task-form-choice img{
+.add-task-form-choice svg{
     position: absolute;
     left: -25px;
-    top: 0;
+    top: 10%;
 }
 
 .add-task-form select{
@@ -978,4 +987,20 @@ table .approve-button{
 
 .employee-data-container ul li{
     color: #00C996;
+}
+
+.selected-bock-header{
+    gap: 4%;
+    display: flex;
+    font-size: 25px;
+}
+
+.selected-bock-header input{
+    width: 80%;
+}
+
+.selected-bock-header p{
+    align-self: center;
+    width: fit-content;
+    border-bottom: 1px solid #00C996;
 }

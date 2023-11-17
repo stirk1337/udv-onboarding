@@ -8,6 +8,10 @@ from src.task.validators import TaskOut
 from src.user.router import EmployeeOut
 
 
+class PlanetIn(BaseModel):
+    name: Optional[str]
+
+
 class ShowPlanet(BaseModel):
     id: int
     name: Optional[str]

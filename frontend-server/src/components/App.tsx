@@ -14,6 +14,7 @@ import { getCurrentUserInfo } from "./store/api-actions/get-actions"
 import { useEffect } from "react"
 import HistoryRouter from "./history-route"
 import browserHistory from "../browser-history"
+import { UserRoles } from "../types"
 
 function App() {
   useEffect(() => {
@@ -27,7 +28,7 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={
-            <Navigate to={`/${userRole}`}></Navigate>
+            <Navigate to='/login'></Navigate>
           }/>
           <Route path={`/employee`} element={
             <AuthChecker isAuth={isRegistered} userRole={userRole}>

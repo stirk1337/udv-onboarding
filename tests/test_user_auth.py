@@ -63,7 +63,7 @@ def test_disable_employee():
     create_employee = register_employee('test3@ussc.com')
     employee_id = create_employee.json()['id']
     disable = client.patch('/user/disable_employee',
-                           params={
+                           json={
                                'employee_id': employee_id
                            },
                            cookies=dict(login_curator1().cookies))

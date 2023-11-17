@@ -131,6 +131,8 @@ def test_answer_task_employee1():
     answer_task = client.patch('/task/answer_task',
                                params={
                                    'task_id': task.json()['id'],
+                               },
+                               json={
                                    'answer': 'this_is_answer',
                                },
                                cookies=dict(login_employee1().cookies))
@@ -143,6 +145,8 @@ def test_answer_task_employee_with_no_rights():
     answer_task = client.patch('/task/answer_task',
                                params={
                                    'task_id': task.json()['id'],
+                               },
+                               json={
                                    'answer': 'this_is_answer',
                                },
                                cookies=dict(login_employee2().cookies))
@@ -155,6 +159,8 @@ def test_check_task_accept():
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
+                              },
+                              json={
                                   'accept': True
                               },
                               cookies=dict(login_curator1().cookies))
@@ -167,6 +173,8 @@ def test_check_task_decline():
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
+                              },
+                              json={
                                   'accept': False
                               },
                               cookies=dict(login_curator1().cookies))
@@ -179,6 +187,8 @@ def test_check_task_with_no_rights():
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
+                              },
+                              json={
                                   'accept': False
                               },
                               cookies=dict(login_curator2().cookies))

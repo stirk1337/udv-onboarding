@@ -23,7 +23,7 @@ class Task(Base):
         String(length=100), nullable=True
     )
     description: Mapped[str] = mapped_column(
-        String(length=10000), nullable=True
+        String(length=1000000), nullable=True
     )
     task_status: Mapped[TaskStatus] = mapped_column(
         Enum(TaskStatus), nullable=False

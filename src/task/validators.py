@@ -6,6 +6,24 @@ from pydantic import BaseModel
 from src.task.models import Task, TaskStatus
 
 
+class TaskInCreate(BaseModel):
+    name: Optional[str]
+    description: Optional[str]
+
+
+class TaskInUpdate(BaseModel):
+    name: Optional[str]
+    description: Optional[str]
+
+
+class TaskInAnswer(BaseModel):
+    answer: str
+
+
+class TaskInCheck(BaseModel):
+    accept: bool
+
+
 class TaskOut(BaseModel):
     id: int
     name: Optional[str]

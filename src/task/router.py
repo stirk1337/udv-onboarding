@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,7 +11,8 @@ from src.request_codes import planet_responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
 from src.task.models import Task
-from src.task.validators import TaskOut
+from src.task.validators import (TaskInAnswer, TaskInCheck, TaskInCreate,
+                                 TaskInUpdate, TaskOut)
 
 router = APIRouter(prefix='/task',
                    tags=['task'])
@@ -39,26 +40,24 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
 @router.post('/create_task',
              responses=planet_responses,
              dependencies=[Depends(curator_user)])
-async def create_new_task(name: Optional[str] = None,
-                          description: Optional[str] = None,
+async def create_new_task(task_in: TaskInCreate,
                           session: AsyncSession = Depends(get_async_session),
                           planet: Planet = Depends(have_planet)) -> TaskOut:
     """Create task linked to planet. Rights: curator, you must have this planet"""
     task_dal = TaskDAL(session)
-    task = await task_dal.create_task(name, description, planet)
+    task = await task_dal.create_task(task_in.name, task_in.description, planet)
     return TaskOut.parse(task)
 
 
 @router.patch('/update_task',
               responses=task_responses,
               dependencies=[Depends(curator_user)])
-async def patch_task(name: str,
-                     description: str,
+async def patch_task(task_in: TaskInUpdate,
                      session: AsyncSession = Depends(get_async_session),
                      task: Task = Depends(have_task)) -> TaskOut:
     """Update task info by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    task = await task_dal.patch_task(task, name, description)
+    task = await task_dal.patch_task(task, task_in.name, task_in.description)
     return TaskOut.parse(task)
 
 
@@ -76,13 +75,13 @@ async def delete_task_by_id(session: AsyncSession = Depends(get_async_session),
 @router.patch('/answer_task',
               dependencies=[Depends(current_user)],
               responses=task_responses)
-async def answer_on_task_by_its_id(answer: str,
+async def answer_on_task_by_its_id(task_in: TaskInAnswer,
                                    session: AsyncSession = Depends(
                                        get_async_session),
                                    task: Task = Depends(have_task)) -> TaskOut:
     """Answer on your task. Rights: employee or curator, you must have this task"""
     task_dal = TaskDAL(session)
-    await task_dal.answer_on_task(task, answer)
+    await task_dal.answer_on_task(task, task_in.answer)
     return TaskOut.parse(task)
 
 
@@ -90,10 +89,10 @@ async def answer_on_task_by_its_id(answer: str,
               responses=task_responses,
               dependencies=[Depends(curator_user)])
 async def check_task_by_its_id(
-        accept: bool,
+        task_in: TaskInCheck,
         session: AsyncSession = Depends(get_async_session),
         task: Task = Depends(have_task)) -> TaskOut:
     """Check competed employee task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    await task_dal.check_task(task, accept)
+    await task_dal.check_task(task, task_in.accept)
     return TaskOut.parse(task)

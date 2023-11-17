@@ -1,9 +1,10 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
 import InputComponent from "../components/input-component";
 import { store } from "../components/store";
 import { loginAction } from "../components/store/api-actions/post-actions";
-import { useAppDispatch } from "../components/hooks";
+import { useAppDispatch, useAppSelector } from "../components/hooks";
+import { UserRoles } from "../types";
 
 type LoginPageProps = {
   isAuth: boolean;
@@ -11,6 +12,7 @@ type LoginPageProps = {
 
 function LoginPage({isAuth}: LoginPageProps) {
     const dispatch = useAppDispatch()
+    const userRole = useAppSelector((state) => state.userData.role);
 
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
@@ -23,18 +25,19 @@ function LoginPage({isAuth}: LoginPageProps) {
       setPassword(evt.target.value)
     }
 
-    function handleSubmit(evt: any){
+    function handleSubmit(evt: SyntheticEvent){
         evt.preventDefault()
         const data = {
           username: email,
           password: password
         }
         dispatch(loginAction(data))
+        console.log('Отправил')
     }
-
+    console.log('обновил')
     return ( 
         <div className="enter-page">
-            {isAuth && <Navigate to="/"/>}
+            {isAuth && userRole !== UserRoles.undefined && <Navigate to={`/${userRole}`}/>}
             <img src="logo.svg" alt="" width={299} height={57}></img>
             <form onSubmit={handleSubmit}>
                 <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' type='text' onchange={handleEmail}/>
