@@ -16,12 +16,6 @@ class Planet(Base):
     name: Mapped[str] = mapped_column(
         String(length=100), nullable=True
     )
-    created_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())")
-    )
-    updated_at: Mapped[datetime.datetime] = mapped_column(
-        server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
-    )
     employees: Mapped[List['Employee']] = (
         relationship(secondary='employee_planet', back_populates='planets'))
     task: Mapped[List['Task']] = relationship(
@@ -31,6 +25,12 @@ class Planet(Base):
     )
     curator: Mapped['Curator'] = relationship(
         back_populates='planet')
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())")
+    )
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
+    )
 
 
 class EmployeePlanet(Base):
@@ -41,4 +41,10 @@ class EmployeePlanet(Base):
     )
     planet_id: Mapped[int] = mapped_column(
         ForeignKey('planet.id', ondelete='CASCADE'), primary_key=True
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())")
+    )
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
     )

@@ -4,7 +4,6 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from src.planet.models import Planet
-from src.task.validators import TaskOut
 from src.user.router import EmployeeOut
 
 
@@ -49,26 +48,24 @@ class ShowPlanetWithEmployees(BaseModel):
                                        )
 
 
-class ShowPlanetWithEmployeesAndTasks(BaseModel):
+class ShowPlanetWithEmployeesAndTaskCount(BaseModel):
     id: int
     name: Optional[str]
     curator_id: int
     created_at: datetime
     updated_at: datetime
     employees: List[EmployeeOut]
-    tasks: List[TaskOut]
+    task_count: int
 
     @staticmethod
-    def parse(planet: Planet):
+    def parse(planet: Planet, task_count: int):
         employees = [EmployeeOut.parse(employee)
                      for employee in planet.employees]
-        tasks = [TaskOut.parse(task) for task in planet.task]
-        tasks = sorted(tasks, key=lambda x: x.id)
-        return ShowPlanetWithEmployeesAndTasks(id=planet.id,
-                                               name=planet.name,
-                                               curator_id=planet.curator_id,
-                                               created_at=planet.created_at,
-                                               updated_at=planet.updated_at,
-                                               employees=employees,
-                                               tasks=tasks
-                                               )
+        return ShowPlanetWithEmployeesAndTaskCount(id=planet.id,
+                                                   name=planet.name,
+                                                   curator_id=planet.curator_id,
+                                                   created_at=planet.created_at,
+                                                   updated_at=planet.updated_at,
+                                                   employees=employees,
+                                                   task_count=task_count
+                                                   )

@@ -1,12 +1,13 @@
 from typing import List
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.planet.models import Planet
-from src.task.models import Task, TaskStatus
+from src.task.models import EmployeeTask, Task, TaskStatus
+from src.user.models import Employee
 
 
 class TaskDAL:
@@ -20,7 +21,14 @@ class TaskDAL:
                 status_code=404, detail=f'Task with id {task_id} not found')
         return task
 
-    async def get_task_with_planet(self, task_id: int) -> Task:
+    async def count_task_of_planet(self, planet_id: int) -> int:
+        return await self.db_session.scalar(
+            select(func.count())
+            .where(Task.planet_id == planet_id)
+            .select_from(Task)
+        )
+
+    async def get_task_with_planet_employees(self, task_id: int) -> Task:
         task = await self.db_session.scalar(
             select(Task)
             .where(Task.id == task_id)
@@ -34,13 +42,27 @@ class TaskDAL:
                 status_code=404, detail=f'Task with id {task_id} not found')
         return task
 
+    async def get_employee_task(self, task: Task,
+                                employee: Employee) -> EmployeeTask:
+        return await self.db_session.scalar(
+            select(EmployeeTask)
+            .where(EmployeeTask.task_id == task.id and EmployeeTask.employee_id == employee.id)
+        )
+
+    async def get_employee_task_for_check(self, employee: Employee) -> List[EmployeeTask]:
+        employee_tasks = await self.db_session.scalars(
+            select(EmployeeTask)
+            .where(EmployeeTask.employee_id == employee.id and EmployeeTask.task_status == TaskStatus.being_checked)
+        )
+        return list(employee_tasks)
+
     async def create_task(self, name: str,
                           description: str,
                           planet: Planet) -> Task:
         new_task = Task(name=name,
                         description=description,
-                        task_status=TaskStatus.in_progress,
-                        planet_id=planet.id)
+                        planet_id=planet.id,
+                        employees=planet.employees)
         self.db_session.add(new_task)
         await self.db_session.commit()
         return new_task
@@ -71,14 +93,21 @@ class TaskDAL:
         await self.db_session.delete(task)
         await self.db_session.commit()
 
-    async def answer_on_task(self, task: Task,
-                             answer: str) -> None:
-        task.employee_answer = answer
-        task.task_status = TaskStatus.being_checked
+    async def answer_task(self, task: Task,
+                          employee: Employee,
+                          answer: str) -> EmployeeTask:
+        employee_task = await self.get_employee_task(task, employee)
+        employee_task.employee_answer = answer
+        employee_task.task_status = TaskStatus.being_checked
         await self.db_session.commit()
-        await self.db_session.refresh(task)
+        await self.db_session.refresh(employee_task)
+        return employee_task
 
-    async def check_task(self, task: Task, accept: bool) -> None:
-        task.task_status = TaskStatus.completed if accept else TaskStatus.in_progress
+    async def check_task(self, task: Task,
+                         employee: Employee,
+                         task_status: TaskStatus) -> EmployeeTask:
+        employee_task = await self.get_employee_task(task, employee)
+        employee_task.task_status = task_status
         await self.db_session.commit()
-        await self.db_session.refresh(task)
+        await self.db_session.refresh(employee_task)
+        return employee_task

@@ -3,16 +3,19 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.dependencies import curator_user, current_user
+from src.auth.dependencies import curator_user, employee_user
+from src.auth.models import User
 from src.db import get_async_session
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
-from src.request_codes import planet_responses, task_responses
+from src.request_codes import planet_responses, responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
 from src.task.models import Task
-from src.task.validators import (TaskInAnswer, TaskInCheck, TaskInCreate,
-                                 TaskInUpdate, TaskOut)
+from src.task.validators import (EmployeeTaskOut, TaskInAnswer, TaskInCheck,
+                                 TaskInCreate, TaskInUpdate, TaskOut,
+                                 TaskOutForChecking)
+from src.user.dals import CuratorDAL, EmployeeDAL
 
 router = APIRouter(prefix='/task',
                    tags=['task'])
@@ -35,6 +38,27 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
     tasks = [TaskOut.parse(task) for task in tasks]
     tasks = sorted(tasks, key=lambda x: x.id)
     return tasks
+
+
+@router.get('/get_tasks_being_checked',
+            responses=responses)
+async def get_tasks_that_need_check(session: AsyncSession = Depends(get_async_session),
+                                    user: User = Depends(curator_user)) -> List[TaskOutForChecking]:
+    """Get tasks that need to be checked. Rights: curator"""
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_with_employees(user)
+    task_dal = TaskDAL(session)
+    employee_dal = EmployeeDAL(session)
+    employees_tasks_for_each_employee = [await task_dal.get_employee_task_for_check(employee)
+                                         for employee in curator.employee]
+    all_employees_tasks = []
+    for employee_task_for_one in employees_tasks_for_each_employee:
+        for employee_task in employee_task_for_one:
+            all_employees_tasks.append(employee_task)
+    seq = [TaskOutForChecking.parse(await task_dal.get_task_by_id(employee_task.task_id),
+                                    await employee_dal.get_employee_by_id_with_user(employee_task.employee_id),
+                                    employee_task) for employee_task in all_employees_tasks]
+    return seq
 
 
 @router.post('/create_task',
@@ -73,26 +97,31 @@ async def delete_task_by_id(session: AsyncSession = Depends(get_async_session),
 
 
 @router.patch('/answer_task',
-              dependencies=[Depends(current_user)],
               responses=task_responses)
 async def answer_on_task_by_its_id(task_in: TaskInAnswer,
                                    session: AsyncSession = Depends(
                                        get_async_session),
-                                   task: Task = Depends(have_task)) -> TaskOut:
+                                   task: Task = Depends(have_task),
+                                   user: User = Depends(employee_user)) -> EmployeeTaskOut:
     """Answer on your task. Rights: employee or curator, you must have this task"""
     task_dal = TaskDAL(session)
-    await task_dal.answer_on_task(task, task_in.answer)
-    return TaskOut.parse(task)
+    employee_dal = EmployeeDAL(session)
+    employee = await employee_dal.get_employee_by_user(user)
+    employee_task = await task_dal.answer_task(task, employee, task_in.answer)
+    return EmployeeTaskOut.parse(employee_task)
 
 
 @router.patch('/check_task',
               responses=task_responses,
               dependencies=[Depends(curator_user)])
-async def check_task_by_its_id(
-        task_in: TaskInCheck,
-        session: AsyncSession = Depends(get_async_session),
-        task: Task = Depends(have_task)) -> TaskOut:
+async def check_task_by_its_id(task_in: TaskInCheck,
+                               employee_id: int,
+                               session: AsyncSession = Depends(
+                                   get_async_session),
+                               task: Task = Depends(have_task)) -> EmployeeTaskOut:
     """Check competed employee task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    await task_dal.check_task(task, task_in.accept)
-    return TaskOut.parse(task)
+    employee_dal = EmployeeDAL(session)
+    employee = await employee_dal.get_employee_by_id(employee_id)
+    employee_task = await task_dal.check_task(task, employee, task_in.task_status)
+    return EmployeeTaskOut.parse(employee_task)
