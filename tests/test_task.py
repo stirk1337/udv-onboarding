@@ -185,13 +185,30 @@ def test_answer_task_employee_with_no_rights():
 
 def test_check_task_accept():
     create = create_planet('planet', login_curator1)
-    task = create_task(planet_id=create.json()['id'], name='6')
+    client.patch('/planet/add_employees_to_planet',
+                 json={
+                     'employee_ids': [1]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 cookies=dict(login_curator1().cookies))
+    task = create_task(planet_id=create.json()['id'], name='1337')
+    client.patch('/task/answer_task',
+                 params={
+                     'task_id': task.json()['id'],
+                 },
+                 json={
+                     'answer': 'this_is_answer',
+                 },
+                 cookies=dict(login_employee1().cookies))
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
+                                  'employee_id': 1,
                               },
                               json={
-                                  'accept': True
+                                  'task_status': 'completed'
                               },
                               cookies=dict(login_curator1().cookies))
     assert check_task.json()['task_status'] == 'completed'
@@ -199,13 +216,30 @@ def test_check_task_accept():
 
 def test_check_task_decline():
     create = create_planet('planet', login_curator1)
-    task = create_task(planet_id=create.json()['id'], name='7')
+    client.patch('/planet/add_employees_to_planet',
+                 json={
+                     'employee_ids': [1]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 cookies=dict(login_curator1().cookies))
+    task = create_task(planet_id=create.json()['id'], name='1337')
+    client.patch('/task/answer_task',
+                 params={
+                     'task_id': task.json()['id'],
+                 },
+                 json={
+                     'answer': 'this_is_answer',
+                 },
+                 cookies=dict(login_employee1().cookies))
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
+                                  'employee_id': 1,
                               },
                               json={
-                                  'accept': False
+                                  'task_status': 'in_progress'
                               },
                               cookies=dict(login_curator1().cookies))
     assert check_task.json()['task_status'] == 'in_progress'
@@ -217,9 +251,10 @@ def test_check_task_with_no_rights():
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
+                                  'employee_id': 1
                               },
                               json={
-                                  'accept': False
+                                  'task_status': 'completed'
                               },
                               cookies=dict(login_curator2().cookies))
     assert check_task.status_code == 403

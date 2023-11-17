@@ -45,6 +45,7 @@ router = APIRouter(prefix='/auth',
 async def update_avatar(file: UploadFile,
                         user: User = Depends(current_user),
                         session: AsyncSession = Depends(get_async_session)) -> UserOut:
+    """Update avatar"""
     file_path = 'static/avatars/'
     if file.content_type not in ['image/jpeg', 'image/png']:
         raise HTTPException(

@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from src.auth.models import User
 from src.planet.models import Planet
+from src.task.models import Task
 from src.user.models import Curator, Employee
 
 
@@ -75,8 +76,27 @@ class PlanetDAL:
                 status_code=404, detail=f'Planet with id {planet_id} not found')
         return planet
 
+    async def get_planet_with_employee_task_table(self, planet_id: int) -> Planet:
+        planet = await self.db_session.scalar(
+            select(Planet)
+            .where(Planet.id == planet_id)
+            .options(
+                selectinload(Planet.employees)
+                .selectinload(Employee.user),
+                selectinload(Planet.task)
+                .selectinload(Task.employees)
+            )
+        )
+        if planet is None:
+            raise HTTPException(
+                status_code=404, detail=f'Planet with id {planet_id} not found')
+        return planet
+
     async def add_employees_to_planet(self, planet: Planet, employees: List[Employee]) -> Planet:
         planet.employees = list(set(planet.employees + employees))
+        planet_employee_task = await self.get_planet_with_employee_task_table(planet.id)
+        for task in planet_employee_task.task:
+            task.employees = planet.employees
         await self.db_session.commit()
         await self.db_session.refresh(planet)
         return planet
