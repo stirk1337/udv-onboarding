@@ -4,15 +4,18 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dependencies import curator_user, current_user
+from src.auth.models import User
 from src.db import get_async_session
+from src.planet.dals import PlanetDAL
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
-from src.request_codes import planet_responses, task_responses
+from src.request_codes import planet_responses, responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
-from src.task.models import Task
+from src.task.models import Task, TaskStatus
 from src.task.validators import (TaskInAnswer, TaskInCheck, TaskInCreate,
-                                 TaskInUpdate, TaskOut)
+                                 TaskInUpdate, TaskOut, TaskOutForChecking)
+from src.user.dals import CuratorDAL
 
 router = APIRouter(prefix='/task',
                    tags=['task'])
@@ -35,6 +38,23 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
     tasks = [TaskOut.parse(task) for task in tasks]
     tasks = sorted(tasks, key=lambda x: x.id)
     return tasks
+
+
+@router.get('/get_tasks_being_checked',
+            responses=responses,
+            response_model=List[TaskOutForChecking])
+async def get_tasks_that_need_check(session: AsyncSession = Depends(get_async_session),
+                                    user: User = Depends(curator_user)) -> List[TaskOutForChecking]:
+    """Get tasks that need to be checked. Rights: curator"""
+    curator_dal = CuratorDAL(session)
+    planet_dal = PlanetDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    planets = await planet_dal.get_planets_for_curator_with_tasks_and_employees(curator)
+    tasks = [task for planet in planets for task in planet.task]
+    employees = [
+        employee for planet in planets for employee in planet.employees]
+    return [TaskOutForChecking.parse(task, employee) for employee in employees for task in tasks if
+            task.task_status == TaskStatus.being_checked]
 
 
 @router.post('/create_task',

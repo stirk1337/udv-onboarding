@@ -31,6 +31,18 @@ class PlanetDAL:
         )
         return list(planets)
 
+    async def get_planets_for_curator_with_tasks_and_employees(self, curator: Curator) -> List[Planet]:
+        planets = await self.db_session.scalars(
+            select(Planet)
+            .where(Planet.curator_id == curator.id)
+            .options(
+                selectinload(Planet.employees)
+                .selectinload(Employee.user),
+                selectinload(Planet.task)
+            )
+        )
+        return list(planets)
+
     async def get_planet_by_id(self, planet_id: int) -> Planet:
         planet = await self.db_session.get(Planet, planet_id)
         if planet is None:
@@ -56,21 +68,6 @@ class PlanetDAL:
             .options(
                 selectinload(Planet.employees)
                 .selectinload(Employee.user),
-            )
-        )
-        if planet is None:
-            raise HTTPException(
-                status_code=404, detail=f'Planet with id {planet_id} not found')
-        return planet
-
-    async def get_planet_with_employees_and_tasks(self, planet_id: int) -> Planet:
-        planet = await self.db_session.scalar(
-            select(Planet)
-            .where(Planet.id == planet_id)
-            .options(
-                selectinload(Planet.employees)
-                .selectinload(Employee.user),
-                selectinload(Planet.task)
             )
         )
         if planet is None:
