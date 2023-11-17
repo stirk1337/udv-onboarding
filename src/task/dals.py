@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -19,6 +19,13 @@ class TaskDAL:
             raise HTTPException(
                 status_code=404, detail=f'Task with id {task_id} not found')
         return task
+
+    async def count_task_of_planet(self, planet_id: int) -> int:
+        return await self.db_session.scalar(
+            select(func.count())
+            .where(Task.planet_id == planet_id)
+            .select_from(Task)
+        )
 
     async def get_task_with_planet(self, task_id: int) -> Task:
         task = await self.db_session.scalar(

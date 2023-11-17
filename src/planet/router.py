@@ -12,8 +12,9 @@ from src.planet.dependencies import have_planet
 from src.planet.models import Planet
 from src.planet.validators import (PlanetIn, ShowPlanet,
                                    ShowPlanetWithEmployees,
-                                   ShowPlanetWithEmployeesAndTasks)
+                                   ShowPlanetWithEmployeesAndTaskCount)
 from src.request_codes import planet_responses, responses
+from src.task.dals import TaskDAL
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import Product, ProductRole
 from src.user.validators import EmployeeIdItem, EmployeesIdItem
@@ -25,11 +26,13 @@ router = APIRouter(prefix='/planet',
 @router.get('/get_planet',
             responses=planet_responses)
 async def get_planet_by_id(session: AsyncSession = Depends(get_async_session),
-                           planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployeesAndTasks:
+                           planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployeesAndTaskCount:
     """Get planet by its id. Rights: you must have this planet (employee or curator)"""
     planet_dal = PlanetDAL(session)
-    planet = await planet_dal.get_planet_with_employees_and_tasks(planet.id)
-    return ShowPlanetWithEmployeesAndTasks.parse(planet)
+    planet = await planet_dal.get_planet_with_employees(planet.id)
+    task_dal = TaskDAL(session)
+    task_count = await task_dal.count_task_of_planet(planet.id)
+    return ShowPlanetWithEmployeesAndTaskCount.parse(planet, task_count)
 
 
 @router.get('/get_planets', responses=responses)

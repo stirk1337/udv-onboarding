@@ -62,6 +62,36 @@ def test_get_task_with_no_rights_curator():
     assert get_task.status_code == 403
 
 
+def test_get_tasks_that_need_to_be_checked_zero_tasks():
+    get_tasks_being_checked = client.get('/task/get_tasks_being_checked',
+                                         cookies=dict(login_curator1().cookies))
+    assert len(get_tasks_being_checked.json()) == 0
+
+
+def test_get_tasks_that_need_to_be_checked():
+    create = create_planet('planet', login_curator1)
+    client.patch('/planet/add_employees_to_planet',
+                 json={
+                     'employee_ids': [1]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 cookies=dict(login_curator1().cookies))
+    task = create_task(planet_id=create.json()['id'], name='5')
+    client.patch('/task/answer_task',
+                 params={
+                     'task_id': task.json()['id'],
+                 },
+                 json={
+                     'answer': 'this_is_answer',
+                 },
+                 cookies=dict(login_employee1().cookies))
+    get_tasks_being_checked = client.get('/task/get_tasks_being_checked',
+                                         cookies=dict(login_curator1().cookies))
+    assert len(get_tasks_being_checked.json()) >= 1
+
+
 def test_patch_task():
     create = create_planet('planet', login_curator1)
     task = create_task(planet_id=create.json()['id'], name='4')
