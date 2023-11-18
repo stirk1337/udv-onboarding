@@ -50,12 +50,10 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
                     <input value={email} onChange={emailChangeHandler} placeholder="Email сотрудника"></input>
                     <select name="Выбор продукта" required value={product} onChange={productSelectHandler}>
                         <option value="" disabled>Выбор продукта</option>
-                        <option value="all">Все</option>
                         {(Object.values(Products) as Array<keyof typeof Products>).map((product) => <option key={product} value={product}>{product}</option>)}
                     </select>
                     <select name="Выбор роли" required value={role} onChange={roleSelectHandler}>
                         <option value="" disabled>Выбор роли</option>
-                        <option value="all">Все</option>
                         {(Object.values(ProductRoles) as Array<keyof typeof ProductRoles>).map((role) => <option key={role} value={role}>{role}</option>)}
                     </select>
                     <button type="submit">Отправить</button>

@@ -6,7 +6,7 @@ import { ConstructorData } from '../../mocks/constructor-data';
 import { useNavigate, useParams } from 'react-router-dom';
 import TaskConstructorTasks from './task-constructor-tasks';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { getPlanet, getPlanetTasks, getPlanets } from '../store/api-actions/get-actions';
+import { getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from '../store/api-actions/get-actions';
 import { deleteTask } from '../store/api-actions/delete-action';
 import { updateTask } from '../store/api-actions/patch-action';
 import { createTask } from '../store/api-actions/post-actions';
@@ -23,7 +23,7 @@ function TaskEditor() {
 
     useEffect(() => {
       if(id){
-        dispatch(getPlanetTasks(Number(id)))
+        dispatch(getPlanetCuratorTasks(Number(id)))
         setDescription(currentTask ? currentTask.description : '')
       }
     }, [])
@@ -79,7 +79,7 @@ function TaskEditor() {
                 </button>
               </div>
               <ul>
-                {tasks.map(task => <TaskConstructorTasks key={task.id} id={task.id} icon={"/monster-icon.svg"} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
+                {tasks.map(task => <TaskConstructorTasks key={task.id} taskId={task.id} blockId={task.planet_id} icon={"/monster-icon.svg"} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
               </ul>
               <button className='new-task-button' type="submit" onClick={() => dispatch(createTask(Number(id)))}><img src="/add-icon.svg" alt=""/>Добавить новую задачу</button>
             </div>

@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
 import { Id, UpdateAnswer } from "../../../types";
-import { getEmployees, getPlanet, getPlanetTasks } from "./get-actions";
+import { getEmployees, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     dispatch: AppDispatch;
@@ -118,6 +118,22 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
           await api.patch(`/user/disable_employee`, {employee_id: id});
           dispatch(getEmployees())
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const checkTask = createAsyncThunk<void, {employeeId: number, taskId: number, isApproved: boolean}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/disableEmployee',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/task/check_task/?employee_id=${data.employeeId}&task_id=${data.taskId}`, {task_status: data.isApproved ? 'completed' : 'in_progress'});
+          dispatch(getTasksBeingChecked())
         } catch {
             dispatch(login(false));
         }

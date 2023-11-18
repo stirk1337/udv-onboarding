@@ -559,11 +559,16 @@ main{
     margin-bottom: 20px;
 }
 
-.task-comments input{
+.task-comments input, .task-comments #comment{
     width: 100%;
     border-radius: 8px;
     background: #454545;
     height: 38px;
+}
+
+.task-comments #comment{
+    margin-top: 10px;
+    padding: 5px;
 }
 
 .button-to-tasks, .decline-button, .approve-button, .completed-button, .being-checked{

@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CuratorPlanetData, Planet, PlanetTask, UserData, UserOnPlanetData } from "../../types";
+import { CuratorPlanetData, Planet, PlanetTask, PlanetTaskForVerification, UserData, UserOnPlanetData } from "../../types";
 
 export const redirectToRoute = createAction<string>('user/redirectToRoute');
 
@@ -26,3 +26,5 @@ export const changeTaskData = createAction<{name: string, description: string, i
 export const clearCurrentTask = createAction('task/clearCurrentTask')
 
 export const changeCurrentTask = createAction<PlanetTask>('task/changeCurrentTask')
+
+export const setTaskForVerification = createAction<PlanetTaskForVerification[]>('task/setTaskForVerification')

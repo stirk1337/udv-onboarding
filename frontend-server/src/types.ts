@@ -42,7 +42,7 @@ export type Planet = {
 
 export type CuratorPlanetData = Planet & {
     employees: UserOnPlanetData[]
-    tasks: PlanetTask[]
+    task_count: number
 }
 
 export type Id = number;
@@ -62,6 +62,10 @@ export type PlanetTask = {
     task_status: TaskStatus,
     created_at: string,
     updated_at: string,
+}
+
+export type PlanetTaskForVerification = PlanetTask & {
+    employee: UserOnPlanetData
 }
 
 export type UpdateAnswer = {

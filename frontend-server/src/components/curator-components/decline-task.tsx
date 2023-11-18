@@ -1,8 +1,9 @@
 type DeclineTaskProps = {
     onDialogClick: () => void
+    onDeclineClick: () => void
 }
 
-function DeclineTask({onDialogClick}: DeclineTaskProps) {
+function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
     return ( 
         <div className="decline-comment-dialog">
             <div onClick={onDialogClick} className="useful-links-header">
@@ -12,7 +13,7 @@ function DeclineTask({onDialogClick}: DeclineTaskProps) {
                 <p>Причина отказа</p>
             </div>
             <textarea placeholder="Введите причину отказа"></textarea>
-            <button className="decline-button">Отклонить</button>
+            <button onClick={onDeclineClick} className="decline-button">Отклонить</button>
         </div>
      );
 }

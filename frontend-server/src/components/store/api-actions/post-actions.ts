@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Id, Login, Planet, PlanetTask } from "../../../types";
 import { changeCurrentTask, logOut, login } from "../action";
-import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetTasks, getPlanets } from "./get-actions";
+import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -64,7 +64,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     async (id, {dispatch, extra: api}) => {
         try {
           const {data: planet} = await api.post<PlanetTask>(`/task/create_task/?planet_id=${id}`, {name: null, description: null})
-            dispatch(getPlanetTasks(id))
+            dispatch(getPlanetCuratorTasks(id))
             dispatch(changeCurrentTask(planet))
         } catch {
             dispatch(login(false));

@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { Id } from "../../../types";
 import { clearCurrentPlanet, clearCurrentTask, login } from "../action";
-import { getPlanetTasks, getPlanets } from "./get-actions";
+import { getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
 
 export const deletePlanet = createAsyncThunk<void, Id, {
     dispatch: AppDispatch;
@@ -32,7 +32,7 @@ export const deletePlanet = createAsyncThunk<void, Id, {
       try {
         await api.delete('/task/delete_task', {params: {task_id :data.taskId}});
         dispatch(clearCurrentTask())
-        dispatch(getPlanetTasks(data.planetId))
+        dispatch(getPlanetCuratorTasks(data.planetId))
       } catch {
         dispatch(login(false));
       }

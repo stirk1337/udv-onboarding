@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setEmployees, setPlanet, setPlanetTasks, setPlanets, setUserData } from './action';
-import { CuratorPlanetData, Planet, PlanetTask, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
+import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setEmployees, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from './action';
+import { CuratorPlanetData, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
 
 type InitialState = {
   authorizationStatus: boolean;
@@ -10,6 +10,7 @@ type InitialState = {
   planetTasks: PlanetTask[];
   employees: UserOnPlanetData[];
   currentTask: PlanetTask;
+  taskForVerification: PlanetTaskForVerification[]
 }
 
 const initialState: InitialState = {
@@ -28,7 +29,7 @@ const initialState: InitialState = {
     created_at: '',
     updated_at: '',
     employees: [],
-    tasks: []
+    task_count: 0
   },
   planetTasks: [],
   employees: [],
@@ -42,6 +43,7 @@ const initialState: InitialState = {
     created_at: '',
     updated_at: '',
   },
+  taskForVerification: []
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -62,13 +64,13 @@ export const reducer = createReducer(initialState, (builder) => {
         state.planetTasks = action.payload;
       })
       .addCase(setPlanet,(state,action) => {
-        const tasks = action.payload.tasks
+        const tasks = action.payload.task_count
         if(tasks) {
           state.currentPlanet = action.payload;
         }
         else{
           state.currentPlanet = action.payload;
-          state.currentPlanet.tasks = tasks
+          state.currentPlanet.task_count = tasks
         }
         console.log(tasks)
       })
@@ -92,6 +94,9 @@ export const reducer = createReducer(initialState, (builder) => {
         const index = state.planetTasks.findIndex(task => task.id === action.payload.idTask);
         state.planetTasks[index].name = action.payload.name
         state.planetTasks[index].description = action.payload.description
+      })
+      .addCase(setTaskForVerification,(state, action) => {
+        state.taskForVerification = action.payload
       })
 });
 
