@@ -14,7 +14,7 @@ from src.task.dependencies import have_task
 from src.task.models import Task
 from src.task.validators import (EmployeeTaskOut, TaskInAnswer, TaskInCheck,
                                  TaskInCreate, TaskInUpdate, TaskOut,
-                                 TaskOutForChecking)
+                                 TaskOutForChecking, TaskOutForEmployee)
 from src.user.dals import CuratorDAL, EmployeeDAL
 
 router = APIRouter(prefix='/task',
@@ -37,6 +37,24 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
     tasks = await task_dal.get_tasks_by_planet(planet)
     tasks = [TaskOut.parse(task) for task in tasks]
     tasks = sorted(tasks, key=lambda x: x.id)
+    return tasks
+
+
+@router.get('/get_tasks_with_status',
+            responses=planet_responses)
+async def get_tasks_by_planet_id_with_status(session: AsyncSession = Depends(get_async_session),
+                                             planet: Planet = Depends(
+                                                 have_planet),
+                                             user: User = Depends(employee_user)) -> List[TaskOutForEmployee]:
+    """Get tasks for employee (with employee information) by planet id.
+    Rights: you must have this planet (employee)"""
+    task_dal = TaskDAL(session)
+    employee_dal = EmployeeDAL(session)
+    employee = await employee_dal.get_employee_by_user(user)
+    tasks = await task_dal.get_tasks_by_planet(planet)
+    employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
+    tasks = [TaskOutForEmployee.parse(task, employee_task)
+             for task, employee_task in zip(tasks, employee_tasks)]
     return tasks
 
 

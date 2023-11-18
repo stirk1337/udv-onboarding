@@ -22,7 +22,7 @@ export enum EmployeeStatus {
 }
 
 export type UserOnPlanetData = {
-    id: string,
+    id: number,
     name: string,
     email: string,
     product: string,
@@ -42,7 +42,7 @@ export type Planet = {
 
 export type CuratorPlanetData = Planet & {
     employees: UserOnPlanetData[]
-    tasks: PlanetTasks[]
+    task_count: number
 }
 
 export type Id = number;
@@ -53,16 +53,19 @@ export enum TaskStatus {
     completed = 'completed',
 }
 
-export type PlanetTasks = {
+export type PlanetTask = {
     id: number,
     name: string,
     description: string,
-    file_link: string,
     planet_id: number,
     employee_answer: null | string,
     task_status: TaskStatus,
     created_at: string,
     updated_at: string,
+}
+
+export type PlanetTaskForVerification = PlanetTask & {
+    employee: UserOnPlanetData
 }
 
 export type UpdateAnswer = {
@@ -91,4 +94,12 @@ export enum ProductRoles {
     analyst = 'analyst',
     test = 'test',
     devops = 'devops',
+}
+
+export enum SortTypes {
+    created_at = 'created_at',
+    name = 'name',
+    email = 'email',
+    product = 'product',
+    product_role = 'product_role',
 }

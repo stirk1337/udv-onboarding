@@ -6,27 +6,30 @@ import { ConstructorData } from '../../mocks/constructor-data';
 import { useNavigate, useParams } from 'react-router-dom';
 import TaskConstructorTasks from './task-constructor-tasks';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { getPlanetTasks } from '../store/api-actions/get-actions';
+import { getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from '../store/api-actions/get-actions';
 import { deleteTask } from '../store/api-actions/delete-action';
 import { updateTask } from '../store/api-actions/patch-action';
+import { createTask } from '../store/api-actions/post-actions';
+import { changeCurrentTask, clearCurrentPlanet, clearCurrentTask } from '../store/action';
 
 function TaskEditor() {
     const dispatch = useAppDispatch()
     const {id} = useParams()
     const [description, setDescription] = useState('');
     const tasks = useAppSelector((state) => state.planetTasks);
-    const [currentTask, setCurrentTask] =  useState(tasks[0])
+    const currentTask = useAppSelector((state) => state.currentTask);
+    console.log(currentTask);
     const [name, setName] = useState('');
 
     useEffect(() => {
       if(id){
-        dispatch(getPlanetTasks(Number(id)))
+        dispatch(getPlanetCuratorTasks(Number(id)))
         setDescription(currentTask ? currentTask.description : '')
       }
     }, [])
 
     useEffect(() => {
-      setName(currentTask ? currentTask.name : '')
+      setName(currentTask.name ? currentTask.name : '')
       setDescription(currentTask ? currentTask.description : '')
     }, [currentTask])
 
@@ -41,17 +44,17 @@ function TaskEditor() {
           ['clean']
         ],
       }
-  
+      
     function constructorClickHandler(evt: React.MouseEvent<HTMLLIElement>, id: number){
       const element = (evt.target as Element).classList.value
       if(element !== 'delete-icon'){
-        setCurrentTask(tasks.find((task) => task.id === id) || tasks[0])
+        dispatch(changeCurrentTask(tasks.find((task) => task.id === id) || tasks[0]))
       }
     }
 
   function deleteTaskHandler(taskId: number){
     dispatch(deleteTask({planetId: Number(id), taskId: taskId}))
-    setCurrentTask(tasks[-1])
+    dispatch(clearCurrentTask())
   }
 
   function onChangeNameHandler(evt: ChangeEvent<HTMLInputElement>){
@@ -71,16 +74,16 @@ function TaskEditor() {
         <div className='task-edit-block'>
             <div className="selected-block-monster-list">
               <div className="monster-header">
-                <button onClick={() => navigate('/curator')}>
+                <button onClick={() => {dispatch(getPlanet(Number(id))),dispatch(clearCurrentTask()), navigate('/curator')}}>
                   <p><img src="/back-arrow.svg" alt=""></img> Вернуться к блокам</p>
                 </button>
               </div>
               <ul>
-                {tasks.map(task => <TaskConstructorTasks key={task.id} id={task.id} icon={"/monster-icon.svg"} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
+                {tasks.map(task => <TaskConstructorTasks key={task.id} taskId={task.id} blockId={task.planet_id} icon={"/monster-icon.svg"} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
               </ul>
-              <button className='new-task-button' type="submit"><img src="/add-icon.svg" alt=""/>Добавить новую задачу</button>
+              <button className='new-task-button' type="submit" onClick={() => dispatch(createTask(Number(id)))}><img src="/add-icon.svg" alt=""/>Добавить новую задачу</button>
             </div>
-            { currentTask && <div className='edit-content'>
+            {currentTask.id !== -1 && <div className='edit-content'>
               <input className="selected-block-name" value={name} onChange={onChangeNameHandler} placeholder="Введите название задачи" onBlur={onBlurHandler}></input>
               <ReactQuill theme="snow" value={description} onChange={onChangeDescriptionHandler} modules={modules} onBlur={onBlurHandler} />
             </div>}

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance, AxiosRequestConfig } from "axios";
-import { login, redirectToRoute, setEmployees, setPlanet, setPlanetTasks, setPlanets, setUserData } from "../action";
-import { Planet, UserData, Id, PlanetTasks, TaskStatus, CuratorPlanetData, UserOnPlanetData } from "../../../types";
+import { login, redirectToRoute, setEmployees, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from "../action";
+import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification } from "../../../types";
 
 export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     dispatch: AppDispatch;
@@ -43,10 +43,10 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     state: State;
     extra: AxiosInstance;
   }>(
-    'user/get-planet-task',
+    'user/get-planet-with-status',
     async (id, {dispatch, extra: api}) => {
       try {
-        const {data: tasks} = await api.get<PlanetTasks[]>(`/task/get_tasks/`, {params: {planet_id: id}});
+        const {data: tasks} = await api.get<PlanetTask[]>(`/task/get_tasks_with_status`, {params: {planet_id: id}});
         dispatch(setPlanetTasks(tasks))
         let task = tasks.find(task => task.task_status === TaskStatus.completed)
         if(task === undefined){
@@ -55,6 +55,22 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
         if(location.pathname.split('/').length === 2){
             dispatch(redirectToRoute(`employee/${id}/${task.id}`));
         }
+      } catch {
+        dispatch(login(false));
+      }
+    },
+  );
+
+  export const getPlanetCuratorTasks = createAsyncThunk<void, Id, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/get-planet-curator-tasks',
+    async (id, {dispatch, extra: api}) => {
+      try {
+        const {data: tasks} = await api.get<PlanetTask[]>(`/task/get_tasks`, {params: {planet_id: id}});
+        dispatch(setPlanetTasks(tasks))
       } catch {
         dispatch(login(false));
       }
@@ -87,6 +103,22 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
       try {
         const {data: employeesData} = await api.get<UserOnPlanetData[]>(`/user/get_employees`);
         dispatch(setEmployees(employeesData))
+      } catch {
+        dispatch(login(false));
+      }
+    },
+  );
+
+  export const getTasksBeingChecked = createAsyncThunk<void, undefined, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/getTasksBeingChecked',
+    async (_arg, {dispatch, extra: api}) => {
+      try {
+        const {data: taskData} = await api.get<PlanetTaskForVerification[]>(`/task/get_tasks_being_checked`);
+        dispatch(setTaskForVerification(taskData))
       } catch {
         dispatch(login(false));
       }

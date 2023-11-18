@@ -62,6 +62,28 @@ class EmployeeTaskOut(BaseModel):
                                updated_at=employee_task.updated_at)
 
 
+class TaskOutForEmployee(BaseModel):
+    id: int
+    name: Optional[str]
+    description: Optional[str]
+    planet_id: int
+    employee_answer: Optional[str]
+    task_status: TaskStatus
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+    @staticmethod
+    def parse(task: Task, employee_task: EmployeeTask):
+        return TaskOutForEmployee(id=task.id,
+                                  name=task.name,
+                                  description=task.description,
+                                  planet_id=task.planet_id,
+                                  employee_answer=employee_task.employee_answer,
+                                  task_status=employee_task.task_status,
+                                  created_at=employee_task.created_at,
+                                  updated_at=employee_task.updated_at)
+
+
 class TaskOutForChecking(BaseModel):
     id: int
     name: Optional[str]

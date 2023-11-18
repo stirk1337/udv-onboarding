@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { Id } from "../../../types";
-import { clearCurrentPlanet, login } from "../action";
-import { getPlanetTasks, getPlanets } from "./get-actions";
+import { clearCurrentPlanet, clearCurrentTask, login } from "../action";
+import { getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
 
 export const deletePlanet = createAsyncThunk<void, Id, {
     dispatch: AppDispatch;
@@ -31,8 +31,8 @@ export const deletePlanet = createAsyncThunk<void, Id, {
     async (data, {dispatch, extra: api}) => {
       try {
         await api.delete('/task/delete_task', {params: {task_id :data.taskId}});
-        dispatch(clearCurrentPlanet())
-        dispatch(getPlanetTasks(data.planetId))
+        dispatch(clearCurrentTask())
+        dispatch(getPlanetCuratorTasks(data.planetId))
       } catch {
         dispatch(login(false));
       }

@@ -1,9 +1,9 @@
 import { AxiosInstance } from "axios";
 import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Id, Login, Planet } from "../../../types";
-import { logOut, login } from "../action";
-import { getCurrentUserInfo, getPlanet, getPlanets } from "./get-actions";
+import { Id, Login, Planet, PlanetTask } from "../../../types";
+import { changeCurrentTask, logOut, login } from "../action";
+import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -46,7 +46,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     'planet/createPlanet',
     async (_arg, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<Planet>(`/planet/create_planet`)
+          const {data: planet} = await api.post<Planet>(`/planet/create_planet`, {name: null})
             dispatch(getPlanets())
             dispatch(getPlanet(planet.id))
         } catch {
@@ -61,11 +61,29 @@ export const loginAction = createAsyncThunk<void, Login, {
     extra: AxiosInstance;
   }>(
     'planet/createTask',
-    async (_arg, {dispatch, extra: api}) => {
+    async (id, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<Planet>(`/task/create_task`)
-            dispatch(getPlanets())
-            dispatch(getPlanet(planet.id))
+          const {data: planet} = await api.post<PlanetTask>(`/task/create_task/?planet_id=${id}`, {name: null, description: null})
+            dispatch(getPlanetCuratorTasks(id))
+            dispatch(changeCurrentTask(planet))
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const registerNewEmployee = createAsyncThunk<void, {email: string, name: string, product: string, productRole: string}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/registerNewEmployee',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          const product = data.product.split(' ').join('_')
+          const role = data.productRole.split(' ').join('_')
+          await api.post<PlanetTask>(`/user/register_new_employee`, {email: data.email, name: data.name, product: product, product_role: role})
+          dispatch(getEmployees())
         } catch {
             dispatch(login(false));
         }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlanetBlockConstructor from "./planet-block-constructor";
 import SelectedBlockContent from "./selected-block-content";
 import { useAppSelector } from "../hooks";
@@ -12,6 +12,10 @@ function TaskConstructor() {
     const constructorPlanets = useAppSelector((state) => state.planets);
     const currentConstructorPlanet = useAppSelector((state) => state.currentPlanet);
     const dispatch = useDispatch<AppDispatch>()
+
+    useEffect(() => {
+        
+    }, [])
 
     let personalList = currentConstructorPlanet.employees
 
@@ -34,7 +38,7 @@ function TaskConstructor() {
                 </ul>
                 <button type="submit" onClick={() => dispatch(createPlanet())}><img src="/add-icon.svg" alt=""/><p>Добавить новый блок</p></button>
             </div>
-            {currentConstructorPlanet.id !== -1 && <SelectedBlockContent numberTask={currentConstructorPlanet.tasks.length} personalList={personalList} idBlock={currentConstructorPlanet.id} blockName={currentConstructorPlanet.name}/>}
+            {currentConstructorPlanet.id !== -1 && <SelectedBlockContent numberTask={currentConstructorPlanet.task_count} personalList={personalList} idBlock={currentConstructorPlanet.id} blockName={currentConstructorPlanet.name}/>}
         </div>
     );
 }

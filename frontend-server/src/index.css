@@ -559,11 +559,16 @@ main{
     margin-bottom: 20px;
 }
 
-.task-comments input{
+.task-comments input, .task-comments #comment{
     width: 100%;
     border-radius: 8px;
     background: #454545;
     height: 38px;
+}
+
+.task-comments #comment{
+    margin-top: 10px;
+    padding: 5px;
 }
 
 .button-to-tasks, .decline-button, .approve-button, .completed-button, .being-checked{
@@ -765,6 +770,7 @@ main{
 }
 
 .added-list-item{
+    cursor: pointer;
     display: flex;
     align-items: center;
     margin-bottom: 10px;
@@ -919,6 +925,7 @@ th{
 
 th, td{
     padding-left: 20px;
+    width: 20%;
 }
 
 tr{
@@ -930,16 +937,9 @@ table{
     font-size: 16px;
 }
 
-th:nth-child(1), td:nth-child(1), th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5){
-    width: 10%;
-}
-
-th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3){
-    width: 30%;
-}
-
 table .approve-button{
-    margin:0
+    margin:0;
+    margin-right: 20px;
 }
 
 .add-employee-form{
@@ -1003,4 +1003,20 @@ table .approve-button{
     align-self: center;
     width: fit-content;
     border-bottom: 1px solid #00C996;
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=small]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
+    content: '15px';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label::before, .ql-snow .ql-picker.ql-size .ql-picker-item::before {
+    content: '20px';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=large]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
+    content: '30px';
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=huge]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
+    content: '50px';
 }
