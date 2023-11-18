@@ -78,3 +78,5 @@ class Employee(Base):
     )
     planets: Mapped[List['Planet']] = (
         relationship(secondary='employee_planet', back_populates='employees'))
+    tasks: Mapped[List['Task']] = (
+        relationship(secondary='employee_task', back_populates='employees'))

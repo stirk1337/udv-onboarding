@@ -21,16 +21,31 @@ class CuratorDAL:
         return new_curator
 
     async def get_curator_by_user(self, user: User) -> Curator:
-        curator = await self.db_session.scalar(
+        return await self.db_session.scalar(
             select(Curator)
             .where(Curator.user_id == user.id)
         )
-        return curator
+
+    async def get_curator_with_employees(self, user: User) -> Curator:
+        return await self.db_session.scalar(
+            select(Curator)
+            .where(Curator.user_id == user.id)
+            .options(
+                selectinload(Curator.employee)
+            )
+        )
 
 
 class EmployeeDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
+
+    async def get_employee_by_id(self, employee_id: int) -> Employee:
+        employee = await self.db_session.get(Employee, employee_id)
+        if employee is None:
+            raise HTTPException(
+                status_code=404, detail=f'Employee with id {employee_id} not found')
+        return employee
 
     async def get_employee_by_id_with_user(self, employee_id: int) -> Employee:
         employee = await self.db_session.scalar(

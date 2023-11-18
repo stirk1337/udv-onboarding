@@ -13,7 +13,7 @@ async def have_task(task_id: int,
                     user: User = Depends(current_user),
                     session: AsyncSession = Depends(get_async_session)) -> Planet:
     task_dal = TaskDAL(session)
-    task = await task_dal.get_task_with_planet(task_id)
+    task = await task_dal.get_task_with_planet_employees(task_id)
     if user.role == Role.curator:
         curator_dal = CuratorDAL(session)
         curator = await curator_dal.get_curator_by_user(user)
