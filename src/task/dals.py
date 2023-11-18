@@ -46,13 +46,15 @@ class TaskDAL:
                                 employee: Employee) -> EmployeeTask:
         return await self.db_session.scalar(
             select(EmployeeTask)
-            .where(EmployeeTask.task_id == task.id and EmployeeTask.employee_id == employee.id)
+            .where(EmployeeTask.task_id == task.id)
+            .where(EmployeeTask.employee_id == employee.id)
         )
 
     async def get_employee_task_for_check(self, employee: Employee) -> List[EmployeeTask]:
         employee_tasks = await self.db_session.scalars(
             select(EmployeeTask)
-            .where(EmployeeTask.employee_id == employee.id and EmployeeTask.task_status == TaskStatus.being_checked)
+            .where(EmployeeTask.employee_id == employee.id)
+            .where(EmployeeTask.task_status == TaskStatus.being_checked)
         )
         return list(employee_tasks)
 
