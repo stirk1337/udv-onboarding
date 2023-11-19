@@ -69,12 +69,6 @@ class TaskDAL:
         await self.db_session.commit()
         return new_task
 
-    async def create_empty_task(self, planet: Planet):
-        new_task = Task(planet_id=planet.id)
-        self.db_session.add(new_task)
-        await self.db_session.commit()
-        return new_task
-
     async def get_tasks_by_planet(self, planet: Planet) -> List[Task]:
         tasks = await self.db_session.scalars(
             select(Task)

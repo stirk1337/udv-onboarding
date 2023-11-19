@@ -72,7 +72,7 @@ async def create_new_employee(employee_in: EmployeeInCreate,
                                       name=employee_in.name,
                                       role=Role.employee,
                                       password=employee_in.password)
-    if employee_user is not None:  # if user already exists
+    if employee_user:  # if user already exists
         employee = await employee_dal.create_employee(
             employee_user,
             curator.id,

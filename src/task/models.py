@@ -44,9 +44,6 @@ class Task(Base):
 class EmployeeTask(Base):
     __tablename__ = 'employee_task'
 
-    id: Mapped[int] = mapped_column(
-        Integer, primary_key=True, autoincrement=True
-    )
     employee_id: Mapped[int] = mapped_column(
         ForeignKey('employee.id', ondelete='CASCADE'), primary_key=True
     )
