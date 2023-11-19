@@ -1,12 +1,11 @@
 from fastapi_users.authentication import (AuthenticationBackend,
-                                          CookieTransport, JWTStrategy)
+                                          BearerTransport, JWTStrategy)
 
 from config import settings
 
 SECRET = settings.secret
 
-cookie_transport = CookieTransport(
-    cookie_max_age=600, cookie_name='udv-onboarding')
+bearer_transport = BearerTransport(tokenUrl='auth/jwt/login')
 
 
 def get_jwt_strategy() -> JWTStrategy:
@@ -15,6 +14,6 @@ def get_jwt_strategy() -> JWTStrategy:
 
 auth_backend = AuthenticationBackend(
     name='jwt',
-    transport=cookie_transport,
+    transport=bearer_transport,
     get_strategy=get_jwt_strategy,
 )
