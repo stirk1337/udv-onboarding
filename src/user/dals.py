@@ -137,4 +137,5 @@ class EmployeeDAL:
         employee.user.is_active = True
         employee.curator_id = curator_id
         await self.db_session.commit()
+        await self.db_session.refresh(employee)
         return employee
