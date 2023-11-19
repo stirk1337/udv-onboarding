@@ -1,4 +1,3 @@
-import { PersonalDataT } from "../../mocks/personal";
 import { UserOnPlanetData } from "../../types";
 
 type EmployeeTableProps = {

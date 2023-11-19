@@ -1,5 +1,4 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { PersonalData, PersonalDataT } from "../../mocks/personal";
 import AddEmployeeForm from "./add-employee-form";
 import EmployeeTable from "./employee-table";
 import StatisticEmployee from "./statistics-employee";
@@ -20,9 +19,10 @@ function Personal() {
     const [isSortProduct, setIsSortProduct] = useState('0')
     const [isSortRole, setIsSortRole] = useState('0')
     const [searchValue, setSearchValue] = useState('')
+    const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
 
     let personalData:UserOnPlanetData[] = searchFinder(sortPersonal(useAppSelector((state) => state.employees)))
-    let currentEmployee = personalData[selectedEmployee]
+    let currentEmployee = personalData.find(employee => employee.id === selectedEmployee) || personalData[0]
     console.log(isSortAdded, isSortName, isSortEmail, isSortProduct, isSortRole)
 
     useEffect(() => {
@@ -74,43 +74,56 @@ function Personal() {
         }
     }
 
-    function dialogClickHandler(){
-        setIsFormOpen(!isFormOpen)
+    function dialogClickHandler(action: boolean) {
+        setIsFormOpen(action)
     }
 
     function employeeClick(id: number){
-        setSelectedEmployee(id - 1)
+        setSelectedEmployee(id)
     }
 
     function deleteEmployee(id: number){
         setSelectedEmployee(-1)
         dispatch(disableEmployee(id))
     }
+
+    function closeDialog(){
+        setSelectedEmployee(-1)
+        setVisibleBackdrop(false)
+        dialogClickHandler(false);
+    }
     
     return ( 
-        <div className="personal-block">
-            <div className="personal-block-header">
-                <input placeholder="Найти сотрудника" value={searchValue} onChange={searchHandler}></input>
-                <button onClick={dialogClickHandler}><img src="/add-icon.svg" alt="Добавить сотрудника"/></button>
+        <>
+            <div className="personal-block">
+                <div className="personal-block-header">
+                    <input placeholder="Найти сотрудника" value={searchValue} onChange={searchHandler}></input>
+                    <button onClick={()=>dialogClickHandler(true)}><img src="/add-icon.svg" alt="Добавить сотрудника"/></button>
+                </div>
+                <table>
+                    <thead>
+                            <tr>
+                                <th onClick={() => sortHandler(SortTypes.created_at)}>Добавлен{sortType === SortTypes.created_at && isSortAdded === '1' && <img src="/sort-arrow.svg" alt=""/>}{sortType === SortTypes.created_at && isSortAdded === '2' && <img className="rotate" src="/sort-arrow.svg" alt=""/>}</th>
+                                <th onClick={() => sortHandler(SortTypes.name )}>Фио сотрудника{sortType === SortTypes.name && isSortName === '1' && <img src="/sort-arrow.svg" alt=""/>}{sortType === SortTypes.name && isSortName === '2' && <img className="rotate" src="/sort-arrow.svg" alt=""/>}</th>
+                                <th onClick={() => sortHandler(SortTypes.email)}>Email{sortType === SortTypes.email && isSortEmail === '1' && <img src="/sort-arrow.svg" alt=""/>}{sortType === SortTypes.email && isSortEmail === '2' && <img className="rotate" src="/sort-arrow.svg" alt=""/>}</th>
+                                <th onClick={() => sortHandler(SortTypes.product)}>Продукт{sortType === SortTypes.product && isSortProduct === '1' && <img src="/sort-arrow.svg" alt=""/>}{sortType === SortTypes.product && isSortProduct === '2' && <img className="rotate" src="/sort-arrow.svg" alt=""/>}</th>
+                                <th onClick={() => sortHandler(SortTypes.product_role)}>Роль{sortType === SortTypes.product_role && isSortRole === '1' && <img src="/sort-arrow.svg" alt=""/>}{sortType === SortTypes.product_role && isSortRole === '2' && <img className="rotate" src="/sort-arrow.svg" alt=""/>}</th>
+                                <th>{null}</th>
+                        </tr>
+                    </thead>
+                </table>
+                <div className="personal-table">
+                    <table>
+                        <tbody>
+                            {personalData.filter(employee => employee.employee_status !== 'disabled').map(employee => <EmployeeTable key={employee.id} onClickEmployee={employeeClick} employeeData={employee}/>)}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th onClick={() => sortHandler(SortTypes.created_at)}>Добавлен</th>
-                        <th onClick={() => sortHandler(SortTypes.name )}>Фио сотрудника</th>
-                        <th onClick={() => sortHandler(SortTypes.email)}>Email</th>
-                        <th onClick={() => sortHandler(SortTypes.product)}>Продукт</th>
-                        <th onClick={() => sortHandler(SortTypes.product_role)}>Роль</th>
-                        <th>{null}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {personalData.filter(employee => employee.employee_status !== 'disabled').map(employee => <EmployeeTable key={employee.id} onClickEmployee={employeeClick} employeeData={employee}/>)}
-                </tbody>
-            </table>
-            {isFormOpen && <AddEmployeeForm onDialogClick={dialogClickHandler}/>}
+            {isFormOpen && <AddEmployeeForm onDialogClick={()=>dialogClickHandler(false)}/>}
             {selectedEmployee !== -1 && <StatisticEmployee avatar={"/profile-logo.png"} id={currentEmployee.id} name={currentEmployee.name} completedTasks={[]} onDelete={deleteEmployee} clickExit={employeeClick}/>}
-        </div>
+            {(isFormOpen || selectedEmployee !== -1) && <div onClick={closeDialog} className={"backdrop"}></div>}
+        </>
      );
 }
 

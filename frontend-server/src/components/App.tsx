@@ -14,7 +14,7 @@ import { getCurrentUserInfo } from "./store/api-actions/get-actions"
 import { useEffect } from "react"
 import HistoryRouter from "./history-route"
 import browserHistory from "../browser-history"
-import { UserRoles } from "../types"
+import ImageCropper from "./image-cropper"
 
 function App() {
   useEffect(() => {

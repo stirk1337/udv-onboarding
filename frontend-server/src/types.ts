@@ -14,6 +14,7 @@ export type UserData = {
     name: string,
     email: string,
     role: UserRoles,
+    image_url: string,
 }
 
 export enum EmployeeStatus {

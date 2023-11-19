@@ -20,6 +20,7 @@ const initialState: InitialState = {
     name: '',
     email: '',
     role: UserRoles.undefined,
+    image_url: ''
   },
   planets: [],
   currentPlanet: {

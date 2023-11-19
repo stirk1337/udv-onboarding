@@ -12,8 +12,8 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     'user/get-current-user-info',
     async (_arg, {dispatch, extra: api}) => {
       try {
-        const {data: {id, name, email, role}} = await api.get<UserData>('/user/get_current_user_info');
-        dispatch(setUserData({id, name, email, role}))
+        const {data} = await api.get<UserData>('/user/get_current_user_info');
+        dispatch(setUserData(data))
         dispatch(login(true))
         dispatch(getPlanets())
       } catch {

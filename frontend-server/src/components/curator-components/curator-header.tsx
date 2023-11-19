@@ -3,6 +3,10 @@ import { NotificationData } from "../../mocks/notifications"
 import Notifications from "../notifications"
 import ProfileButtons from "../profile-buttons"
 import { Link, useLocation } from "react-router-dom"
+import ImageCropper from "../image-cropper"
+import { useAppSelector } from "../hooks"
+import { BACKEND_URL } from "../services/api"
+import UsefulLinks from "../user-components/useful-links"
 
 function CuratorHeader() {
     const [isVisibleProfileButtons, setVisibleProfileButtons] = useState(false)
@@ -10,29 +14,57 @@ function CuratorHeader() {
     const [isVisibleProgress, setVisibleProgress] = useState(false)
     const [isVisibleNotification, setVisibleNotification] = useState(false)
     const [isVisibleAchievements, setVisibleAchievements] = useState(false)
+    const [isVisibleEditImage, setVisibleEditImage] = useState(false)
+    const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
 
+    const userData = useAppSelector((state) => state.userData);
     const location = useLocation().pathname
 
     const notReadNotifications = NotificationData.filter(notification => !notification.checked).length
     
-    function profileClickHandler(){
-        setVisibleProfileButtons(!isVisibleProfileButtons); 
+    function profileClickHandler(action: boolean) {
+        setVisibleProfileButtons(action); 
+        setVisibleBackdrop(action)
     }
 
-    function linksClickHandler(){
-        setVisibleUsefulLinks(!isVisibleUsefulLinks); 
+    function linksClickHandler(action: boolean){
+        setVisibleUsefulLinks(action); 
+        setVisibleBackdrop(action)
+        setVisibleProfileButtons(false);
     }
 
-    function ProgressClickHandler(){
-        setVisibleProgress(!isVisibleProgress);
+    function ProgressClickHandler(action: boolean){
+        setVisibleProgress(action);
+        setVisibleBackdrop(action)
+        setVisibleProfileButtons(false);
     }
 
-    function NotificationClickHandler(){
-        setVisibleNotification(!isVisibleNotification);
+    function NotificationClickHandler(action: boolean){
+        setVisibleNotification(action);
+        setVisibleBackdrop(action)
+        setVisibleProfileButtons(false);
     }
 
-    function AchievementsClickHandler(){
-        setVisibleAchievements(!isVisibleAchievements);
+    function AchievementsClickHandler(action: boolean){
+        setVisibleAchievements(action);
+        setVisibleBackdrop(action)
+        setVisibleProfileButtons(false);
+    }
+
+    function editImageClickHandler(action: boolean){
+        setVisibleEditImage(action);
+        setVisibleBackdrop(action)
+        setVisibleProfileButtons(false);
+    }
+
+    function closeDialog(){
+        setVisibleBackdrop(false)
+        setVisibleProfileButtons(false);
+        setVisibleUsefulLinks(false);
+        setVisibleProgress(false);
+        setVisibleNotification(false);
+        setVisibleAchievements(false);
+        setVisibleEditImage(false);
     }
 
 
@@ -48,19 +80,22 @@ function CuratorHeader() {
             </nav>
             <div className="flex notification-profile-block">
                 <div>
-                    <button className="notifications" onClick={NotificationClickHandler}>
+                    <button className="notifications" onClick={()=>NotificationClickHandler(true)}>
                         <img src="/notifications-icon.svg" alt="Кнопка уведомлений"></img>
                         {notReadNotifications !== 0 && <div className="notifications-number">{notReadNotifications}</div>}
                     </button>
                 </div>
                 <div>
-                    <button onClick={profileClickHandler}>
-                        <img src="/profile-logo.png" alt="Профиль" width={53} height={53}></img>
+                    <button className="profile-logo" onClick={()=>profileClickHandler(true)}>
+                        <img src={userData.image_url ? BACKEND_URL + '/' + userData.image_url : '/profile-logo.png'} alt="Профиль" width={53} height={53}></img>
                     </button>
                 </div>
             </div>
             {isVisibleNotification && <Notifications/>}
-            {isVisibleProfileButtons && <ProfileButtons onClickLinks={linksClickHandler} onClickProgress={ProgressClickHandler} onClickAchievements={AchievementsClickHandler}/>}
+            {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEdit={()=>editImageClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
+            {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}
+            {isVisibleEditImage && <ImageCropper onClickExit={()=>editImageClickHandler(false)}/>}
+            {isVisibleBackdrop && <div onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>}
         </header>
     );
 }
