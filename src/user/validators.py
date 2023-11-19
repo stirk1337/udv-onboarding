@@ -54,6 +54,7 @@ class EmployeeOut(BaseModel):
     employee_status: EmployeeStatus
     created_at: datetime.datetime
     updated_at: datetime.datetime
+    image_url: Optional[str] = None
 
     @staticmethod
     def parse(employee: Employee):
@@ -64,4 +65,5 @@ class EmployeeOut(BaseModel):
                            product_role=employee.product_role,
                            employee_status=employee.employee_status,
                            created_at=employee.created_at,
-                           updated_at=employee.updated_at)
+                           updated_at=employee.updated_at,
+                           image_url=employee.user.image_url)
