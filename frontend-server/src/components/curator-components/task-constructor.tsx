@@ -39,7 +39,7 @@ function TaskConstructor() {
                 <button type="submit" onClick={() => dispatch(createPlanet())}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="57" height="58" viewBox="0 0 57 58" fill="none">
                         <circle cx="28.5" cy="29" r="28.5" fill="#676767"/>
-                        <path d="M28.5001 17.6L28.5001 40.4M17.1001 29H39.9001" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M28.5001 17.6L28.5001 40.4M17.1001 29H39.9001" stroke="white" strokeWidth="5" strokeLinecap="round"/>
                     </svg>
                     <p>Добавить новый блок</p></button>
             </div>

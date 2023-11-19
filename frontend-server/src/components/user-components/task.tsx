@@ -4,12 +4,14 @@ type TaskProps = {
     id:number
     isCompleted: TaskStatus
     name: string
+    currentTask: boolean
     taskClick: (id: number) => void
 }
 
-function Task({id, isCompleted, name, taskClick}:TaskProps){
+function Task({id, currentTask, isCompleted, name, taskClick}:TaskProps){
+    const active = currentTask && 'active'
     return ( 
-        <div className="monster">
+        <div className={"monster " + active}>
             <button onClick={() => taskClick(id)}>
                 <img className="monster-icon" src="/profile-logo.png" alt="Задача" width={68} height={68}></img>
                 <p>{name}</p>

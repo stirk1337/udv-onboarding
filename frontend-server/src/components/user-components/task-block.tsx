@@ -32,7 +32,7 @@ function TaskBlock() {
                     </button>
                 </div>
                 <div className="monster-content">
-                    {tasks.map(task => <Task key={task.id} id={task.id} name={task.name} isCompleted={task.task_status} taskClick={taskClickHandler}/>)}
+                    {tasks.map(task => <Task key={task.id} currentTask={task.id === currentTask.id} id={task.id} name={task.name} isCompleted={task.task_status} taskClick={taskClickHandler}/>)}
                 </div>
             </div>
             <div className="task-content">

@@ -35,7 +35,7 @@ html{
     font-weight: 700;
 }
 
-main::-webkit-scrollbar{
+main::-webkit-scrollbar, html::-webkit-scrollbar{
     width: 0;
 }
 
@@ -176,7 +176,7 @@ header{
 
 main{
     max-width: 1440px;
-    max-height: 850px;
+    max-height: 93vh;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -543,8 +543,6 @@ main{
     box-sizing: border-box;
     width: 70%;
     padding-right: 10px;
-    overflow: auto;
-    overflow-x: hidden;
 }
 
 .task-name{
@@ -566,6 +564,7 @@ main{
     width: 100%;
     border-radius: 8px;
     background: #454545;
+    font-size: 20px;
     height: 38px;
 }
 
@@ -641,11 +640,11 @@ main{
     user-select: none !important;
 }
 
-.constructor-planet-list-item.active, .selected-block-monster-list-item.active, .task-for-verification-list-item.active{
+.constructor-planet-list-item.active, .selected-block-monster-list-item.active, .task-for-verification-list-item.active, .monster.active button{
     background: #5E5E5E;
 }
 
-.constructor-planet-list-item:hover, .selected-block-monster-list-item:hover, .task-for-verification-list-item:hover{
+.constructor-planet-list-item:hover, .selected-block-monster-list-item:hover, .task-for-verification-list-item:hover, .monster button:hover{
     background: #5E5E5E;
 }
 
@@ -1165,7 +1164,7 @@ table .approve-button{
     display: block !important;
 }
 
-.ql-editor .quill img, .task-data img{
+.ql-editor img, .task-data img{
     max-width: 80% !important;
     max-height: 80% !important;
     display: block;
@@ -1178,7 +1177,7 @@ table .approve-button{
 }
 
 @media (max-width: 1920px) {
-    .constructor-block, .task-edit-block, .task-for-verification-block, .personal-block{
+    .constructor-block, .task-edit-block, .task-for-verification-block, .personal-block, .task-block{
         height: 90vh;
     }
 }
@@ -1189,7 +1188,7 @@ table .approve-button{
         align-items: center;
         font-size: 20px;
     }
-    .constructor-block, .task-edit-block, .task-for-verification-block, .personal-block{
+    .constructor-block, .task-edit-block, .task-for-verification-block, .personal-block, .task-block{
         height: 85vh;
     }
     .constructor-planet-list ul, .selected-block-monster-list ul, .task-for-verification-list{
@@ -1218,5 +1217,16 @@ table .approve-button{
     }
     .decline-comment-dialog textarea{
         height: 400px;
+    }
+    .monster-content{
+        max-height: 95%;
+    }
+    .achievement{
+        width: 48%;
+    }
+    .achievements-content, .progress-content{
+        gap: 25px;
+        height: 451px;
+        padding-right: 10px;
     }
 }   
