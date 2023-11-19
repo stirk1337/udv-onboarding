@@ -11,7 +11,7 @@ function StatisticEmployee({id, onDelete, avatar, name, completedTasks, clickExi
     return ( 
         <div className="employee-data">
             <div className="useful-links-header">
-                <button onClick={() => clickExit(0)}>
+                <button onClick={() => clickExit(-1)}>
                     <img src="/close-dialog-icon.svg" alt="закрыть окно" width={67} height={40}></img>
                 </button>
                 <p>Статистика сотрудника</p>

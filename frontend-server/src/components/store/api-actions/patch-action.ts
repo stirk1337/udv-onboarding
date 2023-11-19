@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
 import { Id, UpdateAnswer } from "../../../types";
-import { getEmployees, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
+import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     dispatch: AppDispatch;
@@ -134,6 +134,26 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
           await api.patch(`/task/check_task/?employee_id=${data.employeeId}&task_id=${data.taskId}`, {task_status: data.isApproved ? 'completed' : 'in_progress'});
           dispatch(getTasksBeingChecked())
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const updateImage = createAsyncThunk<void, {file: File}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/disableEmployee',
+    async (data, {dispatch, extra: api}) => {
+        const formData = new FormData();
+        formData.append("file", data.file);
+        try {
+          await api.patch(`/auth/update_image`, formData, {headers: {
+            'Content-Type': 'multipart/form-data'
+          }});
+          dispatch(getCurrentUserInfo())
         } catch {
             dispatch(login(false));
         }

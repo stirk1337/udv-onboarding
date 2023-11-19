@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { PersonalData } from "../../mocks/constructor-data";
 import AddedEmployee from "./added-employee";
 import TaskConstructorTasks from "./task-constructor-tasks";
 import { UserOnPlanetData } from "../../types";
