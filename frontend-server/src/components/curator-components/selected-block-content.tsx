@@ -41,7 +41,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: Se
         <div className="selected-block-content">
             <div className="selected-bock-header">
                 <input className="selected-block-name" placeholder="Введите название блока" value={name} onChange={blockNameHandler} onBlur={()=> dispatch(updatePlanetName({name, idBlock}))}></input>
-                <p>{numberTask} задач</p>
+                <p>{numberTask} этапов</p>
             </div>
             <div className="selected-block-data">
                 <div className="add-task-form-flex">
