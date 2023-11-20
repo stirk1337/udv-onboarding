@@ -13,7 +13,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'task/answerTask',
     async (data, {dispatch, extra: api}) => {
         try {
-            await api.patch(`/task/answer_task/?task_id=${data.task_id}`, {answer: data.answer});
+            await api.patch(`/task/answer_task?task_id=${data.task_id}`, {answer: data.answer});
             dispatch(getPlanetTasks(data.planet_id))
         } catch {
             dispatch(login(false));
@@ -31,7 +31,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
             const name = data.name;
             const idBlock = data.idBlock;
-            await api.patch(`/planet/update_planet/?planet_id=${idBlock}`, {name: name});
+            await api.patch(`/planet/update_planet?planet_id=${idBlock}`, {name: name});
             dispatch(changePlanetName({name, idBlock}))
         } catch {
             dispatch(login(false));
@@ -47,7 +47,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'planet/addEmployeeToPlanet',
     async (data, {dispatch, extra: api}) => {
         try {
-          await api.patch(`/planet/add_employees_to_planet/?planet_id=${data.planetId}`, {employee_ids: [data.employeeId]});
+          await api.patch(`/planet/add_employees_to_planet?planet_id=${data.planetId}`, {employee_ids: [data.employeeId]});
           await dispatch(getPlanet(data.planetId))
             dispatch(getEmployees())
         } catch {
@@ -83,7 +83,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'task/updateTask',
     async (data, {dispatch, extra: api}) => {
         try {
-            await api.patch(`/task/update_task/?task_id=${data.taskId}`, {description:data.description, name:data.name});
+            await api.patch(`/task/update_task?task_id=${data.taskId}`, {description:data.description, name:data.name});
             dispatch(changeTaskData({name: data.name, description: data.description, idTask: data.taskId}))
         } catch {
             dispatch(login(false));
@@ -99,7 +99,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'planet/updateEmployeeOnPlanet',
     async (data, {dispatch, extra: api}) => {
         try {
-          await api.patch(`/planet/remove_employee_from_planet/?planet_id=${data.planetId}`, {employee_id: data.employeeId});
+          await api.patch(`/planet/remove_employee_from_planet?planet_id=${data.planetId}`, {employee_id: data.employeeId});
           await dispatch(getPlanet(data.planetId))
           dispatch(getEmployees())
         } catch {
@@ -132,7 +132,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'user/disableEmployee',
     async (data, {dispatch, extra: api}) => {
         try {
-          await api.patch(`/task/check_task/?employee_id=${data.employeeId}&task_id=${data.taskId}`, {task_status: data.isApproved ? 'completed' : 'in_progress'});
+          await api.patch(`/task/check_task?employee_id=${data.employeeId}&task_id=${data.taskId}`, {task_status: data.isApproved ? 'completed' : 'in_progress'});
           dispatch(getTasksBeingChecked())
         } catch {
             dispatch(login(false));
