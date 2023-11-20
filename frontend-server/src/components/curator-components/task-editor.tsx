@@ -83,7 +83,7 @@ function TaskEditor() {
               <button className='new-task-button' type="submit" onClick={() => dispatch(createTask(Number(id)))}>                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="58" viewBox="0 0 57 58" fill="none">
                         <circle cx="28.5" cy="29" r="28.5" fill="#676767"/>
                         <path d="M28.5001 17.6L28.5001 40.4M17.1001 29H39.9001" stroke="white" stroke-width="5" stroke-linecap="round"/>
-                    </svg>Добавить новую задачу</button>
+                    </svg>Добавить новый этап</button>
             </div>
             {currentTask.id !== -1 && <div className='edit-content'>
               <input className="selected-block-name" value={name} onChange={onChangeNameHandler} placeholder="Введите название задачи" onBlur={onBlurHandler}></input>

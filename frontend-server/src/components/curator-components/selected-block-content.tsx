@@ -70,7 +70,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: Se
                         {personalList.map(employee => <AddedEmployee key={employee.id} id={employee.id} avatar={"profile-logo.png"} data={employee.name} onDelete={onDeleteEmployeeHandler}/>)}
                     </ul>
                     <button className="button-to-tasks" onClick={() => navigate(`/curator/tasks/${idBlock}`)}>
-                        Перейти к задачам
+                        Перейти к этапам
                     </button>
                 </div>
             </div>
