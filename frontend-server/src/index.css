@@ -1098,6 +1098,12 @@ table .approve-button{
     gap: 20px;
     border-bottom: 1px solid #00C996;
     margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.employee-data-header .profile-logo{
+    width: 45px;
+    height: 45px;
 }
 
 .employee-data-container{
@@ -1194,7 +1200,7 @@ table .approve-button{
     text-align: center;
 }
 
-.profile-logo img{
+.profile-logo img, .profile-logo{
     border-radius: 50%;
 }
 

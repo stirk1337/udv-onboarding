@@ -124,7 +124,7 @@ function Personal() {
                 </div>
             </div>
             {isFormOpen && <AddEmployeeForm onDialogClick={()=>dialogClickHandler(false)}/>}
-            {selectedEmployee !== -1 && <StatisticEmployee avatar={"/profile-logo.png"} id={currentEmployee.id} name={currentEmployee.name} completedTasks={[]} onDelete={deleteEmployee} clickExit={employeeClick}/>}
+            {selectedEmployee !== -1 && <StatisticEmployee avatar={currentEmployee.image_url} id={currentEmployee.id} name={currentEmployee.name} completedTasks={[]} onDelete={deleteEmployee} clickExit={employeeClick}/>}
             {(isFormOpen || selectedEmployee !== -1) && <div onClick={closeDialog} className={"backdrop"}></div>}
         </>
      );
