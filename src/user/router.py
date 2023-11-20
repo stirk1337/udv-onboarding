@@ -37,7 +37,8 @@ async def get_curator_employees(user: User = Depends(curator_user),
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     employees = await employee_dal.get_employees_by_curator(curator)
-    employees = [EmployeeOut.parse(employee) for employee in employees]
+    employees = [EmployeeOut.parse(employee) for employee in employees
+                 if employee.employee_status != EmployeeStatus.disabled]
     return employees
 
 

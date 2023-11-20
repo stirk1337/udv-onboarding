@@ -22,7 +22,7 @@ def test_register_curator_with_wrong_email():
 
 def test_login_curator():
     response = login_curator1()
-    assert response.status_code == 204
+    assert isinstance(response, str)
 
 
 def test_login_wrong_credentials():
@@ -53,10 +53,12 @@ def test_register_employee_with_wrong_product_role():
 
 def test_get_curator_linked_to_employee():
     response = client.get('/user/get_employees',
-                          cookies=dict(login_curator1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_curator1()}'
+                          })
 
     assert response.status_code == 200
-    assert len(response.json()) > 1  # has linked employees
+    assert len(response.json()) >= 1  # has linked employees
 
 
 def test_disable_employee():
@@ -66,14 +68,18 @@ def test_disable_employee():
                            json={
                                'employee_id': employee_id
                            },
-                           cookies=dict(login_curator1().cookies))
+                           headers={
+                               'Authorization': f'Bearer {login_curator1()}'
+                           })
     assert disable.status_code == 200
     assert disable.json()['id'] == employee_id
 
 
 def test_logout():
     response = client.post(
-        '/auth/jwt/logout', cookies=dict(login_curator1().cookies))
+        '/auth/jwt/logout', headers={
+            'Authorization': f'Bearer {login_curator1()}'
+        })
     assert response.status_code == 204
 
 
@@ -84,5 +90,7 @@ def test_unauthorized_logout():
 
 def test_get_current_user_info():
     response = client.get('/user/get_current_user_info',
-                          cookies=dict(login_curator1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_curator1()}'
+                          })
     assert response.status_code == 200

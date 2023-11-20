@@ -68,39 +68,104 @@ async def test_create_superuser_for_testing():
         await session.commit()
 
 
+@pytest.fixture(scope='session', autouse=True)
+def test_register_curator1(email: str = 'curator1@ussc.com'):
+    superuser = login_superuser()
+    return client.post('/user/register_new_curator',
+                       json={
+                           'email': email,
+                           'name': 'Curator1',
+                           'password': 'password'
+                       },
+                       headers={
+                           'Authorization': f'Bearer {superuser}'
+                       })
+
+
+@pytest.fixture(scope='session', autouse=True)
+def test_register_curator2():
+    superuser = login_superuser()
+    return client.post('/user/register_new_curator',
+                       json={
+                           'email': 'curator2@ussc.com',
+                           'name': 'Curator2',
+                           'password': 'password'
+                       },
+                       headers={
+                           'Authorization': f'Bearer {superuser}'
+                       })
+
+
+@pytest.fixture(scope='session', autouse=True)
+def test_register_employee1():
+    curator1 = login_curator1()
+    return client.post('/user/register_new_employee',
+                       json={
+                           'email': 'employee1@ussc.com',
+                           'name': 'Employee1',
+                           'product': 'datapk_industrial_kit',
+                           'product_role': 'backend',
+                           'password': 'password'
+                       },
+                       headers={
+                           'Authorization': f'Bearer {curator1}'
+                       })
+
+
+@pytest.fixture(scope='session', autouse=True)
+def test_register_employee2():
+    curator2 = login_curator2()
+    return client.post('/user/register_new_employee',
+                       json={
+                           'email': 'employee2@ussc.com',
+                           'name': 'Employee2',
+                           'product': 'eplat4m',
+                           'product_role': 'frontend',
+                           'password': 'password'
+                       },
+                       headers={
+                           'Authorization': f'Bearer {curator2}'
+                       })
+
+
 def login_superuser():
-    return client.post('/auth/jwt/login', data={
+    request = client.post('/auth/jwt/login', data={
         'username': 'admin@admin.ru',
         'password': 'adminadmin'
     })
+    return request.json()['access_token']
 
 
 def login_curator1():
-    return client.post('/auth/jwt/login', data={
+    request = client.post('/auth/jwt/login', data={
         'username': 'curator1@ussc.com',
         'password': 'password'
     })
+    return request.json()['access_token']
 
 
 def login_curator2():
-    return client.post('/auth/jwt/login', data={
+    request = client.post('/auth/jwt/login', data={
         'username': 'curator2@ussc.com',
         'password': 'password'
     })
+    return request.json()['access_token']
 
 
 def login_employee1():
-    return client.post('/auth/jwt/login', data={
+    request = client.post('/auth/jwt/login', data={
         'username': 'employee1@ussc.com',
         'password': 'password'
     })
+    return request.json()['access_token']
 
 
 def login_employee2():
-    return client.post('/auth/jwt/login', data={
+    request = client.post('/auth/jwt/login', data={
         'username': 'employee2@ussc.com',
         'password': 'password'
     })
+    return request.json()['access_token']
 
 
 def register_employee(email: str,
@@ -114,13 +179,19 @@ def register_employee(email: str,
                            'product_role': product_role,
                            'password': 'password'
                        },
-                       cookies=dict(login_curator1().cookies))
+                       headers={
+                           'Authorization': f'Bearer {login_curator1()}'
+                       })
 
 
 def create_planet(name: str = 'no name', login=login_curator1):  # delegate
-    return client.post('/planet/create_planet', json={
-        'name': name,
-    }, cookies=dict(login().cookies))
+    return client.post('/planet/create_planet',
+                       json={
+                           'name': name,
+                       },
+                       headers={
+                           'Authorization': f'Bearer {login()}'
+                       })
 
 
 def create_task(planet_id: int,
@@ -136,7 +207,9 @@ def create_task(planet_id: int,
                            'name': name,
                            'description': description,
                        },
-                       cookies=dict(login().cookies))
+                       headers={
+                           'Authorization': f'Bearer {login()}'
+                       })
 
 
 def patch_task(task_id: int,
@@ -152,7 +225,9 @@ def patch_task(task_id: int,
                         params={
                             'task_id': task_id
                         },
-                        cookies=dict(login().cookies))
+                        headers={
+                            'Authorization': f'Bearer {login()}'
+                        })
 
 
 def register_curator(email: str):
@@ -162,56 +237,6 @@ def register_curator(email: str):
                            'name': 'Curator',
                            'password': 'password'
                        },
-                       cookies=dict(login_superuser().cookies))
-
-
-@pytest.fixture(scope='session', autouse=True)
-def test_register_curator1(email: str = 'curator1@ussc.com'):
-    superuser = login_superuser()
-    return client.post('/user/register_new_curator',
-                       json={
-                           'email': email,
-                           'name': 'Curator1',
-                           'password': 'password'
-                       },
-                       cookies=dict(superuser.cookies))
-
-
-@pytest.fixture(scope='session', autouse=True)
-def test_register_curator2():
-    superuser = login_superuser()
-    return client.post('/user/register_new_curator',
-                       json={
-                           'email': 'curator2@ussc.com',
-                           'name': 'Curator2',
-                           'password': 'password'
-                       },
-                       cookies=dict(superuser.cookies))
-
-
-@pytest.fixture(scope='session', autouse=True)
-def test_register_employee1():
-    curator1 = login_curator1()
-    return client.post('/user/register_new_employee',
-                       json={
-                           'email': 'employee1@ussc.com',
-                           'name': 'Employee1',
-                           'product': 'datapk_industrial_kit',
-                           'product_role': 'backend',
-                           'password': 'password'
-                       },
-                       cookies=dict(curator1.cookies))
-
-
-@pytest.fixture(scope='session', autouse=True)
-def test_register_employee2():
-    curator2 = login_curator2()
-    return client.post('/user/register_new_employee',
-                       json={
-                           'email': 'employee2@ussc.com',
-                           'name': 'Employee2',
-                           'product': 'eplat4m',
-                           'product_role': 'frontend',
-                           'password': 'password'
-                       },
-                       cookies=dict(curator2.cookies))
+                       headers={
+                           'Authorization': f'Bearer {login_superuser()}'
+                       })

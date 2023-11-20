@@ -55,6 +55,7 @@ async def get_tasks_by_planet_id_with_status(session: AsyncSession = Depends(get
     employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
     tasks = [TaskOutForEmployee.parse(task, employee_task)
              for task, employee_task in zip(tasks, employee_tasks)]
+    tasks = sorted(tasks, key=lambda x: x.id)
     return tasks
 
 
