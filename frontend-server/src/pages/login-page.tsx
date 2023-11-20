@@ -32,15 +32,13 @@ function LoginPage({isAuth}: LoginPageProps) {
           password: password
         }
         dispatch(loginAction(data))
-        console.log('Отправил')
     }
-    console.log('обновил')
+
     return ( 
         <div className="enter-page">
-            {isAuth && userRole !== UserRoles.undefined && <Navigate to={`/${userRole}`}/>}
             <img src="logo.svg" alt="" width={299} height={57}></img>
             <form onSubmit={handleSubmit}>
-                <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' type='text' onchange={handleEmail}/>
+                <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' type='email' onchange={handleEmail}/>
                 <InputComponent name="Пароль" icon='password-icon.svg' value={password} placeholder='Введите пароль' type="password" onchange={handlePassword}/>
                 <div className="assistance-block">
                   <span className="error-message"></span>

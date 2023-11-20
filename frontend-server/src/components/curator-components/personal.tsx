@@ -98,7 +98,10 @@ function Personal() {
             <div className="personal-block">
                 <div className="personal-block-header">
                     <input placeholder="Найти сотрудника" value={searchValue} onChange={searchHandler}></input>
-                    <button onClick={()=>dialogClickHandler(true)}><img src="/add-icon.svg" alt="Добавить сотрудника"/></button>
+                    <button onClick={()=>dialogClickHandler(true)}><svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="40" fill="#3F3F3F"/>
+                        <path d="M40 24L40 56M24 40H56" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+                        </svg></button>
                 </div>
                 <table>
                     <thead>

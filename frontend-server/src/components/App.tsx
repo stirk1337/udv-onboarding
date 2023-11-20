@@ -1,7 +1,6 @@
 import LoginPage from "../pages/login-page"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import MainPage from "../pages/main-page"
-import AuthChecker from "./auth-checker"
 import TaskConstructor from "./curator-components/task-constructor"
 import CuratorPageLayout from "./curator-components/curator-page-layout"
 import TaskEditor from "./curator-components/task-editor"
@@ -15,36 +14,30 @@ import { useEffect } from "react"
 import HistoryRouter from "./history-route"
 import browserHistory from "../browser-history"
 import { UserRoles } from "../types"
+import { useLocalStorage } from "@uidotdev/usehooks"
 
 function App() {
+  const isRegistered = useAppSelector((state) => state.authorizationStatus);
+  const userRole = useAppSelector((state) => state.userData.role);
   useEffect(() => {
     store.dispatch(getCurrentUserInfo())
   }, [])
-  const isRegistered = useAppSelector((state) => state.authorizationStatus);
-  const userRole = useAppSelector((state) => state.userData.role);
 
   return (
     <HistoryRouter history={browserHistory}>
       <Routes>
         <Route path="/">
-          <Route index element={
-            <Navigate to='/login'></Navigate>
-          }/>
           <Route path={`/employee`} element={
-            <AuthChecker isAuth={isRegistered} userRole={userRole}>
               <CuratorPageLayout userRole={userRole}/>
-            </AuthChecker>
           }>
             <Route index element={
-              <MainPage isAuth={isRegistered} userRole={userRole}/>
+              <MainPage/>
             }/>
             <Route path=":planetId/:taskId" element={<TaskBlock/>}/>
           </Route>
 
           <Route path="/curator" element={
-            <AuthChecker isAuth={isRegistered} userRole={userRole}>
               <CuratorPageLayout userRole={userRole}/>
-            </AuthChecker>
           }>
             <Route index element={<TaskConstructor/>}/>
             <Route path="tasks-for-verification" element={<TaskForVerification/>}/>

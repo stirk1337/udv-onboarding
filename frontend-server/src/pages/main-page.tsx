@@ -1,12 +1,10 @@
 import { Navigate } from "react-router-dom";
 import Content from "../components/user-components/content";
 
-function MainPage({isAuth, userRole} : any) {
+function MainPage() {
 
     return ( 
         <div>
-            {!isAuth && <Navigate to="/"/>}
-            {userRole === 'employee' && <Navigate to="/employee"/>}
             <Content />
         </div>
      );

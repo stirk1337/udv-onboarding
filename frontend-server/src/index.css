@@ -35,6 +35,20 @@ html{
     font-weight: 700;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0px 1000px #5E5E5E inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 main::-webkit-scrollbar, html::-webkit-scrollbar{
     width: 0;
 }
@@ -321,6 +335,11 @@ main{
     border-radius: 13px;
     background: #1B1A1A;
     padding: 7px;
+    user-select: none !important;
+}
+
+.profile-buttons button:hover{
+    background-color: #5E5E5E;
 }
 
 .profile-buttons button p{
@@ -353,12 +372,13 @@ main{
 
 .achievements-header button, .progress-header button, .update-image-header button{
     position: absolute;
-    left: 2%;
+    left: 95%;
     top: 2%;
 }
 
 .achievements-progress-bar{
     margin-bottom: 30px;
+    margin-right: 30px;
 }
 
 .achievements-content, .progress-content{
@@ -436,8 +456,12 @@ main{
 
 .useful-links-header button{
     position: absolute;
-    left: 2%;
+    left: 95%;
     top: 5%;
+}
+
+.useful-links-header button:hover svg path, .achievements-header button:hover svg path,  .progress-header button:hover svg path, .update-image-header button:hover svg path{
+    stroke:rgba(255, 112, 112, 1)
 }
 
 .useful-links-content{
@@ -474,6 +498,10 @@ main{
     border-radius: 50%;
     padding: 8px;
     background: #312F2F;
+}
+
+.planet{
+    user-select: none;
 }
 
 .planet:nth-child(even){
@@ -582,6 +610,15 @@ main{
     margin-left: auto;
     margin-top: 20px;
     font-size: 18px;
+    border-radius: 5px;
+}
+
+.button-to-tasks:hover, .approve-button:hover{
+    background-color: rgba(0, 122, 91, 1);
+}
+
+.decline-button:hover{
+    background-color: rgba(239, 34, 34, 1);
 }
 
 .header-nav{
@@ -648,7 +685,7 @@ main{
     background: #5E5E5E;
 }
 
-.constructor-planet-list button:hover circle, .selected-block-monster-list button:hover circle, .task-for-verification-list button:hover circle{
+.constructor-planet-list button:hover circle, .selected-block-monster-list button:hover circle, .task-for-verification-list button:hover circle, .personal-block-header button:hover circle{
     fill: rgba(0, 201, 150, 1);
 }
 
@@ -800,6 +837,7 @@ main{
 }
 
 .added-list-item{
+    position: relative;
     user-select: none;
     cursor: pointer;
     display: flex;
@@ -808,6 +846,17 @@ main{
     border-bottom: 1px solid #3F3F3F;
     width: 90%;
     gap: 10px;
+}
+
+.added-list-item p{
+    width: 90%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.added-list-item:hover .delete-user{
+    display: block !important;
 }
 
 .task-edit-block{
@@ -904,10 +953,12 @@ main{
 }
 
 .completed-button{
+    cursor:default;
     background-color: #00C996;
 }
 
 .being-checked{
+    cursor:default;
     background-color: #F9A22F;
 }
 
@@ -946,6 +997,11 @@ main{
     align-items: center;
     padding: 5px 10px;
     border: 1px solid #505050;
+}
+
+.personal-block-header svg{
+    width: 52px;
+    height: 52px;
 }
 
 .personal-block-header input{
@@ -1169,11 +1225,90 @@ table .approve-button{
     max-height: 80% !important;
     display: block;
     margin: 0 auto;
+}
+
+.ql-editor p, .task-data p {
     margin-bottom: 10px;
 }
 
 .rotate{
     transform: rotate(180deg);
+}
+
+.delete-user{
+    display: none;
+    position: absolute;
+    width: 30px;
+    top: -10%;
+    left: 100%;
+}
+
+.ql-size-huge{
+    font-size: 50px;
+}
+
+.ql-size-small{
+    font-size: 15px;
+}
+
+.ql-size-large{
+    font-size: 30px;
+}
+
+.ql-snow a{
+    color: #00C996;
+}
+
+.task-data a {
+    text-decoration: underline;
+    color: #00C996;
+}
+
+.task-data ol, .task-data ul{
+    padding-left: 2.5em;
+    margin-bottom: 10px;
+}
+
+.task-data ul{
+    list-style:disc;
+}
+
+.ql-editor ol, .ql-editor ul{
+    margin-bottom: 10px;
+}
+
+.ql-editing{
+    position: absolute !important;
+    top: 0 !important;
+    left: 25% !important;
+    margin: 0 !important;
+    margin: 0 !important;
+    background-color: lightgray !important;
+}
+
+.ql-snow .ql-tooltip[data-mode=link]::before {
+    content: "Введите ссылку";
+}
+
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after{
+    content: 'Сохранить';
+}
+
+.ql-snow .ql-tooltip a.ql-action::after {
+    margin: 0;
+}
+
+.ql-action{
+    margin-left: 10px;
+    border-radius: 5px;
+    width: 10px !important;
+    background-color: #02392B;
+    color: white !important;
+    padding: 10px;
+}
+
+.ql-snow .ql-tooltip[data-mode=video]::before{
+    content: 'ссылка на видео';
 }
 
 @media (max-width: 1920px) {

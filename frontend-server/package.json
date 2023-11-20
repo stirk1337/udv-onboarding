@@ -12,6 +12,7 @@
   "dependencies": {
     "@ramonak/react-progress-bar": "^5.0.3",
     "@reduxjs/toolkit": "^1.9.7",
+    "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
     "data-uri-to-file": "^0.1.8",
