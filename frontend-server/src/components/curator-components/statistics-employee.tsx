@@ -1,3 +1,5 @@
+import { BACKEND_URL } from "../services/api";
+
 type StatisticEmployeesProps = {
     id: number;
     avatar: string,
@@ -19,7 +21,7 @@ function StatisticEmployee({id, onDelete, avatar, name, completedTasks, clickExi
                 <p>Статистика сотрудника</p>
             </div>
             <div className="employee-data-header">
-                <img src={avatar} alt=""></img>
+                <img className="profile-logo" src={avatar ? BACKEND_URL + '/' + avatar : '/profile-logo.png'} alt=""></img>
                 <p>{name}</p>
             </div>
             <div className="employee-data-container">

@@ -31,6 +31,7 @@ export type UserOnPlanetData = {
     employee_status: EmployeeStatus,
     created_at: string,
     updated_at: string,
+    image_url: string
 }
 
 export type Planet = {

@@ -67,7 +67,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: Se
                 <div className="added-employee-block">
                     <p className="header-task-form">Добавленные сотрудники</p>
                     <ul className="added-employee-list">
-                        {personalList.map(employee => <AddedEmployee key={employee.id} id={employee.id} avatar={"profile-logo.png"} data={employee.name} onDelete={onDeleteEmployeeHandler}/>)}
+                        {personalList.map(employee => <AddedEmployee key={employee.id} id={employee.id} avatar={employee.image_url} data={employee.name} onDelete={onDeleteEmployeeHandler}/>)}
                     </ul>
                     <button className="button-to-tasks" onClick={() => navigate(`/curator/tasks/${idBlock}`)}>
                         Перейти к этапам
