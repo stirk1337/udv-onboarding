@@ -67,7 +67,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     'planet/createTask',
     async (id, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<PlanetTask>(`/task/create_task/?planet_id=${id}`, {name: null, description: null})
+          const {data: planet} = await api.post<PlanetTask>(`/task/create_task?planet_id=${id}`, {name: null, description: null})
             dispatch(getPlanetCuratorTasks(id))
             dispatch(changeCurrentTask(planet))
         } catch {
