@@ -2,8 +2,9 @@ import { AxiosInstance } from "axios";
 import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Id, Login, Planet, PlanetTask } from "../../../types";
-import { changeCurrentTask, logOut, login } from "../action";
+import { changeCurrentTask, logOut, login, redirectToRoute } from "../action";
 import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
+import { Token, createAPI } from "../../services/api";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -13,9 +14,10 @@ export const loginAction = createAsyncThunk<void, Login, {
     'user/login',
     async (data, {dispatch, extra: api}) => {
       console.log(data)
-      await api.post('/auth/jwt/login', data, {headers: {
+      const {data: tokenData} = await api.post<Token>('/auth/jwt/login', data, {headers: {
         'Content-Type': 'multipart/form-data'
       }});
+      localStorage.setItem('token', JSON.stringify(tokenData.access_token));
       dispatch(login(true));
       dispatch(getCurrentUserInfo())
     },
@@ -30,8 +32,10 @@ export const loginAction = createAsyncThunk<void, Login, {
     async (_arg, {dispatch, extra: api}) => {
         try {
             await api.post('/auth/jwt/logout')
+            localStorage.setItem('token', '');
             dispatch(login(false));
             dispatch(logOut())
+            dispatch(redirectToRoute(`/login`));
         } catch {
             dispatch(login(false));
         }

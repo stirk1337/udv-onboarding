@@ -36,8 +36,8 @@ function TaskEditor() {
     const modules = {
         toolbar: [
           [{ 'size': ['small', false, 'large', 'huge'] }],
-          ['bold', 'italic', 'underline','strike', 'blockquote'],
-          [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+          ['bold', 'italic', 'underline','strike'],
+          [{'list': 'ordered'}, {'list': 'bullet'}],
           ['link', 'image', 'video'],
           [{'align': ['right','center', false]}],
           ['clean']

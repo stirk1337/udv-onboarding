@@ -15,7 +15,7 @@ function InputComponent({name, icon, value,placeholder, type, onchange}: InputCo
             <label htmlFor="email">{name}</label>
             <div className="label-container">
                 <img src={icon} alt="" width={26} height={26}></img>
-                <input type={type} name="email" placeholder={placeholder} value={value} onChange={onchange}></input>
+                <input required type={type} name="email" placeholder={placeholder} value={value} onChange={onchange}></input>
             </div>
         </>
      );
