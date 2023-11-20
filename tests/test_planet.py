@@ -16,7 +16,9 @@ def test_create_planet_with_no_rights():
 def test_get_planets():
     create_planet('test_get_planets', login_curator1)
     response = client.get('/planet/get_planets',
-                          cookies=dict(login_curator1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_curator1()}'
+                          })
     assert response.json()[-1]['name'] == 'test_get_planets'
 
 
@@ -26,7 +28,9 @@ def test_create_and_get_planet_by_id():
                             params={
                                 'planet_id': create.json()['id']
                             },
-                            cookies=dict(login_curator1().cookies))
+                            headers={
+                                'Authorization': f'Bearer {login_curator1()}'
+                            })
     assert get_planet.json()['name'] == 'planet'
 
 
@@ -38,16 +42,23 @@ def test_create_and_update_planet_by_id():
                                  },
                                  json={
                                      'name': '1337'
-                                 }, cookies=dict(login_curator1().cookies))
+                                 },
+                                 headers={
+                                     'Authorization': f'Bearer {login_curator1()}'
+                                 })
 
     assert update_planet.json()['name'] == '1337'
 
 
 def test_create_and_delete_planet():
     create = create_planet('planet', login_curator1)
-    response = client.delete('planet/delete_planet', params={
-        'planet_id': create.json()['id']
-    }, cookies=dict(login_curator1().cookies))
+    response = client.delete('planet/delete_planet',
+                             params={
+                                 'planet_id': create.json()['id']
+                             },
+                             headers={
+                                 'Authorization': f'Bearer {login_curator1()}'
+                             })
     assert response.status_code == 200
 
 
@@ -60,7 +71,9 @@ def test_add_employee1_to_created_planet():
                             params={
                                 'planet_id': create.json()['id']
                             },
-                            cookies=dict(login_curator1().cookies))
+                            headers={
+                                'Authorization': f'Bearer {login_curator1()}'
+                            })
     assert response.json()['id'] == create.json()['id']
 
 
@@ -78,7 +91,9 @@ def test_add_employees_by_params():
                             params={
                                 'planet_id': create.json()['id'],
                             },
-                            cookies=dict(login_curator1().cookies))
+                            headers={
+                                'Authorization': f'Bearer {login_curator1()}'
+                            })
     assert response.json()['id'] == create.json()['id']
 
 
@@ -94,7 +109,9 @@ def test_remove_employee_from_planet():
                  params={
                      'planet_id': create.json()['id']
                  },
-                 cookies=dict(login_curator1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
     response = client.patch('/planet/remove_employee_from_planet',
                             json={
                                 'employee_id': employee.json()['id']
@@ -102,13 +119,17 @@ def test_remove_employee_from_planet():
                             params={
                                 'planet_id': create.json()['id'],
                             },
-                            cookies=dict(login_curator1().cookies))
+                            headers={
+                                'Authorization': f'Bearer {login_curator1()}'
+                            })
     assert response.json()['id'] == create.json()['id']
 
 
 def test_get_planets_by_employee1():
     response = client.get('/planet/get_planets',
-                          cookies=dict(login_employee1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_employee1()}'
+                          })
     assert response.status_code == 200
     assert len(response.json()) >= 1
 
@@ -118,7 +139,9 @@ def test_get_planet_that_doesnt_exists():
                           params={
                               'planet_id': 123123
                           },
-                          cookies=dict(login_employee1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_employee1()}'
+                          })
     assert response.status_code == 404
 
 
@@ -130,7 +153,9 @@ def test_patch_planet_that_doesnt_exists():
                             params={
                                 'planet_id': 123123,
                             },
-                            cookies=dict(login_curator1().cookies))
+                            headers={
+                                'Authorization': f'Bearer {login_curator1()}'
+                            })
     assert response.status_code == 404
 
 
@@ -139,7 +164,9 @@ def test_delete_planet_that_doesnt_exists():
                              params={
                                  'planet_id': 123123,
                              },
-                             cookies=dict(login_curator1().cookies))
+                             headers={
+                                 'Authorization': f'Bearer {login_curator1()}'
+                             })
     assert response.status_code == 404
 
 
@@ -152,7 +179,9 @@ def test_patch_planet_with_no_rights():
                             params={
                                 'planet_id': create.json()['id'],
                             },
-                            cookies=dict(login_curator2().cookies))
+                            headers={
+                                'Authorization': f'Bearer {login_curator2()}'
+                            })
     assert response.status_code == 403
 
 
@@ -162,7 +191,9 @@ def test_delete_planet_with_no_rights():
                              params={
                                  'planet_id': create.json()['id']
                              },
-                             cookies=dict(login_curator2().cookies))
+                             headers={
+                                 'Authorization': f'Bearer {login_curator2()}'
+                             })
     assert response.status_code == 403
 
 
@@ -175,10 +206,14 @@ def test_get_planet_with_no_rights():
                 params={
                     'planet_id': create.json()['id']
                 },
-                cookies=dict(login_curator1().cookies))
+                headers={
+                    'Authorization': f'Bearer {login_curator1()}'
+                })
     response = client.get('/planet/get_planet',
                           params={
                               'planet_id': create.json()['id']
                           },
-                          cookies=dict(login_employee2().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_employee2()}'
+                          })
     assert response.status_code == 403

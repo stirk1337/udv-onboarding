@@ -85,8 +85,7 @@ class TaskOutForEmployee(BaseModel):
 
 
 class TaskOutForChecking(BaseModel):
-    task_id: int
-    employee_task_id: int
+    id: int
     name: Optional[str]
     description: Optional[str]
     planet_id: int
@@ -98,8 +97,7 @@ class TaskOutForChecking(BaseModel):
 
     @staticmethod
     def parse(task: Task, employee: Employee, employee_task: EmployeeTask):
-        return TaskOutForChecking(task_id=task.id,
-                                  employee_task_id=employee_task.id,
+        return TaskOutForChecking(id=task.id,
                                   name=task.name,
                                   description=task.description,
                                   planet_id=task.planet_id,

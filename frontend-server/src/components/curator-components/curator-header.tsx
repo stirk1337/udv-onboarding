@@ -71,7 +71,7 @@ function CuratorHeader() {
     return ( 
         <header>
             <div className="logo">
-                <img src="/logo.svg" alt="udv group space exploration" width={210} height={40}></img>
+            <a href="/"><img src="/logo.svg" alt="udv group space exploration" width={210} height={40}></img></a>
             </div>
             <nav className="header-nav">
                 <Link className={location === '/curator' ? 'active' : ''} to={"/curator"}>Конструктор задач</Link>

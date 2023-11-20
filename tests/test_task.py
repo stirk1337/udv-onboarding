@@ -16,7 +16,9 @@ def test_get_created_task():
                           params={
                               'task_id': task.json()['id']
                           },
-                          cookies=dict(login_curator1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_curator1()}'
+                          })
     assert get_task.json()['name'] == '2'
 
 
@@ -27,7 +29,9 @@ def test_get_created_tasks():
                            params={
                                'planet_id': create.json()['id']
                            },
-                           cookies=dict(login_curator1().cookies))
+                           headers={
+                               'Authorization': f'Bearer {login_curator1()}'
+                           })
     assert len(get_tasks.json()) >= 1
 
 
@@ -36,7 +40,9 @@ def test_get_task_that_doenst_exist():
                           params={
                               'task_id': '133333'
                           },
-                          cookies=dict(login_curator1().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_curator1()}'
+                          })
     assert get_task.status_code == 404
 
 
@@ -47,7 +53,9 @@ def test_get_task_with_no_rights_employee():
                           params={
                               'task_id': task.json()['id']
                           },
-                          cookies=dict(login_employee2().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_employee1()}'
+                          })
     assert get_task.status_code == 403
 
 
@@ -58,13 +66,17 @@ def test_get_task_with_no_rights_curator():
                           params={
                               'task_id': task.json()['id']
                           },
-                          cookies=dict(login_curator2().cookies))
+                          headers={
+                              'Authorization': f'Bearer {login_curator2()}'
+                          })
     assert get_task.status_code == 403
 
 
 def test_get_tasks_that_need_to_be_checked_zero_tasks():
     get_tasks_being_checked = client.get('/task/get_tasks_being_checked',
-                                         cookies=dict(login_curator1().cookies))
+                                         headers={
+                                             'Authorization': f'Bearer {login_curator1()}'
+                                         })
     assert len(get_tasks_being_checked.json()) == 0
 
 
@@ -77,7 +89,9 @@ def test_get_tasks_that_need_to_be_checked():
                  params={
                      'planet_id': create.json()['id']
                  },
-                 cookies=dict(login_curator1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
     task = create_task(planet_id=create.json()['id'], name='5')
     client.patch('/task/answer_task',
                  params={
@@ -86,9 +100,13 @@ def test_get_tasks_that_need_to_be_checked():
                  json={
                      'answer': 'this_is_answer',
                  },
-                 cookies=dict(login_employee1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_employee1()}'
+                 })
     get_tasks_being_checked = client.get('/task/get_tasks_being_checked',
-                                         cookies=dict(login_curator1().cookies))
+                                         headers={
+                                             'Authorization': f'Bearer {login_curator1()}'
+                                         })
     assert len(get_tasks_being_checked.json()) >= 1
 
 
@@ -101,7 +119,9 @@ def test_get_tasks_with_status():
                  params={
                      'planet_id': create.json()['id']
                  },
-                 cookies=dict(login_curator1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
     task = create_task(planet_id=create.json()['id'], name='5')
     client.patch('/task/answer_task',
                  params={
@@ -110,12 +130,16 @@ def test_get_tasks_with_status():
                  json={
                      'answer': 'this_is_answer',
                  },
-                 cookies=dict(login_employee1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_employee1()}'
+                 })
     get_tasks_with_status = client.get('/task/get_tasks_being_checked',
                                        params={
                                            'planet_id': create.json()['id']
                                        },
-                                       cookies=dict(login_curator1().cookies))
+                                       headers={
+                                           'Authorization': f'Bearer {login_curator1()}'
+                                       })
     assert len(get_tasks_with_status.json()) >= 1
 
 
@@ -147,8 +171,9 @@ def test_delete_task():
                                 params={
                                     'task_id': task.json()['id'],
                                 },
-                                cookies=dict(login_curator1().cookies)
-                                )
+                                headers={
+                                    'Authorization': f'Bearer {login_curator1()}'
+                                })
     assert delete_task.json()['id'] == task.json()['id']
 
 
@@ -157,8 +182,9 @@ def test_delete_task_that_doesnt_exist():
                                 params={
                                     'task_id': '9865',
                                 },
-                                cookies=dict(login_curator1().cookies)
-                                )
+                                headers={
+                                    'Authorization': f'Bearer {login_curator1()}'
+                                })
     assert delete_task.status_code == 404
 
 
@@ -169,8 +195,9 @@ def test_delete_task_with_no_rights():
                                 params={
                                     'task_id': task.json()['id'],
                                 },
-                                cookies=dict(login_curator2().cookies)
-                                )
+                                headers={
+                                    'Authorization': f'Bearer {login_curator2()}'
+                                })
     assert delete_task.status_code == 403
 
 
@@ -183,7 +210,9 @@ def test_answer_task_employee1():
                  params={
                      'planet_id': create.json()['id']
                  },
-                 cookies=dict(login_curator1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
     task = create_task(planet_id=create.json()['id'], name='5')
     answer_task = client.patch('/task/answer_task',
                                params={
@@ -192,7 +221,9 @@ def test_answer_task_employee1():
                                json={
                                    'answer': 'this_is_answer',
                                },
-                               cookies=dict(login_employee1().cookies))
+                               headers={
+                                   'Authorization': f'Bearer {login_employee1()}'
+                               })
     assert answer_task.json()['employee_answer'] == 'this_is_answer'
 
 
@@ -206,7 +237,9 @@ def test_answer_task_employee_with_no_rights():
                                json={
                                    'answer': 'this_is_answer',
                                },
-                               cookies=dict(login_employee2().cookies))
+                               headers={
+                                   'Authorization': f'Bearer {login_employee2()}'
+                               })
     assert answer_task.status_code == 403
 
 
@@ -219,7 +252,9 @@ def test_check_task_accept():
                  params={
                      'planet_id': create.json()['id']
                  },
-                 cookies=dict(login_curator1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
     task = create_task(planet_id=create.json()['id'], name='1337')
     client.patch('/task/answer_task',
                  params={
@@ -228,7 +263,9 @@ def test_check_task_accept():
                  json={
                      'answer': 'this_is_answer',
                  },
-                 cookies=dict(login_employee1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_employee1()}'
+                 })
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
@@ -237,7 +274,9 @@ def test_check_task_accept():
                               json={
                                   'task_status': 'completed'
                               },
-                              cookies=dict(login_curator1().cookies))
+                              headers={
+                                  'Authorization': f'Bearer {login_curator1()}'
+                              })
     assert check_task.json()['task_status'] == 'completed'
 
 
@@ -250,7 +289,9 @@ def test_check_task_decline():
                  params={
                      'planet_id': create.json()['id']
                  },
-                 cookies=dict(login_curator1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
     task = create_task(planet_id=create.json()['id'], name='1337')
     client.patch('/task/answer_task',
                  params={
@@ -259,7 +300,9 @@ def test_check_task_decline():
                  json={
                      'answer': 'this_is_answer',
                  },
-                 cookies=dict(login_employee1().cookies))
+                 headers={
+                     'Authorization': f'Bearer {login_employee1()}'
+                 })
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],
@@ -268,7 +311,9 @@ def test_check_task_decline():
                               json={
                                   'task_status': 'in_progress'
                               },
-                              cookies=dict(login_curator1().cookies))
+                              headers={
+                                  'Authorization': f'Bearer {login_curator1()}'
+                              })
     assert check_task.json()['task_status'] == 'in_progress'
 
 
@@ -283,5 +328,7 @@ def test_check_task_with_no_rights():
                               json={
                                   'task_status': 'completed'
                               },
-                              cookies=dict(login_curator2().cookies))
+                              headers={
+                                  'Authorization': f'Bearer {login_curator2()}'
+                              })
     assert check_task.status_code == 403

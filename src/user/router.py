@@ -37,7 +37,8 @@ async def get_curator_employees(user: User = Depends(curator_user),
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     employees = await employee_dal.get_employees_by_curator(curator)
-    employees = [EmployeeOut.parse(employee) for employee in employees]
+    employees = [EmployeeOut.parse(employee) for employee in employees
+                 if employee.employee_status != EmployeeStatus.disabled]
     return employees
 
 
@@ -72,7 +73,7 @@ async def create_new_employee(employee_in: EmployeeInCreate,
                                       name=employee_in.name,
                                       role=Role.employee,
                                       password=employee_in.password)
-    if employee_user is not None:  # if user already exists
+    if employee_user:  # if user already exists
         employee = await employee_dal.create_employee(
             employee_user,
             curator.id,
