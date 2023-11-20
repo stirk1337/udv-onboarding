@@ -16,7 +16,7 @@ from src.planet.validators import (PlanetIn, ShowPlanet,
 from src.request_codes import planet_responses, responses
 from src.task.dals import TaskDAL
 from src.user.dals import CuratorDAL, EmployeeDAL
-from src.user.models import Product, ProductRole
+from src.user.models import EmployeeStatus, Product, ProductRole
 from src.user.validators import EmployeeIdItem, EmployeesIdItem
 
 router = APIRouter(prefix='/planet',
@@ -96,7 +96,7 @@ async def set_employee(ids: EmployeesIdItem,
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     filtered_employees = list(
-        filter(lambda x: x.curator_id == curator.id, employees))
+        filter(lambda x: x.curator_id == curator.id and x.employee_status != EmployeeStatus.disabled, employees))
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
     return ShowPlanetWithEmployees.parse(planet)
 
@@ -123,7 +123,7 @@ async def set_employee_by_param(product_in: ProductAndProductRoleIn,
         product_in.product,
         product_in.product_role)
     filtered_employees = list(
-        filter(lambda x: x.curator_id == curator.id, employees))
+        filter(lambda x: x.curator_id == curator.id and x.employee_status != EmployeeStatus.disabled, employees))
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
     return ShowPlanetWithEmployees.parse(planet)
 
