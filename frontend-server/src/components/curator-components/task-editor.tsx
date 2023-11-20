@@ -78,7 +78,7 @@ function TaskEditor() {
                 </button>
               </div>
               <ul>
-                {tasks.map(task => <TaskConstructorTasks key={task.id} currentTaskId={task.id === currentTask.id} taskId={task.id} blockId={task.planet_id} icon={"/monster-icon.svg"} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
+                {tasks.map(task => <TaskConstructorTasks key={task.id} currentTaskId={task.id === currentTask.id} taskId={task.id} blockId={task.planet_id} icon={''} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
               </ul>
               <button className='new-task-button' type="submit" onClick={() => dispatch(createTask(Number(id)))}>                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="58" viewBox="0 0 57 58" fill="none">
                         <circle cx="28.5" cy="29" r="28.5" fill="#676767"/>
