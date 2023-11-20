@@ -18,7 +18,7 @@ function TaskConstructorTasks({taskId, currentTaskId,  blockId, icon, name, date
     const active = currentTaskId && 'active'
     return ( 
         <li onClick={(evt) => onClickElement(evt, taskId, blockId)} className={"selected-block-monster-list-item " + active}>
-            <img className="profile-logo" src={icon ? BACKEND_URL + '/' + icon : '/profile-logo.png'} alt="" width={56} height={56}></img>
+            <img className="profile-logo" src={icon ? BACKEND_URL + '/' + icon : '/monster-icon.svg'} alt="" width={56} height={56}></img>
             <div className="selected-block-monster-list-item-content">
                 <p>{name}</p>
                 <p className="date">{`${convertedDate[2]}.${convertedDate[1]}.${convertedDate[0]}`}</p>
