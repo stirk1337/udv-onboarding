@@ -69,13 +69,13 @@ function TaskData({id, planetId, name, data, currentAnswer, taskStatus, isApprov
             <div className="task-data" dangerouslySetInnerHTML={{__html: data}}></div>
             {!isApprovePage ?
                         <form onSubmit={handleSubmit} className="task-comments">
-                            <label htmlFor="comment"><p>Введите комментарий к задаче:</p></label>
+                            <label htmlFor="comment"><p>Введите комментарий к этапу:</p></label>
                             <input type="text" autoComplete="off" value={answer} onChange={handleAnswer} id="comment"></input>
                             {!isApprovePage && <button type="submit" disabled={buttonInfo[0] !== 'approve-button'} className={buttonInfo[0]}>{buttonInfo[1]}</button>}
                         </form>
                             :
                         <div className="task-comments">
-                            <p>Комментарий к задаче:</p>
+                            <p>Комментарий к этапу:</p>
                             <p id="comment">{answer}</p>
                             {!isApprovePage && <button type="submit" className={buttonInfo[0]}>{buttonInfo[1]}</button>}
                         </div>

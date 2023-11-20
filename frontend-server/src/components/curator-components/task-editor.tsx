@@ -86,7 +86,7 @@ function TaskEditor() {
                     </svg>Добавить новый этап</button>
             </div>
             {currentTask.id !== -1 && <div className='edit-content'>
-              <input className="selected-block-name" value={name} onChange={onChangeNameHandler} placeholder="Введите название задачи" onBlur={onBlurHandler}></input>
+              <input className="selected-block-name" value={name} onChange={onChangeNameHandler} placeholder="Введите название этапа" onBlur={onBlurHandler}></input>
               <ReactQuill theme="snow" value={description} onChange={onChangeDescriptionHandler} modules={modules} onBlur={onBlurHandler} />
             </div>}
         </div>
