@@ -15,7 +15,7 @@ from src.user.router import router as user_router
 tags_metadata = [
     {
         'name': 'auth',
-        'description': 'All about auth is here. Create Curators is also here (/register)'
+        'description': 'All about auth is here. Bearer transport'
     },
     {
         'name': 'user',
