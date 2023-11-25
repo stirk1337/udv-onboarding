@@ -1,4 +1,4 @@
-from tests.conftest import (client, create_planet, login_curator1,
+from tests.conftest import (client, create_planet, create_task, login_curator1,
                             login_curator2, login_employee1, login_employee2,
                             register_employee)
 
@@ -217,3 +217,49 @@ def test_get_planet_with_no_rights():
                               'Authorization': f'Bearer {login_employee2()}'
                           })
     assert response.status_code == 403
+
+
+def test_get_employee_planets_by_employee_id():
+    create = create_planet('planet', login_curator1)
+    client.patch('/planet/add_employees_to_planet',
+                 json={
+                     'employee_ids': [1]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
+    create_task(planet_id=create.json()['id'], name='123')
+    response = client.get('/planet/get_employee_planets_by_employee_id',
+                          params={
+                              'employee_id': 1,
+                          },
+                          headers={
+                              'Authorization': f'Bearer {login_curator1()}'
+                          })
+    assert len(response.json()) >= 1
+
+
+def test_get_employee_planets():
+    create = create_planet('planet', login_curator1)
+    client.patch('/planet/add_employees_to_planet_by_employee_id',
+                 json={
+                     'employee_ids': [1]
+                 },
+                 params={
+                     'planet_id': create.json()['id']
+                 },
+                 headers={
+                     'Authorization': f'Bearer {login_curator1()}'
+                 })
+    create_task(planet_id=create.json()['id'], name='123')
+    response = client.get('/planet/get_employee_planets',
+                          params={
+                              'employee_id': 1,
+                          },
+                          headers={
+                              'Authorization': f'Bearer {login_employee1()}'
+                          })
+    assert len(response.json()) >= 1

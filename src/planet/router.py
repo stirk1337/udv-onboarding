@@ -1,20 +1,22 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.dependencies import curator_user, current_user
+from src.auth.dependencies import curator_user, current_user, employee_user
 from src.auth.models import Role, User
 from src.db import get_async_session
 from src.planet.dals import PlanetDAL
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
 from src.planet.validators import (PlanetIn, ShowPlanet,
+                                   ShowPlanetWithCompletionStatus,
                                    ShowPlanetWithEmployees,
                                    ShowPlanetWithEmployeesAndTaskCount)
-from src.request_codes import planet_responses, responses
+from src.request_codes import employee_responses, planet_responses, responses
 from src.task.dals import TaskDAL
+from src.task.models import TaskStatus
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import EmployeeStatus, Product, ProductRole
 from src.user.validators import EmployeeIdItem, EmployeesIdItem
@@ -57,6 +59,57 @@ async def get_planets(user: User = Depends(current_user),
     ]
     planets = sorted(planets, key=lambda x: x.id)
     return planets
+
+
+@router.get('/get_employee_planets_by_employee_id', responses=employee_responses)
+async def get_employee_planets_by_employee_id(
+        employee_id: int,
+        user: User = Depends(curator_user),
+        session: AsyncSession = Depends(get_async_session)) -> List[ShowPlanetWithCompletionStatus]:
+    """Get employee planets by employee id with completion status. Rights: curator"""
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    employee_dal = EmployeeDAL(session)
+    employee = await employee_dal.get_employee_by_id(employee_id)
+    response = []
+    if employee.curator_id == curator.id:
+        planet_dal = PlanetDAL(session)
+        task_dal = TaskDAL(session)
+        planets = await planet_dal.get_planets_for_employee(employee)
+        for planet in planets:
+            tasks = await task_dal.get_tasks_by_planet(planet)
+            employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
+            completed_task_count = len(list(filter(lambda x: x == TaskStatus.completed,
+                                                   [x.task_status for x in employee_tasks])))
+            response.append(
+                ShowPlanetWithCompletionStatus.parse(
+                    planet, completed_task_count, len(employee_tasks))
+            )
+        return response
+    raise HTTPException(status_code=403, detail='Forbidden')
+
+
+@router.get('/get_employee_planets', responses=employee_responses)
+async def get_employee_planets(
+        user: User = Depends(employee_user),
+        session: AsyncSession = Depends(get_async_session)) -> List[ShowPlanetWithCompletionStatus]:
+    """Get employee planets with completion status. Rights: employee"""
+    employee_dal = EmployeeDAL(session)
+    employee = await employee_dal.get_employee_by_user(user)
+    response = []
+    planet_dal = PlanetDAL(session)
+    task_dal = TaskDAL(session)
+    planets = await planet_dal.get_planets_for_employee(employee)
+    for planet in planets:
+        tasks = await task_dal.get_tasks_by_planet(planet)
+        employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
+        completed_task_count = len(list(filter(lambda x: x == TaskStatus.completed,
+                                               [x.task_status for x in employee_tasks])))
+        response.append(
+            ShowPlanetWithCompletionStatus.parse(
+                planet, completed_task_count, len(employee_tasks))
+        )
+    return response
 
 
 @router.post('/create_planet',
