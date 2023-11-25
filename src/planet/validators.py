@@ -27,6 +27,26 @@ class ShowPlanet(BaseModel):
                           updated_at=planet.updated_at)
 
 
+class ShowPlanetWithCompletionStatus(BaseModel):
+    id: int
+    name: Optional[str]
+    curator_id: int
+    created_at: datetime
+    updated_at: datetime
+    completed: int
+    task_count: int
+
+    @staticmethod
+    def parse(planet: Planet, completed: int, task_count: int):
+        return ShowPlanetWithCompletionStatus(id=planet.id,
+                                              name=planet.name,
+                                              curator_id=planet.curator_id,
+                                              created_at=planet.created_at,
+                                              updated_at=planet.updated_at,
+                                              completed=completed,
+                                              task_count=task_count)
+
+
 class ShowPlanetWithEmployees(BaseModel):
     id: int
     name: Optional[str]
