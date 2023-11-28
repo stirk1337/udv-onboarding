@@ -9,6 +9,7 @@ from sqlalchemy import engine_from_config, pool
 from main import Base
 # imports for alembic migrations
 from src.auth.models import User
+from src.notification.models import Notification
 from src.planet.models import EmployeePlanet, Planet
 from src.task.models import Task
 from src.user.models import Curator, Employee

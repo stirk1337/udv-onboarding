@@ -31,6 +31,8 @@ class Planet(Base):
     updated_at: Mapped[datetime.datetime] = mapped_column(
         server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
     )
+    notifications: Mapped[List['Notification']
+                          ] = relationship(back_populates='planet')
 
 
 class EmployeePlanet(Base):

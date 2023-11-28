@@ -39,3 +39,5 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     )
     employee: Mapped[List['Employee']] = relationship(back_populates='user')
     curator: Mapped[List['Curator']] = relationship(back_populates='user')
+    notifications: Mapped[List['Notification']
+                          ] = relationship(back_populates='user')

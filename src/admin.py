@@ -3,6 +3,7 @@ from sqladmin import Admin, ModelView
 
 from src.auth.models import User
 from src.db import engine
+from src.notification.models import Notification
 from src.planet.models import EmployeePlanet, Planet
 from src.task.models import EmployeeTask, Task
 from src.user.models import Curator, Employee
@@ -15,7 +16,8 @@ class UserAdmin(ModelView, model=User):
                    User.role,
                    User.is_active,
                    User.is_superuser,
-                   User.is_verified]
+                   User.is_verified,
+                   User.notifications]
 
 
 class EmployeeAdmin(ModelView, model=Employee):
@@ -36,7 +38,8 @@ class PlanetAdmin(ModelView, model=Planet):
                    Planet.task,
                    Planet.employees,
                    Planet.created_at,
-                   Planet.updated_at]
+                   Planet.updated_at,
+                   Planet.notifications]
 
 
 class TaskAdmin(ModelView, model=Task):
@@ -46,7 +49,8 @@ class TaskAdmin(ModelView, model=Task):
                    Task.planet_id,
                    Task.planet,
                    Task.updated_at,
-                   Task.created_at]
+                   Task.created_at,
+                   Task.notifications]
 
 
 class EmployeePlanetAdmin(ModelView, model=EmployeePlanet):
@@ -65,6 +69,19 @@ class EmployeeTaskAdmin(ModelView, model=EmployeeTask):
                    EmployeeTask.updated_at]
 
 
+class NotificationAdmin(ModelView, model=Notification):
+    column_list = [Notification.id,
+                   Notification.user_id,
+                   Notification.user,
+                   Notification.task_id,
+                   Notification.task,
+                   Notification.planet_id,
+                   Notification.planet,
+                   Notification.created_at,
+                   Notification.is_read,
+                   Notification.type]
+
+
 def add_admin_views(app: FastAPI) -> None:
     admin = Admin(app, engine)
     admin.add_view(UserAdmin)
@@ -74,3 +91,4 @@ def add_admin_views(app: FastAPI) -> None:
     admin.add_view(TaskAdmin)
     admin.add_view(EmployeePlanetAdmin)
     admin.add_view(EmployeeTaskAdmin)
+    admin.add_view(NotificationAdmin)

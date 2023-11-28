@@ -114,6 +114,21 @@ class EmployeeDAL:
                 status_code=404, detail=f'Employee with that user {user} not found')
         return employee
 
+    async def get_employee_by_user_with_curator(self, user: User) -> Employee:
+        employee = await self.db_session.scalar(
+            select(Employee)
+            .where(Employee.user_id == user.id)
+            .options(
+                selectinload(
+                    Employee.curator
+                )
+            )
+        )
+        if employee is None:
+            raise HTTPException(
+                status_code=404, detail=f'Employee with that user {user} not found')
+        return employee
+
     async def get_employees_by_ids(self, ids: List[int]) -> List[Employee]:
         employees = await self.db_session.scalars(
             select(Employee)

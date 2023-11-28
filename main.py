@@ -7,6 +7,7 @@ from src.admin import add_admin_views
 from src.auth.router import include_auth_routers
 from src.auth.router import router as auth_router
 from src.db import Base, get_async_session  # noqa: F401
+from src.notification.router import router as notification_router
 from src.planet.router import router as planet_router
 from src.startup import start_up
 from src.task.router import router as task_router
@@ -47,6 +48,7 @@ app.include_router(user_router)
 app.include_router(task_router)
 app.include_router(planet_router)
 app.include_router(auth_router)
+app.include_router(notification_router)
 
 origins = ['*']
 
@@ -62,6 +64,7 @@ app.add_middleware(
 @app.on_event('startup')
 async def startup_event():
     await start_up()
+
 
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
