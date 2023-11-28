@@ -6,12 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import curator_user, employee_user
 from src.auth.models import User
 from src.db import get_async_session
+from src.notification.dals import NotificationDAL
+from src.notification.models import NotificationType
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
 from src.request_codes import planet_responses, responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
-from src.task.models import Task
+from src.task.models import Task, TaskStatus
 from src.task.validators import (EmployeeTaskOut, TaskInAnswer, TaskInCheck,
                                  TaskInCreate, TaskInUpdate, TaskOut,
                                  TaskOutForChecking, TaskOutForEmployee)
@@ -81,14 +83,24 @@ async def get_tasks_that_need_check(session: AsyncSession = Depends(get_async_se
 
 
 @router.post('/create_task',
-             responses=planet_responses,
-             dependencies=[Depends(curator_user)])
+             responses=planet_responses)
 async def create_new_task(task_in: TaskInCreate,
                           session: AsyncSession = Depends(get_async_session),
-                          planet: Planet = Depends(have_planet)) -> TaskOut:
+                          planet: Planet = Depends(have_planet),
+                          user: User = Depends(curator_user)) -> TaskOut:
     """Create task linked to planet. Rights: curator, you must have this planet"""
     task_dal = TaskDAL(session)
     task = await task_dal.create_task(task_in.name, task_in.description, planet)
+    employee_dal = EmployeeDAL(session)
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    employees = await employee_dal.get_employees_by_curator(curator)
+    notification_dal = NotificationDAL(session)
+    for employee in employees:
+        await notification_dal.create(user_id=employee.user_id,
+                                      task=task,
+                                      planet=task.planet,
+                                      notification_type=NotificationType.new)
     return TaskOut.parse(task)
 
 
@@ -122,11 +134,16 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
                                        get_async_session),
                                    task: Task = Depends(have_task),
                                    user: User = Depends(employee_user)) -> EmployeeTaskOut:
-    """Answer on your task. Rights: employee or curator, you must have this task"""
+    """Answer on your task. Rights: employee, you must have this task"""
     task_dal = TaskDAL(session)
     employee_dal = EmployeeDAL(session)
-    employee = await employee_dal.get_employee_by_user(user)
+    employee = await employee_dal.get_employee_by_user_with_curator(user)
     employee_task = await task_dal.answer_task(task, employee, task_in.answer)
+    notification_dal = NotificationDAL(session)
+    await notification_dal.create(user_id=employee.curator.user_id,
+                                  task=task,
+                                  planet=task.planet,
+                                  notification_type=NotificationType.answer)
     return EmployeeTaskOut.parse(employee_task)
 
 
@@ -143,4 +160,10 @@ async def check_task_by_its_id(task_in: TaskInCheck,
     employee_dal = EmployeeDAL(session)
     employee = await employee_dal.get_employee_by_id(employee_id)
     employee_task = await task_dal.check_task(task, employee, task_in.task_status)
+    notification_dal = NotificationDAL(session)
+    notify_type = NotificationType.accept if task_in.task_status == TaskStatus.completed else NotificationType.decline
+    await notification_dal.create(user_id=employee.user_id,
+                                  task=task,
+                                  planet=task.planet,
+                                  notification_type=notify_type)
     return EmployeeTaskOut.parse(employee_task)
