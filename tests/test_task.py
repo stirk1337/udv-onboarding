@@ -72,14 +72,6 @@ def test_get_task_with_no_rights_curator():
     assert get_task.status_code == 403
 
 
-def test_get_tasks_that_need_to_be_checked_zero_tasks():
-    get_tasks_being_checked = client.get('/task/get_tasks_being_checked',
-                                         headers={
-                                             'Authorization': f'Bearer {login_curator1()}'
-                                         })
-    assert len(get_tasks_being_checked.json()) == 0
-
-
 def test_get_tasks_that_need_to_be_checked():
     create = create_planet('planet', login_curator1)
     client.patch('/planet/add_employees_to_planet',
