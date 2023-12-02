@@ -1,11 +1,39 @@
 from tests.conftest import (client, create_planet, create_task, login_curator1,
                             login_curator2, login_employee1, login_employee2,
-                            register_employee)
+                            login_superuser, register_employee)
 
 
 def test_create_planet():
     response = create_planet(name='planet')
     assert response.json()['name'] == 'planet'
+
+
+def test_create_first_day_planet():
+    response = client.post('/planet/create_planet',
+                           json={
+                               'name': '123',
+                           },
+                           headers={
+                               'Authorization': f'Bearer {login_superuser()}'
+                           },
+                           params={
+                               'is_first_day': True
+                           })
+    assert response.json()['name'] == '123'
+
+
+def test_create_first_day_planet_no_rights():
+    response = client.post('/planet/create_planet',
+                           json={
+                               'name': '123',
+                           },
+                           headers={
+                               'Authorization': f'Bearer {login_curator1()}'
+                           },
+                           params={
+                               'is_first_day': True
+                           })
+    assert response.status_code == 403
 
 
 def test_create_planet_with_no_rights():

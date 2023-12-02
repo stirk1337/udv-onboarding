@@ -18,6 +18,8 @@ from src.task.validators import (EmployeeTaskOut, TaskInAnswer, TaskInCheck,
                                  TaskInCreate, TaskInUpdate, TaskOut,
                                  TaskOutForChecking, TaskOutForEmployee)
 from src.user.dals import CuratorDAL, EmployeeDAL
+from src.user.dependencies import have_employee
+from src.user.models import Employee
 
 router = APIRouter(prefix='/task',
                    tags=['task'])
@@ -151,14 +153,13 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
               responses=task_responses,
               dependencies=[Depends(curator_user)])
 async def check_task_by_its_id(task_in: TaskInCheck,
-                               employee_id: int,
+                               task_id: int,
                                session: AsyncSession = Depends(
                                    get_async_session),
-                               task: Task = Depends(have_task)) -> EmployeeTaskOut:
+                               employee: Employee = Depends(have_employee)) -> EmployeeTaskOut:
     """Check competed employee task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
-    employee_dal = EmployeeDAL(session)
-    employee = await employee_dal.get_employee_by_id(employee_id)
+    task = await task_dal.get_task_with_planet_employees(task_id)
     employee_task = await task_dal.check_task(task, employee, task_in.task_status)
     notification_dal = NotificationDAL(session)
     notify_type = NotificationType.accept if task_in.task_status == TaskStatus.completed else NotificationType.decline

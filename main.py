@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
+from src.achievement.router import router as achievement_router
 from src.admin import add_admin_views
 from src.auth.router import include_auth_routers
 from src.auth.router import router as auth_router
@@ -49,6 +50,7 @@ app.include_router(task_router)
 app.include_router(planet_router)
 app.include_router(auth_router)
 app.include_router(notification_router)
+app.include_router(achievement_router)
 
 origins = ['*']
 

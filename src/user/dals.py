@@ -40,6 +40,12 @@ class EmployeeDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
+    async def get_all_employees(self) -> List[Employee]:
+        employees = await self.db_session.scalars(
+            select(Employee)
+        )
+        return list(employees)
+
     async def get_employee_by_id(self, employee_id: int) -> Employee:
         employee = await self.db_session.get(Employee, employee_id)
         if employee is None:
@@ -103,6 +109,21 @@ class EmployeeDAL:
             .options(selectinload(Employee.user))
         )
         return list(employees)
+
+    async def get_employee_by_user_with_planets(self, user: User) -> Employee:
+        employee = await self.db_session.scalar(
+            select(Employee)
+            .where(Employee.user_id == user.id)
+            .options(
+                selectinload(
+                    Employee.planets
+                )
+            )
+        )
+        if employee is None:
+            raise HTTPException(
+                status_code=404, detail=f'Employee with that user {user} not found')
+        return employee
 
     async def get_employee_by_user(self, user: User) -> Employee:
         employee = await self.db_session.scalar(

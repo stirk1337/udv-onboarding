@@ -9,6 +9,7 @@ from src.auth.manager import create_user
 from src.auth.models import Role, User
 from src.auth.router import current_superuser
 from src.db import get_async_session
+from src.planet.dals import PlanetDAL
 from src.request_codes import employee_responses, responses
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import EmployeeStatus
@@ -73,13 +74,13 @@ async def create_new_employee(employee_in: EmployeeInCreate,
                                       name=employee_in.name,
                                       role=Role.employee,
                                       password=employee_in.password)
-    if employee_user:  # if user already exists
+    if employee_user:
         employee = await employee_dal.create_employee(
             employee_user,
             curator.id,
             employee_in.product,
             employee_in.product_role)
-    else:
+    else:  # if user already exists
         user_dal = UserDAL(session)
         employee_user = await user_dal.get_user_by_email(employee_in.email)
         if employee_user.role == Role.curator:
@@ -91,6 +92,11 @@ async def create_new_employee(employee_in: EmployeeInCreate,
         else:
             raise HTTPException(
                 status_code=403, detail=f'Employee with email {employee_in.email} is active.')
+
+    planet_dal = PlanetDAL(session)
+    first_day_planets = await planet_dal.get_first_day_planets()
+    for planet in first_day_planets:
+        await planet_dal.add_employees_to_planet(planet, [employee])
     return EmployeeOut.parse(employee)
 
 

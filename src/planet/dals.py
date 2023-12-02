@@ -25,6 +25,16 @@ class PlanetDAL:
         )
         return list(employees.planets)
 
+    async def get_first_day_planets(self) -> List[Planet]:
+        planets = await self.db_session.scalars(
+            select(Planet)
+            .where(Planet.is_first_day)
+            .options(
+                selectinload(Planet.employees)
+            )
+        )
+        return list(planets)
+
     async def get_planets_for_curator(self, curator: Curator) -> List[Planet]:
         planets = await self.db_session.scalars(
             select(Planet)
@@ -51,13 +61,14 @@ class PlanetDAL:
                 status_code=404, detail=f'Planet with id {planet_id} not found')
         return planet
 
-    async def create_planet(self, name: str, user: User) -> Planet:
+    async def create_planet(self, name: str, user: User, is_first_day: bool) -> Planet:
         curator = await self.db_session.scalar(
             select(Curator)
             .where(Curator.user_id == user.id)
         )
         new_planet = Planet(name=name,
-                            curator_id=curator.id)
+                            curator_id=curator.id,
+                            is_first_day=is_first_day)
         self.db_session.add(new_planet)
         await self.db_session.commit()
         return new_planet
