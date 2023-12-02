@@ -1,7 +1,7 @@
 import datetime
 from typing import List
 
-from sqlalchemy import ForeignKey, Integer, String, text
+from sqlalchemy import Boolean, ForeignKey, Integer, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
@@ -33,6 +33,9 @@ class Planet(Base):
     )
     notifications: Mapped[List['Notification']
                           ] = relationship(back_populates='planet')
+    is_first_day: Mapped[bool] = mapped_column(
+        Boolean, default=False, nullable=False
+    )
 
 
 class EmployeePlanet(Base):

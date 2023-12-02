@@ -12,6 +12,7 @@ from config import settings
 from main import app
 from src.auth.models import Role, User
 from src.db import Base, get_async_session
+from src.user.models import Curator
 
 DATABASE_URL_TEST = str(settings.postgres_test)
 
@@ -65,6 +66,9 @@ async def test_create_superuser_for_testing():
                     is_active=True,
                     role=Role.curator)
         session.add(user)
+        await session.commit()
+        curator = Curator(user_id=user.id)
+        session.add(curator)
         await session.commit()
 
 

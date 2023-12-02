@@ -1,6 +1,6 @@
 from tests.conftest import (client, create_planet, create_task, login_curator1,
                             login_curator2, login_employee1, login_employee2,
-                            patch_task)
+                            login_superuser, patch_task)
 
 
 def test_create_task():
@@ -312,6 +312,70 @@ def test_check_task_decline():
 def test_check_task_with_no_rights():
     create = create_planet('planet', login_curator1)
     task = create_task(planet_id=create.json()['id'], name='8')
+    check_task = client.patch('/task/check_task',
+                              params={
+                                  'task_id': task.json()['id'],
+                                  'employee_id': 1
+                              },
+                              json={
+                                  'task_status': 'completed'
+                              },
+                              headers={
+                                  'Authorization': f'Bearer {login_curator2()}'
+                              })
+    assert check_task.status_code == 403
+
+
+def test_check_first_day_task():
+    create = client.post('/planet/create_planet',
+                         json={
+                             'name': '123',
+                         },
+                         headers={
+                             'Authorization': f'Bearer {login_superuser()}'
+                         },
+                         params={
+                             'is_first_day': True
+                         })
+    task = create_task(planet_id=create.json()[
+                       'id'], name='8', login=login_superuser)
+    client.patch('/task/answer_task',
+                 params={
+                     'task_id': task.json()['id'],
+                 },
+                 json={
+                     'answer': 'this_is_answer',
+                 },
+                 headers={
+                     'Authorization': f'Bearer {login_employee1()}'
+                 })
+    check_task = client.patch('/task/check_task',
+                              params={
+                                  'task_id': task.json()['id'],
+                                  'employee_id': 1
+                              },
+                              json={
+                                  'task_status': 'completed'
+                              },
+                              headers={
+                                  'Authorization': f'Bearer {login_curator1()}'
+                              })
+    assert check_task.json()['task_status'] == 'completed'
+
+
+def test_check_first_day_task_no_rights():
+    create = client.post('/planet/create_planet',
+                         json={
+                             'name': '123',
+                         },
+                         headers={
+                             'Authorization': f'Bearer {login_superuser()}'
+                         },
+                         params={
+                             'is_first_day': True
+                         })
+    task = create_task(planet_id=create.json()[
+                       'id'], name='8', login=login_superuser)
     check_task = client.patch('/task/check_task',
                               params={
                                   'task_id': task.json()['id'],

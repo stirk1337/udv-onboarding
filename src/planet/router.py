@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -117,11 +117,21 @@ async def get_employee_planets(
 @router.post('/create_planet',
              responses=responses)
 async def create_planet(planet_in: PlanetIn,
+                        is_first_day: Union[bool, None] = False,
                         session: AsyncSession = Depends(get_async_session),
-                        user: User = Depends(curator_user)) -> ShowPlanet:
-    """Create a new planet. Rights: curator"""
+                        user: User = Depends(curator_user),
+                        ) -> ShowPlanet:
+    """Create a new planet. Rights: curator, superuser (for first day)"""
+    if is_first_day and not user.is_superuser:
+        raise HTTPException(
+            status_code=403, detail='Forbidden. Only superuser can create first day planets')
     planet_dal = PlanetDAL(session)
-    planet = await planet_dal.create_planet(name=planet_in.name, user=user)
+    employee_dal = EmployeeDAL(session)
+    employees = await employee_dal.get_all_employees()
+    planet = await planet_dal.create_planet(name=planet_in.name, user=user, is_first_day=is_first_day)
+    planet_with_employees = await planet_dal.get_planet_with_employees(planet.id)
+    if is_first_day:  # link first day planet to all employees
+        await planet_dal.add_employees_to_planet(planet_with_employees, employees)
     return ShowPlanet.parse(planet)
 
 

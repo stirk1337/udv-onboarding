@@ -42,6 +42,17 @@ class TaskDAL:
                 status_code=404, detail=f'Task with id {task_id} not found')
         return task
 
+    async def get_first_day_tasks(self, employee: Employee) -> List[Task]:
+        tasks = await self.db_session.scalars(
+            select(Task)
+            .options(
+                selectinload(Task.planet)
+            )
+            .where(Planet.is_first_day)
+            .where(Planet.employees.contains(employee))
+        )
+        return list(tasks)
+
     async def get_employee_task(self, task: Task,
                                 employee: Employee) -> EmployeeTask:
         return await self.db_session.scalar(
@@ -93,17 +104,28 @@ class TaskDAL:
                           employee: Employee,
                           answer: str) -> EmployeeTask:
         employee_task = await self.get_employee_task(task, employee)
+        if employee_task.task_status != TaskStatus.in_progress:
+            raise HTTPException(
+                status_code=400, detail='Task is not in progress, cannot answer')
         employee_task.employee_answer = answer
         employee_task.task_status = TaskStatus.being_checked
+        employee.send_task_count += 1
         await self.db_session.commit()
         await self.db_session.refresh(employee_task)
+        await self.db_session.refresh(employee.curator)
         return employee_task
 
     async def check_task(self, task: Task,
                          employee: Employee,
                          task_status: TaskStatus) -> EmployeeTask:
         employee_task = await self.get_employee_task(task, employee)
+        if employee_task.task_status != TaskStatus.being_checked:
+            raise HTTPException(
+                status_code=400, detail='Task is not being checked, cannot check')
         employee_task.task_status = task_status
+        if task_status == TaskStatus.completed:
+            employee.complete_task_count += 1
         await self.db_session.commit()
         await self.db_session.refresh(employee_task)
+        await self.db_session.refresh(employee)
         return employee_task

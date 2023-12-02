@@ -28,6 +28,10 @@ class TaskResponse404(BaseModel):
     detail: str = 'Task with provided id not found'
 
 
+class TaskResponse400(BaseModel):
+    detail: str = 'Task is not in progress, cannot answer'
+
+
 class EmployeeResponse404(BaseModel):
     detail: str = 'Employee with provided id not found'
 
@@ -60,7 +64,8 @@ planet_responses = {
 task_responses = {
     401: {'model': Response401},
     403: {'model': Response403},
-    404: {'model': TaskResponse404}
+    404: {'model': TaskResponse404},
+    400: {'model': TaskResponse400}
 }
 
 employee_responses = {

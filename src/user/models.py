@@ -80,3 +80,9 @@ class Employee(Base):
         relationship(secondary='employee_planet', back_populates='employees'))
     tasks: Mapped[List['Task']] = (
         relationship(secondary='employee_task', back_populates='employees'))
+    send_task_count: Mapped[int] = mapped_column(
+        Integer, default=0
+    )
+    complete_task_count: Mapped[int] = mapped_column(
+        Integer, default=0
+    )
