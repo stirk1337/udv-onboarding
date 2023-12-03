@@ -17,6 +17,7 @@ class ShowPlanet(BaseModel):
     curator_id: int
     created_at: datetime
     updated_at: datetime
+    is_first_day: bool
 
     @staticmethod
     def parse(planet: Planet):
@@ -24,7 +25,8 @@ class ShowPlanet(BaseModel):
                           name=planet.name,
                           curator_id=planet.curator_id,
                           created_at=planet.created_at,
-                          updated_at=planet.updated_at)
+                          updated_at=planet.updated_at,
+                          is_first_day=planet.is_first_day)
 
 
 class ShowPlanetWithCompletionStatus(BaseModel):
@@ -35,6 +37,7 @@ class ShowPlanetWithCompletionStatus(BaseModel):
     updated_at: datetime
     completed: int
     task_count: int
+    is_first_day: bool
 
     @staticmethod
     def parse(planet: Planet, completed: int, task_count: int):
@@ -44,7 +47,8 @@ class ShowPlanetWithCompletionStatus(BaseModel):
                                               created_at=planet.created_at,
                                               updated_at=planet.updated_at,
                                               completed=completed,
-                                              task_count=task_count)
+                                              task_count=task_count,
+                                              is_first_day=planet.is_first_day)
 
 
 class ShowPlanetWithEmployees(BaseModel):
@@ -54,6 +58,7 @@ class ShowPlanetWithEmployees(BaseModel):
     created_at: datetime
     updated_at: datetime
     employees: List[EmployeeOut]
+    is_first_day: bool
 
     @staticmethod
     def parse(planet: Planet):
@@ -64,7 +69,8 @@ class ShowPlanetWithEmployees(BaseModel):
                                        curator_id=planet.curator_id,
                                        created_at=planet.created_at,
                                        updated_at=planet.updated_at,
-                                       employees=employees
+                                       employees=employees,
+                                       is_first_day=planet.is_first_day
                                        )
 
 
@@ -76,6 +82,7 @@ class ShowPlanetWithEmployeesAndTaskCount(BaseModel):
     updated_at: datetime
     employees: List[EmployeeOut]
     task_count: int
+    is_first_day: bool
 
     @staticmethod
     def parse(planet: Planet, task_count: int):
@@ -87,5 +94,6 @@ class ShowPlanetWithEmployeesAndTaskCount(BaseModel):
                                                    created_at=planet.created_at,
                                                    updated_at=planet.updated_at,
                                                    employees=employees,
-                                                   task_count=task_count
+                                                   task_count=task_count,
+                                                   is_first_day=planet.is_first_day
                                                    )

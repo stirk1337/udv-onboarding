@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import curator_user, current_user, employee_user
 from src.auth.models import Role, User
 from src.db import get_async_session
-from src.notification.dals import NotificationDAL
 from src.notification.models import NotificationType
+from src.notification.notification import send_notifications_with_emails
 from src.planet.dals import PlanetDAL
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
@@ -162,13 +162,13 @@ async def set_employee(ids: EmployeesIdItem,
     curator = await curator_dal.get_curator_by_user(user)
     filtered_employees = list(
         filter(lambda x: x.curator_id == curator.id and x.employee_status != EmployeeStatus.disabled, employees))
-    notification_dal = NotificationDAL(session)
     notify_employees = list(set(filtered_employees) - set(planet.employees))
-    for employee in notify_employees:
-        await notification_dal.create(user_id=employee.user_id,
-                                      planet=planet,
-                                      notification_type=NotificationType.invited)
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
+
+    await send_notifications_with_emails([employee.user for employee in notify_employees],
+                                         planet,
+                                         NotificationType.invited,
+                                         session)
     return ShowPlanetWithEmployees.parse(planet)
 
 
@@ -195,13 +195,13 @@ async def set_employee_by_param(product_in: ProductAndProductRoleIn,
         product_in.product_role)
     filtered_employees = list(
         filter(lambda x: x.curator_id == curator.id and x.employee_status != EmployeeStatus.disabled, employees))
-    notification_dal = NotificationDAL(session)
     notify_employees = list(set(filtered_employees) - set(planet.employees))
-    for employee in notify_employees:
-        await notification_dal.create(user_id=employee.user_id,
-                                      planet=planet,
-                                      notification_type=NotificationType.invited)
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
+
+    await send_notifications_with_emails([employee.user for employee in notify_employees],
+                                         planet,
+                                         NotificationType.invited,
+                                         session)
     return ShowPlanetWithEmployees.parse(planet)
 
 

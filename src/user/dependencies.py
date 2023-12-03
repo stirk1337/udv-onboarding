@@ -14,7 +14,7 @@ async def have_employee(employee_id: int,
     employee_dal = EmployeeDAL(session)
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
-    employee = await employee_dal.get_employee_by_id(employee_id)
+    employee = await employee_dal.get_employee_by_id_with_user(employee_id)
     if employee.curator_id == curator.id:
         return employee
     raise HTTPException(status_code=403, detail='Forbidden')
