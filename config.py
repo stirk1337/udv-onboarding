@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     secret: SecretStr
     postgres: PostgresDsn
     postgres_test: PostgresDsn
+    smtp_server: str
+    smtp_port: int
+    mail_username: str
+    mail_password: str
 
 
 settings = Settings()

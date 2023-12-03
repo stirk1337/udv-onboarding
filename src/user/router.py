@@ -9,6 +9,7 @@ from src.auth.manager import create_user
 from src.auth.models import Role, User
 from src.auth.router import current_superuser
 from src.db import get_async_session
+from src.email.email import EmailBody, EmailSchema, send_register_email
 from src.planet.dals import PlanetDAL
 from src.request_codes import employee_responses, responses
 from src.user.dals import CuratorDAL, EmployeeDAL
@@ -55,6 +56,8 @@ async def register_curator(curator_in: CuratorInCreate,
                              password=curator_in.password)
     if user is None:
         raise HTTPException(status_code=409, detail='User already exists')
+    emails = [(EmailBody(email=user.email, body={'email': user.email}))]
+    await send_register_email(EmailSchema(emails=emails))
     return UserOut.parse(user)
 
 
@@ -97,6 +100,9 @@ async def create_new_employee(employee_in: EmployeeInCreate,
     first_day_planets = await planet_dal.get_first_day_planets()
     for planet in first_day_planets:
         await planet_dal.add_employees_to_planet(planet, [employee])
+    emails = [(EmailBody(email=employee_user.email,
+               body={'email': employee_user.email}))]
+    await send_register_email(EmailSchema(emails=emails))
     return EmployeeOut.parse(employee)
 
 

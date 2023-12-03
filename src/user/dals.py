@@ -143,6 +143,7 @@ class EmployeeDAL:
                 selectinload(
                     Employee.curator
                 )
+                .selectinload(Curator.user)
             )
         )
         if employee is None:

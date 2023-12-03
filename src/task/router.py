@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.dependencies import curator_user, employee_user
 from src.auth.models import User
 from src.db import get_async_session
-from src.notification.dals import NotificationDAL
 from src.notification.models import NotificationType
+from src.notification.notification import send_notifications_with_emails
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet
 from src.request_codes import planet_responses, responses, task_responses
@@ -97,12 +97,11 @@ async def create_new_task(task_in: TaskInCreate,
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     employees = await employee_dal.get_employees_by_curator(curator)
-    notification_dal = NotificationDAL(session)
-    for employee in employees:
-        await notification_dal.create(user_id=employee.user_id,
-                                      task=task,
-                                      planet=task.planet,
-                                      notification_type=NotificationType.new)
+    await send_notifications_with_emails([employee.user for employee in employees],
+                                         planet,
+                                         NotificationType.new,
+                                         session,
+                                         task)
     return TaskOut.parse(task)
 
 
@@ -141,11 +140,11 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
     employee_dal = EmployeeDAL(session)
     employee = await employee_dal.get_employee_by_user_with_curator(user)
     employee_task = await task_dal.answer_task(task, employee, task_in.answer)
-    notification_dal = NotificationDAL(session)
-    await notification_dal.create(user_id=employee.curator.user_id,
-                                  task=task,
-                                  planet=task.planet,
-                                  notification_type=NotificationType.answer)
+    await send_notifications_with_emails([employee.curator.user],
+                                         task.planet,
+                                         NotificationType.answer,
+                                         session,
+                                         task)
     return EmployeeTaskOut.parse(employee_task)
 
 
@@ -161,10 +160,10 @@ async def check_task_by_its_id(task_in: TaskInCheck,
     task_dal = TaskDAL(session)
     task = await task_dal.get_task_with_planet_employees(task_id)
     employee_task = await task_dal.check_task(task, employee, task_in.task_status)
-    notification_dal = NotificationDAL(session)
     notify_type = NotificationType.accept if task_in.task_status == TaskStatus.completed else NotificationType.decline
-    await notification_dal.create(user_id=employee.user_id,
-                                  task=task,
-                                  planet=task.planet,
-                                  notification_type=notify_type)
+    await send_notifications_with_emails([employee.user],
+                                         task.planet,
+                                         notify_type,
+                                         session,
+                                         task)
     return EmployeeTaskOut.parse(employee_task)
