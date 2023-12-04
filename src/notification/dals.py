@@ -52,3 +52,10 @@ class NotificationDAL:
         await self.db_session.commit()
         await self.db_session.refresh(notification)
         return notification
+
+    async def read_all_notifications(self, user_id: int) -> List[Notification]:
+        notifications = await self.get_notifications(user_id)
+        for notify in notifications:
+            notify.is_read = True
+        await self.db_session.commit()
+        return list(notifications)
