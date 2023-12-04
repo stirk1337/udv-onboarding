@@ -2,9 +2,10 @@ from src.email.email import fm
 from tests.conftest import (client, create_planet, create_task, login_curator1,
                             login_employee1, login_superuser)
 
+fm.config.SUPPRESS_SEND = 1
+
 
 def test_send_register_employee_email():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         response = client.post('/user/register_new_employee',
                                json={
@@ -22,7 +23,6 @@ def test_send_register_employee_email():
 
 
 def test_send_register_curator_email():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         response = client.post('/user/register_new_curator',
                                json={
@@ -38,7 +38,6 @@ def test_send_register_curator_email():
 
 
 def test_send_invite_to_planet():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         create = create_planet('planet', login_curator1)
         response = client.patch('/planet/add_employees_to_planet',
@@ -56,7 +55,6 @@ def test_send_invite_to_planet():
 
 
 def test_send_create_new_task():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         create = create_planet('planet', login_curator1)
         client.patch('/planet/add_employees_to_planet',
@@ -74,7 +72,6 @@ def test_send_create_new_task():
 
 
 def test_send_answer_task():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         create = create_planet('planet', login_curator1)
         client.patch('/planet/add_employees_to_planet',
@@ -102,7 +99,6 @@ def test_send_answer_task():
 
 
 def test_send_check_task_accept():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         create = create_planet('planet', login_curator1)
         client.patch('/planet/add_employees_to_planet',
@@ -141,7 +137,6 @@ def test_send_check_task_accept():
 
 
 def test_send_check_task_decline():
-    fm.config.SUPPRESS_SEND = 1
     with fm.record_messages() as outbox:
         create = create_planet('planet', login_curator1)
         client.patch('/planet/add_employees_to_planet',
