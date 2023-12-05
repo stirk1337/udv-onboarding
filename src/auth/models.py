@@ -25,6 +25,9 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     email: Mapped[str] = mapped_column(
         String(length=320), unique=True, index=True, nullable=False
     )
+    contact: Mapped[str] = mapped_column(
+        String(length=100), nullable=True
+    )
     hashed_password: Mapped[str] = mapped_column(
         String(length=1024), nullable=False
     )

@@ -1,5 +1,6 @@
 import os
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,6 +16,19 @@ class UserDAL:
             select(User)
             .where(User.email == email)
         )
+        return user
+
+    async def get_user_by_id(self, user_id: int) -> User:
+        user = await self.db_session.get(User, user_id)
+        if user is None:
+            raise HTTPException(
+                status_code=404, detail=f'User with id {user_id} not found')
+        return user
+
+    async def patch_profile(self, user: User, contact: str) -> User:
+        user.contact = contact
+        await self.db_session.commit()
+        await self.db_session.refresh(user)
         return user
 
     async def patch_avatar(self, user: User, image_url: str) -> User:
