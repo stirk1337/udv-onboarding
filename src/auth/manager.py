@@ -13,6 +13,7 @@ from src.auth.models import Role, User
 from src.auth.schemas import UserCreate
 from src.auth.utils import get_user_db
 from src.db import get_async_session
+from src.email.email import EmailBody, EmailSchema, send_reset_password_token
 from src.user.dals import CuratorDAL
 
 SECRET = settings.secret
@@ -66,6 +67,8 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_forgot_password(
             self, user: User, token: str, request: Optional[Request] = None
     ) -> None:
+        emails = [EmailBody(email=user.email, body={'email': user.email})]
+        await send_reset_password_token(EmailSchema(emails=emails))
         print(f'User {user.id} has forgot their password. Reset token: {token}')  # noqa: E501
 
     async def on_after_reset_password(self, user: User, request: Optional[Request] = None):

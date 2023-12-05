@@ -4,7 +4,8 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, EmailStr
 
 from src.auth.models import Role, User
-from src.user.models import Employee, EmployeeStatus, Product, ProductRole
+from src.user.models import (Curator, Employee, EmployeeStatus, Product,
+                             ProductRole)
 
 
 class EmployeeIdItem(BaseModel):
@@ -29,12 +30,31 @@ class EmployeeInCreate(BaseModel):
     password: Union[str, None] = None
 
 
+class CuratorOut(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    role: Role
+    image_url: Optional[str] = None
+    contact: Optional[str] = None
+
+    @staticmethod
+    def parse(curator: Curator):
+        return CuratorOut(id=curator.id,
+                          name=curator.user.name,
+                          email=curator.user.email,
+                          role=curator.user.role,
+                          image_url=curator.user.image_url,
+                          contact=curator.user.contact)
+
+
 class UserOut(BaseModel):
     id: int
     name: str
     email: EmailStr
     role: Role
     image_url: Optional[str] = None
+    contact: Optional[str] = None
 
     @staticmethod
     def parse(user: User):
@@ -42,7 +62,8 @@ class UserOut(BaseModel):
                        name=user.name,
                        email=user.email,
                        role=user.role,
-                       image_url=user.image_url)
+                       image_url=user.image_url,
+                       contact=user.contact)
 
 
 class EmployeeOut(BaseModel):
@@ -55,6 +76,8 @@ class EmployeeOut(BaseModel):
     created_at: datetime.datetime
     updated_at: datetime.datetime
     image_url: Optional[str] = None
+    contact: Optional[str] = None
+    curator_id: int
 
     @staticmethod
     def parse(employee: Employee):
@@ -66,4 +89,6 @@ class EmployeeOut(BaseModel):
                            employee_status=employee.employee_status,
                            created_at=employee.created_at,
                            updated_at=employee.updated_at,
-                           image_url=employee.user.image_url)
+                           image_url=employee.user.image_url,
+                           contact=employee.user.contact,
+                           curator_id=employee.curator_id)

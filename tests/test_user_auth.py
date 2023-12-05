@@ -1,5 +1,8 @@
-from tests.conftest import (client, login_curator1, register_curator,
-                            register_employee)
+from src.email.email import fm
+from tests.conftest import (client, login_curator1, login_employee1,
+                            register_curator, register_employee)
+
+fm.config.SUPPRESS_SEND = 1
 
 
 def test_register_curator():
@@ -94,3 +97,51 @@ def test_get_current_user_info():
                               'Authorization': f'Bearer {login_curator1()}'
                           })
     assert response.status_code == 200
+
+
+def test_get_employee_profile():
+    user = client.get('/user/get_current_user_info',
+                      headers={
+                          'Authorization': f'Bearer {login_employee1()}'
+                      })
+    response = client.get('/user/get_employee_profile_by_user_id',
+                          headers={
+                              'Authorization': f'Bearer {login_employee1()}'
+                          },
+                          params={
+                              'user_id': user.json()['id']
+                          })
+    assert response.status_code == 200
+
+
+def test_get_curator_profile_by_curator_id():
+    user = client.get('/user/get_current_user_info',
+                      headers={
+                          'Authorization': f'Bearer {login_employee1()}'
+                      })
+    employee_profile = client.get('/user/get_employee_profile_by_user_id',
+                                  headers={
+                                      'Authorization': f'Bearer {login_employee1()}'
+                                  },
+                                  params={
+                                      'user_id': user.json()['id']
+                                  })
+    response = client.get('/user/get_curator_profile_by_curator_id',
+                          headers={
+                              'Authorization': f'Bearer {login_employee1()}'
+                          },
+                          params={
+                              'curator_id': employee_profile.json()['curator_id']
+                          })
+    assert response.status_code == 200
+
+
+def test_edit_profile():
+    response = client.patch('/user/edit_user_profile',
+                            headers={
+                                'Authorization': f'Bearer {login_employee1()}'
+                            },
+                            params={
+                                'contact': '123'
+                            })
+    assert response.json()['contact'] == '123'

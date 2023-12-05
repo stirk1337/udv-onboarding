@@ -51,6 +51,21 @@ email_titles = {
 fm = FastMail(conf)
 
 
+async def send_reset_password_token(email: EmailSchema) -> None:
+    for email_body in email.emails:
+        message = MessageSchema(
+            subject='Восстановление пароля',
+            recipients=[email_body.email],
+            template_body=email_body.body,
+            subtype=MessageType.html,
+        )
+        try:
+            await fm.send_message(message, template_name='reset_password.html')
+        except (aiosmtplib.errors.SMTPRecipientsRefused, aiosmtplib.errors.SMTPDataError):
+            print(
+                f'Email {email_body.email} does not exist. Message will not be sent.')
+
+
 async def send_register_email(email: EmailSchema) -> None:
     for email_body in email.emails:
         message = MessageSchema(

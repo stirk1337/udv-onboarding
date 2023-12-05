@@ -11,10 +11,11 @@ from src.auth.router import current_superuser
 from src.db import get_async_session
 from src.email.email import EmailBody, EmailSchema, send_register_email
 from src.planet.dals import PlanetDAL
-from src.request_codes import employee_responses, responses
+from src.request_codes import (curator_responses, employee_responses,
+                               responses, user_responses)
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import EmployeeStatus
-from src.user.validators import (CuratorInCreate, EmployeeIdItem,
+from src.user.validators import (CuratorInCreate, CuratorOut, EmployeeIdItem,
                                  EmployeeInCreate, EmployeeOut, UserOut)
 
 router = APIRouter(
@@ -27,6 +28,38 @@ router = APIRouter(
             responses=responses)
 async def get_current_user_info(user: User = Depends(current_user)) -> UserOut:
     """Get current user info. Rights: authorized"""
+    return UserOut.parse(user)
+
+
+@router.get('/get_employee_profile_by_user_id',
+            responses=user_responses,
+            dependencies=[Depends(current_user)])
+async def get_employee_profile(user_id: int,
+                               session: AsyncSession = Depends(get_async_session)) -> EmployeeOut:
+    employee_dal = EmployeeDAL(session)
+    user_dal = UserDAL(session)
+    user = await user_dal.get_user_by_id(user_id)
+    employee = await employee_dal.get_employee_by_user_with_curator(user)
+    return EmployeeOut.parse(employee)
+
+
+@router.get('/get_curator_profile_by_curator_id',
+            responses=curator_responses,
+            dependencies=[Depends(current_user)])
+async def get_curator_profile(curator_id: int,
+                              session: AsyncSession = Depends(get_async_session)) -> CuratorOut:
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_id_with_user(curator_id)
+    return CuratorOut.parse(curator)
+
+
+@router.patch('/edit_user_profile',
+              responses=responses)
+async def patch_user_profile(contact: str,
+                             user: User = Depends(current_user),
+                             session: AsyncSession = Depends(get_async_session)) -> UserOut:
+    user_dal = UserDAL(session)
+    user = await user_dal.patch_profile(user, contact)
     return UserOut.parse(user)
 
 
@@ -101,7 +134,7 @@ async def create_new_employee(employee_in: EmployeeInCreate,
     for planet in first_day_planets:
         await planet_dal.add_employees_to_planet(planet, [employee])
     emails = [(EmailBody(email=employee_user.email,
-               body={'email': employee_user.email}))]
+                         body={'email': employee_user.email}))]
     await send_register_email(EmailSchema(emails=emails))
     return EmployeeOut.parse(employee)
 

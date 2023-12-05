@@ -40,6 +40,14 @@ class NotificationResponse404(BaseModel):
     detail: str = 'Notification with provided id not found'
 
 
+class UserResponse404(BaseModel):
+    detail: str = 'User with provided id not found'
+
+
+class CuratorResponse404(BaseModel):
+    detail: str = 'Curator with provided id not found'
+
+
 class AvatarResponse400(BaseModel):
     detail: str = 'There was an error uploading the file. Did you upload png/jpg?'
 
@@ -47,6 +55,18 @@ class AvatarResponse400(BaseModel):
 responses = {
     401: {'model': Response401},
     403: {'model': Response403},
+}
+
+user_responses = {
+    401: {'model': Response401},
+    403: {'model': Response403},
+    404: {'model': UserResponse404}
+}
+
+curator_responses = {
+    401: {'model': Response401},
+    403: {'model': Response403},
+    404: {'model': CuratorResponse404}
 }
 
 avatar_responses = {

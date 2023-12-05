@@ -12,6 +12,7 @@ from config import settings
 from main import app
 from src.auth.models import Role, User
 from src.db import Base, get_async_session
+from src.email.email import fm
 from src.user.models import Curator
 
 DATABASE_URL_TEST = str(settings.postgres_test)
@@ -19,6 +20,8 @@ DATABASE_URL_TEST = str(settings.postgres_test)
 engine_test = create_async_engine(DATABASE_URL_TEST, poolclass=NullPool)
 async_session_maker = sessionmaker(
     engine_test, class_=AsyncSession, expire_on_commit=False)
+
+fm.config.SUPPRESS_SEND = 1
 
 
 async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:

@@ -20,6 +20,19 @@ class CuratorDAL:
         await self.db_session.commit()
         return new_curator
 
+    async def get_curator_by_id_with_user(self, curator_id: int) -> Curator:
+        curator = await self.db_session.scalar(
+            select(Curator)
+            .where(Curator.id == curator_id)
+            .options(
+                selectinload(Curator.user)
+            )
+        )
+        if curator is None:
+            raise HTTPException(
+                status_code=404, detail=f'Curator with id {curator_id} not found')
+        return curator
+
     async def get_curator_by_user(self, user: User) -> Curator:
         return await self.db_session.scalar(
             select(Curator)
@@ -148,7 +161,7 @@ class EmployeeDAL:
         )
         if employee is None:
             raise HTTPException(
-                status_code=404, detail=f'Employee with that user {user} not found')
+                status_code=404, detail=f'Employee with that user_id {user.id} not found')
         return employee
 
     async def get_employees_by_ids(self, ids: List[int]) -> List[Employee]:
