@@ -1,5 +1,8 @@
+from src.email.email import fm
 from tests.conftest import (client, login_curator1, login_employee1,
                             register_curator, register_employee)
+
+fm.config.SUPPRESS_SEND = 1
 
 
 def test_register_curator():
