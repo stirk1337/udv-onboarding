@@ -86,3 +86,5 @@ class Employee(Base):
     complete_task_count: Mapped[int] = mapped_column(
         Integer, default=0
     )
+    notifications: Mapped[List['Notification']
+                          ] = relationship(back_populates='employee')

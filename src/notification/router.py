@@ -22,16 +22,16 @@ async def get_notifications(user: User = Depends(current_user),
     return [ShowNotification.parse(notification) for notification in notifications]
 
 
-@router.patch('/read_notification')
+@router.patch('/read_notification', status_code=200)
 async def read_notification(notification_id: int,
                             user: User = Depends(current_user),
-                            session: AsyncSession = Depends(get_async_session)) -> ShowNotification:
+                            session: AsyncSession = Depends(get_async_session)):
     """Read your notification. Rights: you must have this notification"""
     notification_dal = NotificationDAL(session)
     notification = await notification_dal.get_notification(notification_id)
     if notification.user_id == user.id:
-        notification = await notification_dal.read_notification(notification)
-        return ShowNotification.parse(notification)
+        await notification_dal.read_notification(notification)
+        return None
     raise HTTPException(status_code=403, detail='Forbidden')
 
 

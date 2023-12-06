@@ -144,7 +144,8 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
                                          task.planet,
                                          NotificationType.answer,
                                          session,
-                                         task)
+                                         task,
+                                         employee)
     return EmployeeTaskOut.parse(employee_task)
 
 

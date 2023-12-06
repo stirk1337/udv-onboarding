@@ -3,10 +3,12 @@ from typing import List
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from src.notification.models import Notification, NotificationType
 from src.planet.models import Planet
 from src.task.models import Task
+from src.user.models import Curator, Employee
 
 
 class NotificationDAL:
@@ -16,8 +18,10 @@ class NotificationDAL:
     async def create(self, user_id: int,
                      notification_type: NotificationType,
                      task: Task = None,
+                     employee: Employee = None,
                      planet: Planet = None) -> Notification:
         notify = Notification(user_id=user_id,
+                              employee_id=employee.id if employee else None,
                               task_id=task.id if task else None,
                               planet_id=planet.id if planet else None,
                               is_read=False,
@@ -31,6 +35,14 @@ class NotificationDAL:
             select(Notification)
             .where(
                 Notification.user_id == user_id
+            )
+            .options(
+                selectinload(Notification.planet)
+                .selectinload(Planet.curator)
+                .selectinload(Curator.user),
+                selectinload(Notification.task),
+                selectinload(Notification.employee)
+                .selectinload(Employee.user)
             )
         )
         return list(notifications)

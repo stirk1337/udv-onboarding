@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from src.planet.models import Planet
 from src.user.router import EmployeeOut
+from src.user.validators import CuratorOut
 
 
 class PlanetIn(BaseModel):
@@ -27,6 +28,24 @@ class ShowPlanet(BaseModel):
                           created_at=planet.created_at,
                           updated_at=planet.updated_at,
                           is_first_day=planet.is_first_day)
+
+
+class ShowPlanetWithCurator(BaseModel):
+    id: int
+    name: Optional[str]
+    curator: CuratorOut
+    created_at: datetime
+    updated_at: datetime
+    is_first_day: bool
+
+    @staticmethod
+    def parse(planet: Planet):
+        return ShowPlanetWithCurator(id=planet.id,
+                                     name=planet.name,
+                                     curator=CuratorOut.parse(planet.curator),
+                                     created_at=planet.created_at,
+                                     updated_at=planet.updated_at,
+                                     is_first_day=planet.is_first_day)
 
 
 class ShowPlanetWithCompletionStatus(BaseModel):
