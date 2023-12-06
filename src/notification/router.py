@@ -19,7 +19,9 @@ async def get_notifications(user: User = Depends(current_user),
     """Get your notifications. Rights: employee or curator"""
     notification_dal = NotificationDAL(session)
     notifications = await notification_dal.get_notifications_with_info(user.id)
-    return [ShowNotification.parse(notification) for notification in notifications]
+    sorted_notifications = sorted(notifications, key=lambda x: (
+        x.is_read, -x.created_at.timestamp()))
+    return [ShowNotification.parse(notification) for notification in sorted_notifications]
 
 
 @router.patch('/read_notification', status_code=200)
