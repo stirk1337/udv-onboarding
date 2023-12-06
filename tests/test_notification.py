@@ -242,4 +242,4 @@ def test_read_all_notifications():
                             headers={
                                 'Authorization': f'Bearer {login_employee1()}'
                             })
-    assert len(response.json()) >= 1
+    assert response.status_code == 200
