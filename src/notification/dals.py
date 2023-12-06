@@ -30,7 +30,7 @@ class NotificationDAL:
         await self.db_session.commit()
         return notify
 
-    async def get_notifications(self, user_id: int) -> List[Notification]:
+    async def get_notifications_with_info(self, user_id: int) -> List[Notification]:
         notifications = await self.db_session.scalars(
             select(Notification)
             .where(
@@ -43,6 +43,15 @@ class NotificationDAL:
                 selectinload(Notification.task),
                 selectinload(Notification.employee)
                 .selectinload(Employee.user)
+            )
+        )
+        return list(notifications)
+
+    async def get_notifications(self, user_id: int) -> List[Notification]:
+        notifications = await self.db_session.scalars(
+            select(Notification)
+            .where(
+                Notification.user_id == user_id
             )
         )
         return list(notifications)

@@ -18,7 +18,7 @@ async def get_notifications(user: User = Depends(current_user),
                             session: AsyncSession = Depends(get_async_session)) -> List[ShowNotification]:
     """Get your notifications. Rights: employee or curator"""
     notification_dal = NotificationDAL(session)
-    notifications = await notification_dal.get_notifications(user.id)
+    notifications = await notification_dal.get_notifications_with_info(user.id)
     return [ShowNotification.parse(notification) for notification in notifications]
 
 
@@ -37,8 +37,7 @@ async def read_notification(notification_id: int,
 
 @router.patch('/read_all_notifications')
 async def read_all_notifications(user: User = Depends(current_user),
-                                 session: AsyncSession = Depends(get_async_session)) -> List[ShowNotification]:
+                                 session: AsyncSession = Depends(get_async_session)):
     """Read your notification. Rights: you must have this notification"""
     notification_dal = NotificationDAL(session)
-    notifications = await notification_dal.read_all_notifications(user.id)
-    return [ShowNotification.parse(notification) for notification in notifications]
+    await notification_dal.read_all_notifications(user.id)
