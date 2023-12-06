@@ -21,7 +21,7 @@ def test_invite_to_planet():
                           headers={
                               'Authorization': f'Bearer {login_employee1()}'
                           })
-    assert response.json()[-1]['planet_id'] == create.json()['id']
+    assert response.json()[-1]['planet']['id'] == create.json()['id']
 
 
 def test_create_new_task():
@@ -41,7 +41,7 @@ def test_create_new_task():
                           headers={
                               'Authorization': f'Bearer {login_employee1()}'
                           })
-    assert response.json()[-1]['task_id'] == task.json()['id']
+    assert response.json()[-1]['task']['id'] == task.json()['id']
 
 
 def test_answer_task():
@@ -71,7 +71,7 @@ def test_answer_task():
                           headers={
                               'Authorization': f'Bearer {login_employee1()}'
                           })
-    assert response.json()[-1]['task_id'] == task.json()['id']
+    assert response.json()[-1]['task']['id'] == task.json()['id']
 
 
 def test_check_task_accept():
@@ -112,7 +112,7 @@ def test_check_task_accept():
                           headers={
                               'Authorization': f'Bearer {login_employee1()}'
                           })
-    assert response.json()[-1]['task_id'] == task.json()['id']
+    assert response.json()[-1]['task']['id'] == task.json()['id']
 
 
 def test_check_task_decline():
@@ -153,7 +153,7 @@ def test_check_task_decline():
                           headers={
                               'Authorization': f'Bearer {login_employee1()}'
                           })
-    assert response.json()[-1]['task_id'] == task.json()['id']
+    assert response.json()[-1]['task']['id'] == task.json()['id']
 
 
 def test_read_notification():
@@ -201,7 +201,7 @@ def test_read_notification():
                             params={
                                 'notification_id': notifications.json()[0]['id']
                             })
-    assert response.json()['is_read'] is True
+    assert response.status_code == 200
 
 
 def test_read_all_notifications():

@@ -42,3 +42,7 @@ class Notification(Base):
     type: Mapped[NotificationType] = mapped_column(
         Enum(NotificationType), nullable=False
     )
+    employee_id: Mapped[int] = mapped_column(
+        ForeignKey('employee.id', ondelete='CASCADE'), nullable=True
+    )
+    employee: Mapped['Employee'] = relationship(back_populates='notifications')
