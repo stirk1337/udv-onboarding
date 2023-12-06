@@ -76,6 +76,20 @@ export type UpdateAnswer = {
     answer: string,
 }
 
+export type NotificationCuratorData = Planet & {
+    curator: UserData
+}
+
+export type NotificationType = {
+    id: number,
+    created_at: string,
+    employee: UserOnPlanetData,
+    is_read: boolean,
+    notification_type: NotificationTypes
+    planet: NotificationCuratorData
+    task: PlanetTask
+}
+
 export enum Products {
     datapkIndustrialKit = 'datapk industrial kit',
     industrialFirewall = 'industrial firewall',
@@ -104,4 +118,11 @@ export enum SortTypes {
     email = 'email',
     product = 'product',
     product_role = 'product_role',
+}
+
+export enum NotificationTypes {
+    answer = 'answer',
+    new = 'new',
+    invited = 'invited',
+    decline = 'decline',
 }

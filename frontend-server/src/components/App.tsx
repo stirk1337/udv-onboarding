@@ -9,7 +9,7 @@ import TaskForVerification from "./curator-components/task-for-verification"
 import Personal from "./curator-components/personal"
 import { useAppSelector } from "./hooks"
 import { store } from "./store"
-import { getCurrentUserInfo } from "./store/api-actions/get-actions"
+import { getCurrentUserInfo, getNotifications } from "./store/api-actions/get-actions"
 import { useEffect } from "react"
 import HistoryRouter from "./history-route"
 import browserHistory from "../browser-history"
@@ -19,6 +19,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 function App() {
   const isRegistered = useAppSelector((state) => state.authorizationStatus);
   const userRole = useAppSelector((state) => state.userData.role);
+  const tasks = useAppSelector((state) => state.planetTasks);
   useEffect(() => {
     store.dispatch(getCurrentUserInfo())
   }, [])
@@ -33,14 +34,14 @@ function App() {
             <Route index element={
               <MainPage/>
             }/>
-            <Route path=":planetId/:taskId" element={<TaskBlock/>}/>
+            <Route path=":planetId/:taskId" element={<TaskBlock tasks={tasks}/>}/>
           </Route>
 
           <Route path="/curator" element={
               <CuratorPageLayout userRole={userRole}/>
           }>
             <Route index element={<TaskConstructor/>}/>
-            <Route path="tasks-for-verification" element={<TaskForVerification/>}/>
+            <Route path="tasks-for-verification/:id" element={<TaskForVerification/>}/>
             <Route path="personal" element={<Personal/>}/>
             <Route path="tasks/:id" element={<TaskEditor/>}/>
           </Route>
