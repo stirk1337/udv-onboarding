@@ -1,12 +1,24 @@
 import ProgressBarComponent from "./progress-bar";
-import { AchievementData } from "../../mocks/achievement";
 import Achievement from "./achievement";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getAchievements } from "../store/api-actions/get-actions";
 
 type AchievementsProps ={
     onClickExit: () => void
 }
 
 function Achievements({onClickExit}:AchievementsProps) {
+    const dispatch = useAppDispatch()
+    const achievements = useAppSelector((state) => state.achievements)
+    const completedAchievementsNumber = achievements.filter(achievement => achievement.completed === true).length;
+
+    console.log(achievements)
+
+    useEffect(() => {
+        dispatch(getAchievements())
+    }, [])
+
     return ( 
         <div className="achievements-block">
             <div className="achievements-header">
@@ -18,10 +30,10 @@ function Achievements({onClickExit}:AchievementsProps) {
                 <p>Мои достижения</p>
             </div>
             <div className="achievements-progress-bar">
-                <ProgressBarComponent/>
+                <ProgressBarComponent percentage={completedAchievementsNumber / achievements.length * 100}/>
             </div>
             <div className="achievements-content">
-                {AchievementData.map(achievement => <Achievement key={achievement.id} id={achievement.id} icon={achievement.icon} type={achievement.type} data={achievement.data} coins={achievement.coins} completed={achievement.completed}/>)}
+                {achievements.map(achievement => <Achievement key={achievement.name} type={achievement.name} data={achievement.description} coins={10} completed={achievement.completed}/>)}
             </div>
         </div>
      );

@@ -382,15 +382,18 @@ main{
 }
 
 .achievements-content, .progress-content{
-    display: flex;
     flex-wrap: wrap;
-    gap: 16px;
     box-sizing: border-box;
     overflow: auto;
     overflow-x: hidden;
     height: 651px;
     margin-bottom: 20px;
     padding-right: 20px;
+}
+
+.achievements-content{
+    display: flex;
+    gap: 15px;
 }
 
 .achievement{
@@ -419,7 +422,7 @@ main{
     border-radius: 21px;
     background: #3F3F3F;
     margin-bottom: 35px;
-    padding: 10px 20px;
+    padding: 20px 20px;
 }
 
 .progress-data-header{

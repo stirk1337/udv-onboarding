@@ -1,15 +1,24 @@
+import { useEffect } from "react";
 import { BACKEND_URL } from "../services/api";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getEmployeePlanetsForCurator } from "../store/api-actions/get-actions";
 
 type StatisticEmployeesProps = {
     id: number;
     avatar: string,
     name: string,
-    completedTasks: string[],
     clickExit: (id:number) => void
     onDelete: (id:number) => void
 }
 
-function StatisticEmployee({id, onDelete, avatar, name, completedTasks, clickExit}: StatisticEmployeesProps) {
+function StatisticEmployee({id, onDelete, avatar, name, clickExit}: StatisticEmployeesProps) {
+    const dispatch = useAppDispatch()
+    const completedPlanets = useAppSelector((state) => state.completedPlanets)
+
+    useEffect(() => {
+        dispatch(getEmployeePlanetsForCurator(id))
+    })
+
     return ( 
         <div className="employee-data">
             <div className="useful-links-header">
@@ -28,7 +37,7 @@ function StatisticEmployee({id, onDelete, avatar, name, completedTasks, clickExi
                 <div>
                     <p>Прошёл:</p>
                     <ul>
-                        {completedTasks.map((task) => <li>{task}</li>)}
+                        {completedPlanets.map((planet) => <li>{planet.name}</li>)}
                     </ul>
                 </div>
                 <button className="decline-button" onClick={()=> onDelete(id)}>Деактивировать</button>

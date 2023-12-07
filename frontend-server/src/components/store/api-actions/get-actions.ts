@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance, AxiosRequestConfig } from "axios";
-import { login, redirectToRoute, setEmployees, setNotifications, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from "../action";
-import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification, NotificationType } from "../../../types";
+import { login, redirectToRoute, setAchievements, setCompletedPlanets, setEmployees, setNotifications, setPercentageCompletedPlanets, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from "../action";
+import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification, NotificationType, Achievement, EmployeePlanets } from "../../../types";
 
 export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     dispatch: AppDispatch;
@@ -143,3 +143,63 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
       }
     },
   );
+
+  export const getAchievements = createAsyncThunk<void, undefined, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'achievements/getAchievements',
+    async (_arg, {dispatch, extra: api}) => {
+      try {
+        const {data: achievementsData} = await api.get<Achievement[]>(`/achievement/get_achievements`);
+        dispatch(setAchievements(achievementsData))
+      } catch {
+        dispatch(login(false));
+      }
+    },
+  );
+
+  export const getEmployeePlanets = createAsyncThunk<void, undefined, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'achievements/getAchievements',
+    async (_arg, {dispatch, extra: api}) => {
+      try {
+        const {data: planetsData} = await api.get<EmployeePlanets[]>(`/planet/get_employee_planets`);
+        const numberCompletedPlanets = planetsData.filter(planet => planet.completed === planet.task_count).length;
+        dispatch(setPercentageCompletedPlanets(numberCompletedPlanets / planetsData.length * 100));
+      } catch {
+        dispatch(login(false));
+      }
+    },
+  );
+
+  export const getProgressPlanetsTasks = createAsyncThunk<PlanetTask[], Id, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'tasks/getProgressPlanetsTasks',
+    async (id, {extra: api}) => {
+      const {data: tasks} = await api.get<PlanetTask[]>(`/task/get_tasks_with_status`, {params: {planet_id: id}});
+      return tasks
+    });
+
+    export const getEmployeePlanetsForCurator = createAsyncThunk<void, Id, {
+      dispatch: AppDispatch;
+      state: State;
+      extra: AxiosInstance;
+    }>(
+      'tasks/getEmployeePlanetsForCurator',
+      async (id, {dispatch, extra: api}) => {
+        try {
+          const {data: planetsData} = await api.get<EmployeePlanets[]>(`/planet/get_employee_planets_by_employee_id?employee_id=${id}`);
+          const CompletedPlanets = planetsData.filter(planet => planet.completed === planet.task_count);
+          dispatch(setCompletedPlanets(CompletedPlanets));
+        } catch {
+          dispatch(login(false));
+        }
+      });

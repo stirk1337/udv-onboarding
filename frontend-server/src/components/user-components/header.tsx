@@ -8,8 +8,9 @@ import Progress from "./progress";
 import ImageCropper from "../image-cropper";
 import { useAppSelector } from "../hooks";
 import { BACKEND_URL } from "../services/api";
-import { getNotifications } from "../store/api-actions/get-actions";
+import { getEmployeePlanets, getNotifications } from "../store/api-actions/get-actions";
 import { store } from "../store";
+import { Link } from "react-router-dom";
 
 function Header() {
 
@@ -23,10 +24,13 @@ function Header() {
 
     const userData = useAppSelector((state) => state.userData);
     const notifications = useAppSelector((state) => state.notifications);
+    const percentage = useAppSelector((state) => state.percentage);
     const notReadNotifications = notifications.filter(notification => !notification.is_read).length
+    const navigate = '/' + userData.role
 
     useEffect(() => {
         store.dispatch(getNotifications())
+        store.dispatch(getEmployeePlanets())
       }, [])
     
     function profileClickHandler(action: boolean) {
@@ -80,11 +84,11 @@ function Header() {
     return ( 
         <header>
             <div className="logo">
-                <a href="/"><img src="/logo.svg" alt="udv group space exploration" width={210} height={40}></img></a>
+                <Link to={navigate}><img src="/logo.svg" alt="udv group space exploration" width={210} height={40}></img></Link>
             </div>
             <div className="progress-bar">
-                <p>Первые дни</p>
-                <ProgressBarComponent/>
+                <p>Прогресс: {percentage}%</p>
+                <ProgressBarComponent percentage={percentage}/>
             </div>
             <div className="flex notification-profile-block">
                 <div>

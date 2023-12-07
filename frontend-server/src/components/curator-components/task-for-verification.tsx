@@ -16,7 +16,7 @@ function TaskForVerification() {
     const TaskForVerification = useAppSelector((state) => state.taskForVerification);
     const [isDeclineOpen, setIsDeclineOpen] = useState(false)
     const [currentTaskForVerificationId, setCurrentTaskForVerificationId] = useState(tId)
-    if(currentTaskForVerificationId !== tId) {
+    if(currentTaskForVerificationId !== tId && tId) {
         setCurrentTaskForVerificationId(tId)
     }
     console.log(currentTaskForVerificationId)

@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setEmployees, setNotifications, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from './action';
-import { CuratorPlanetData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
+import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setAchievements, setCompletedPlanets, setEmployees, setNotifications, setPercentageCompletedPlanets, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from './action';
+import { Achievement, CuratorPlanetData, EmployeePlanets, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
 
 type InitialState = {
   authorizationStatus: boolean;
@@ -12,6 +12,9 @@ type InitialState = {
   currentTask: PlanetTask;
   taskForVerification: PlanetTaskForVerification[]
   notifications: NotificationType[],
+  achievements: Achievement[]
+  percentage: number
+  completedPlanets: EmployeePlanets[];
 }
 
 const initialState: InitialState = {
@@ -47,6 +50,9 @@ const initialState: InitialState = {
   },
   taskForVerification: [],
   notifications: [],
+  achievements: [],
+  percentage: 0,
+  completedPlanets: [],
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -103,5 +109,14 @@ export const reducer = createReducer(initialState, (builder) => {
       })
       .addCase(setNotifications,(state, action) => {
         state.notifications = action.payload
+      })
+      .addCase(setAchievements,(state, action) => {
+        state.achievements = action.payload
+      })
+      .addCase(setPercentageCompletedPlanets,(state, action) => {
+        state.percentage = action.payload
+      })
+      .addCase(setCompletedPlanets,(state, action) => {
+        state.completedPlanets = action.payload
       })
 });

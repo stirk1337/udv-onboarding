@@ -1,5 +1,4 @@
 import Notification from "./notification";
-import { NotificationData } from "../mocks/notifications";
 import { NotificationType } from "../types";
 import { useAppDispatch } from "./hooks";
 import { readAllNotification } from "./store/api-actions/patch-action";
