@@ -3,13 +3,14 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from src.planet.models import Planet
+from src.planet.models import Planet, PlanetImage
 from src.user.router import EmployeeOut
 from src.user.validators import CuratorOut
 
 
 class PlanetIn(BaseModel):
     name: Optional[str]
+    image: Optional[PlanetImage]
 
 
 class ShowPlanet(BaseModel):
@@ -19,6 +20,7 @@ class ShowPlanet(BaseModel):
     created_at: datetime
     updated_at: datetime
     is_first_day: bool
+    image: PlanetImage
 
     @staticmethod
     def parse(planet: Planet):
@@ -27,7 +29,8 @@ class ShowPlanet(BaseModel):
                           curator_id=planet.curator_id,
                           created_at=planet.created_at,
                           updated_at=planet.updated_at,
-                          is_first_day=planet.is_first_day)
+                          is_first_day=planet.is_first_day,
+                          image=planet.image)
 
 
 class ShowPlanetWithCurator(BaseModel):

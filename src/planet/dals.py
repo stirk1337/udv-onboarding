@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.auth.models import User
-from src.planet.models import Planet
+from src.planet.models import Planet, PlanetImage
 from src.task.models import Task
 from src.user.models import Curator, Employee
 
@@ -61,14 +61,15 @@ class PlanetDAL:
                 status_code=404, detail=f'Planet with id {planet_id} not found')
         return planet
 
-    async def create_planet(self, name: str, user: User, is_first_day: bool) -> Planet:
+    async def create_planet(self, name: str, user: User, is_first_day: bool, image: PlanetImage) -> Planet:
         curator = await self.db_session.scalar(
             select(Curator)
             .where(Curator.user_id == user.id)
         )
         new_planet = Planet(name=name,
                             curator_id=curator.id,
-                            is_first_day=is_first_day)
+                            is_first_day=is_first_day,
+                            image=image)
         self.db_session.add(new_planet)
         await self.db_session.commit()
         return new_planet

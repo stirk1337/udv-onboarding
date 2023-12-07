@@ -330,6 +330,7 @@ def test_check_first_day_task():
     create = client.post('/planet/create_planet',
                          json={
                              'name': '123',
+                             'image': 'planet1'
                          },
                          headers={
                              'Authorization': f'Bearer {login_superuser()}'
@@ -367,6 +368,7 @@ def test_check_first_day_task_no_rights():
     create = client.post('/planet/create_planet',
                          json={
                              'name': '123',
+                             'image': 'planet1'
                          },
                          headers={
                              'Authorization': f'Bearer {login_superuser()}'

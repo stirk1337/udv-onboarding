@@ -1,10 +1,26 @@
 import datetime
+import enum
 from typing import List
 
 from sqlalchemy import Boolean, ForeignKey, Integer, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db import Base
+
+
+class PlanetImage(enum.Enum):
+    planet1 = 'planet1'
+    planet2 = 'planet2'
+    planet3 = 'planet3'
+    planet4 = 'planet4'
+    planet5 = 'planet5'
+    planet6 = 'planet6'
+    planet7 = 'planet7'
+    planet8 = 'planet8'
+    planet9 = 'planet9'
+    planet10 = 'planet10'
+    planet11 = 'planet11'
+    planet12 = 'planet12'
 
 
 class Planet(Base):
@@ -36,6 +52,7 @@ class Planet(Base):
     is_first_day: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )
+    image: Mapped[PlanetImage]
 
 
 class EmployeePlanet(Base):

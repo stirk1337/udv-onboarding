@@ -195,6 +195,7 @@ def create_planet(name: str = 'no name', login=login_curator1):  # delegate
     return client.post('/planet/create_planet',
                        json={
                            'name': name,
+                           'image': 'planet1',
                        },
                        headers={
                            'Authorization': f'Bearer {login()}'
@@ -213,6 +214,7 @@ def create_task(planet_id: int,
                        json={
                            'name': name,
                            'description': description,
+                           'image': 'octopus1'
                        },
                        headers={
                            'Authorization': f'Bearer {login()}'

@@ -67,7 +67,8 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_forgot_password(
             self, user: User, token: str, request: Optional[Request] = None
     ) -> None:
-        emails = [EmailBody(email=user.email, body={'email': user.email})]
+        emails = [EmailBody(email=user.email, body={
+                            'email': user.email, 'token': token})]
         await send_reset_password_token(EmailSchema(emails=emails))
         print(f'User {user.id} has forgot their password. Reset token: {token}')  # noqa: E501
 
@@ -89,7 +90,7 @@ async def create_user(session: AsyncSession,
                       password: str = token_urlsafe(16),
                       is_superuser: bool = False,
                       role: Role = Role.employee,
-                      name: str = 'SomeUser') -> Optional[User]:
+                      name: str = 'SomeUser'):
     try:
         if password is None:
             password = token_urlsafe(16)
@@ -106,7 +107,7 @@ async def create_user(session: AsyncSession,
                     await session.commit()
                 print(f'User created {user}')
                 print(f'Password: {password}')
-                return user
+                return user, password
     except UserAlreadyExists:
         print(f'User {email} already exists')
 

@@ -11,7 +11,8 @@ from src.task.models import Task
 from src.user.models import Employee
 
 
-async def send_notifications_with_emails(users: List[User],
+async def send_notifications_with_emails(user_from: User,
+                                         users: List[User],
                                          planet: Planet,
                                          notify_type: NotificationType,
                                          session: AsyncSession,
@@ -25,5 +26,12 @@ async def send_notifications_with_emails(users: List[User],
                                       task=task,
                                       notification_type=notify_type,
                                       employee=employee if employee else None)
-        emails.append(EmailBody(email=user.email, body={'email': user.email}))
+        emails.append(EmailBody(
+            email=user.email,
+            body={
+                'email': user.email,
+                'user_from': user_from,
+                'planet': planet,
+                'task': task,
+            }))
     await send_notification_email(EmailSchema(emails=emails), notify_type)

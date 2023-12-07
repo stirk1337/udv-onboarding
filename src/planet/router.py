@@ -11,7 +11,7 @@ from src.notification.models import NotificationType
 from src.notification.notification import send_notifications_with_emails
 from src.planet.dals import PlanetDAL
 from src.planet.dependencies import have_planet
-from src.planet.models import Planet
+from src.planet.models import Planet, PlanetImage
 from src.planet.validators import (PlanetIn, ShowPlanet,
                                    ShowPlanetWithCompletionStatus,
                                    ShowPlanetWithEmployees,
@@ -128,7 +128,10 @@ async def create_planet(planet_in: PlanetIn,
     planet_dal = PlanetDAL(session)
     employee_dal = EmployeeDAL(session)
     employees = await employee_dal.get_all_employees()
-    planet = await planet_dal.create_planet(name=planet_in.name, user=user, is_first_day=is_first_day)
+    planet = await planet_dal.create_planet(name=planet_in.name,
+                                            user=user,
+                                            is_first_day=is_first_day,
+                                            image=planet_in.image if planet_in.image else PlanetImage.planet1)
     planet_with_employees = await planet_dal.get_planet_with_employees(planet.id)
     if is_first_day:  # link first day planet to all employees
         await planet_dal.add_employees_to_planet(planet_with_employees, employees)
@@ -167,6 +170,7 @@ async def set_employee(ids: EmployeesIdItem,
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
 
     background_tasks.add_task(send_notifications_with_emails,
+                              user,
                               [employee.user for employee in notify_employees],
                               planet,
                               NotificationType.invited,
@@ -202,6 +206,7 @@ async def set_employee_by_param(product_in: ProductAndProductRoleIn,
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
 
     background_tasks.add_task(send_notifications_with_emails,
+                              user,
                               [employee.user for employee in notify_employees],
                               planet,
                               NotificationType.invited,

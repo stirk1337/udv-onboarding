@@ -13,7 +13,7 @@ from src.planet.models import Planet
 from src.request_codes import planet_responses, responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
-from src.task.models import Task, TaskStatus
+from src.task.models import Task, TaskImage, TaskStatus
 from src.task.validators import (EmployeeTaskOut, TaskInAnswer, TaskInCheck,
                                  TaskInCreate, TaskInUpdate, TaskOut,
                                  TaskOutForChecking, TaskOutForEmployee)
@@ -93,12 +93,13 @@ async def create_new_task(task_in: TaskInCreate,
                           user: User = Depends(curator_user)) -> TaskOut:
     """Create task linked to planet. Rights: curator, you must have this planet"""
     task_dal = TaskDAL(session)
-    task = await task_dal.create_task(task_in.name, task_in.description, planet)
+    task = await task_dal.create_task(task_in.name, task_in.description, planet, task_in.image if task_in.image else TaskImage.octopus1)
     employee_dal = EmployeeDAL(session)
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     employees = await employee_dal.get_employees_by_curator(curator)
     background_tasks.add_task(send_notifications_with_emails,
+                              user,
                               [employee.user for employee in employees],
                               planet,
                               NotificationType.new,
@@ -144,6 +145,7 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
     employee = await employee_dal.get_employee_by_user_with_curator(user)
     employee_task = await task_dal.answer_task(task, employee, task_in.answer)
     background_tasks.add_task(send_notifications_with_emails,
+                              user,
                               [employee.curator.user],
                               task.planet,
                               NotificationType.answer,
@@ -154,20 +156,21 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
 
 
 @router.patch('/check_task',
-              responses=task_responses,
-              dependencies=[Depends(curator_user)])
+              responses=task_responses)
 async def check_task_by_its_id(task_in: TaskInCheck,
                                task_id: int,
                                background_tasks: BackgroundTasks,
                                session: AsyncSession = Depends(
                                    get_async_session),
-                               employee: Employee = Depends(have_employee)) -> EmployeeTaskOut:
+                               employee: Employee = Depends(have_employee),
+                               user: User = Depends(curator_user)) -> EmployeeTaskOut:
     """Check competed employee task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
     task = await task_dal.get_task_with_planet_employees(task_id)
     employee_task = await task_dal.check_task(task, employee, task_in.task_status)
     notify_type = NotificationType.accept if task_in.task_status == TaskStatus.completed else NotificationType.decline
     background_tasks.add_task(send_notifications_with_emails,
+                              user,
                               [employee.user],
                               task.planet,
                               notify_type,

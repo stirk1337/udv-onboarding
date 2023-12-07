@@ -14,6 +14,19 @@ class TaskStatus(enum.Enum):
     completed = 'completed'
 
 
+class TaskImage(enum.Enum):
+    octopus1 = 'octopus1'
+    octopus2 = 'octopus2'
+    octopus3 = 'octopus3'
+    octopus4 = 'octopus4'
+    octopus5 = 'octopus5'
+    octopus6 = 'octopus6'
+    octopus7 = 'octopus7'
+    octopus8 = 'octopus8'
+    octopus9 = 'octopus9'
+    octopus10 = 'octopus10'
+
+
 class Task(Base):
     __tablename__ = 'task'
 
@@ -41,6 +54,7 @@ class Task(Base):
     )
     notifications: Mapped[List['Notification']
                           ] = relationship(back_populates='task')
+    image: Mapped[TaskImage]
 
 
 class EmployeeTask(Base):
