@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dependencies import curator_user, employee_user
@@ -87,6 +87,7 @@ async def get_tasks_that_need_check(session: AsyncSession = Depends(get_async_se
 @router.post('/create_task',
              responses=planet_responses)
 async def create_new_task(task_in: TaskInCreate,
+                          background_tasks: BackgroundTasks,
                           session: AsyncSession = Depends(get_async_session),
                           planet: Planet = Depends(have_planet),
                           user: User = Depends(curator_user)) -> TaskOut:
@@ -97,11 +98,12 @@ async def create_new_task(task_in: TaskInCreate,
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     employees = await employee_dal.get_employees_by_curator(curator)
-    await send_notifications_with_emails([employee.user for employee in employees],
-                                         planet,
-                                         NotificationType.new,
-                                         session,
-                                         task)
+    background_tasks.add_task(send_notifications_with_emails,
+                              [employee.user for employee in employees],
+                              planet,
+                              NotificationType.new,
+                              session,
+                              task)
     return TaskOut.parse(task)
 
 
@@ -131,6 +133,7 @@ async def delete_task_by_id(session: AsyncSession = Depends(get_async_session),
 @router.patch('/answer_task',
               responses=task_responses)
 async def answer_on_task_by_its_id(task_in: TaskInAnswer,
+                                   background_tasks: BackgroundTasks,
                                    session: AsyncSession = Depends(
                                        get_async_session),
                                    task: Task = Depends(have_task),
@@ -140,12 +143,13 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
     employee_dal = EmployeeDAL(session)
     employee = await employee_dal.get_employee_by_user_with_curator(user)
     employee_task = await task_dal.answer_task(task, employee, task_in.answer)
-    await send_notifications_with_emails([employee.curator.user],
-                                         task.planet,
-                                         NotificationType.answer,
-                                         session,
-                                         task,
-                                         employee)
+    background_tasks.add_task(send_notifications_with_emails,
+                              [employee.curator.user],
+                              task.planet,
+                              NotificationType.answer,
+                              session,
+                              task,
+                              employee)
     return EmployeeTaskOut.parse(employee_task)
 
 
@@ -154,6 +158,7 @@ async def answer_on_task_by_its_id(task_in: TaskInAnswer,
               dependencies=[Depends(curator_user)])
 async def check_task_by_its_id(task_in: TaskInCheck,
                                task_id: int,
+                               background_tasks: BackgroundTasks,
                                session: AsyncSession = Depends(
                                    get_async_session),
                                employee: Employee = Depends(have_employee)) -> EmployeeTaskOut:
@@ -162,9 +167,10 @@ async def check_task_by_its_id(task_in: TaskInCheck,
     task = await task_dal.get_task_with_planet_employees(task_id)
     employee_task = await task_dal.check_task(task, employee, task_in.task_status)
     notify_type = NotificationType.accept if task_in.task_status == TaskStatus.completed else NotificationType.decline
-    await send_notifications_with_emails([employee.user],
-                                         task.planet,
-                                         notify_type,
-                                         session,
-                                         task)
+    background_tasks.add_task(send_notifications_with_emails,
+                              [employee.user],
+                              task.planet,
+                              notify_type,
+                              session,
+                              task)
     return EmployeeTaskOut.parse(employee_task)

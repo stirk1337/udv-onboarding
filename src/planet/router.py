@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -150,9 +150,10 @@ async def patch_planet(planet_in: PlanetIn,
 @router.patch('/add_employees_to_planet',
               responses=planet_responses)
 async def set_employee(ids: EmployeesIdItem,
+                       background_tasks: BackgroundTasks,
                        session: AsyncSession = Depends(get_async_session),
                        user: User = Depends(curator_user),
-                       planet: Planet = Depends(have_planet)) -> ShowPlanetWithEmployees:
+                       planet: Planet = Depends(have_planet),) -> ShowPlanetWithEmployees:
     """Add new employees to a planet. Rights: curator, you must have this planet, you must have linked to this
     employees"""
     planet_dal = PlanetDAL(session)
@@ -165,10 +166,11 @@ async def set_employee(ids: EmployeesIdItem,
     notify_employees = list(set(filtered_employees) - set(planet.employees))
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
 
-    await send_notifications_with_emails([employee.user for employee in notify_employees],
-                                         planet,
-                                         NotificationType.invited,
-                                         session)
+    background_tasks.add_task(send_notifications_with_emails,
+                              [employee.user for employee in notify_employees],
+                              planet,
+                              NotificationType.invited,
+                              session)
     return ShowPlanetWithEmployees.parse(planet)
 
 
@@ -180,6 +182,7 @@ class ProductAndProductRoleIn(BaseModel):
 @router.patch('/add_employees_to_planet_by_params',
               responses=planet_responses)
 async def set_employee_by_param(product_in: ProductAndProductRoleIn,
+                                background_tasks: BackgroundTasks,
                                 session: AsyncSession = Depends(
                                     get_async_session),
                                 user: User = Depends(curator_user),
@@ -198,10 +201,11 @@ async def set_employee_by_param(product_in: ProductAndProductRoleIn,
     notify_employees = list(set(filtered_employees) - set(planet.employees))
     planet = await planet_dal.add_employees_to_planet(planet, filtered_employees)
 
-    await send_notifications_with_emails([employee.user for employee in notify_employees],
-                                         planet,
-                                         NotificationType.invited,
-                                         session)
+    background_tasks.add_task(send_notifications_with_emails,
+                              [employee.user for employee in notify_employees],
+                              planet,
+                              NotificationType.invited,
+                              session)
     return ShowPlanetWithEmployees.parse(planet)
 
 
