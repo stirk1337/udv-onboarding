@@ -22,6 +22,7 @@ function App() {
   const tasks = useAppSelector((state) => state.planetTasks);
   useEffect(() => {
     store.dispatch(getCurrentUserInfo())
+
   }, [])
 
   return (
@@ -41,6 +42,7 @@ function App() {
               <CuratorPageLayout userRole={userRole}/>
           }>
             <Route index element={<TaskConstructor/>}/>
+            <Route path="tasks-for-verification" element={<TaskForVerification/>}/>
             <Route path="tasks-for-verification/:id" element={<TaskForVerification/>}/>
             <Route path="personal" element={<Personal/>}/>
             <Route path="tasks/:id" element={<TaskEditor/>}/>

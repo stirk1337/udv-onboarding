@@ -1,11 +1,57 @@
-import { ProgressData } from "../../mocks/progress";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getProgressPlanetsTasks } from "../store/api-actions/get-actions";
 import ProgressBlock from "./progress-block";
+import { useEffect, useState } from "react";
 
 type ProgressProps = {
     onClickExit: () => void
 }
 
+type TProgressData = {
+    id: number,
+    name: string,
+    tasksName: ProgressTaskData[]
+}
+
+type ProgressTaskData = {
+    id: number,
+    name: string,
+    completed: boolean,
+}
+
 function Progress({onClickExit}:ProgressProps) {
+    const dispatch = useAppDispatch()
+    const [progressData, setProgressData] = useState<TProgressData[]>([])
+    const planets = useAppSelector((state) => state.planets)
+
+    useEffect(() => {
+        fillProgressData().then((progressData) => setProgressData(progressData))
+    }, [])
+
+    async function fillProgressData(){
+        const newProgressData: TProgressData[] = [] 
+        for await (let planet of planets) {
+            await dispatch(getProgressPlanetsTasks(planet.id)).then(unwrapResult).then((tasks) => {
+                const data: TProgressData = {
+                    id: planet.id,
+                    name: planet.name,
+                    tasksName: []
+                }
+                tasks.forEach(task => {
+                    const taskData: ProgressTaskData = {
+                        id: task.id,
+                        name: task.name,
+                        completed: task.task_status === 'completed'
+                    }
+                    data.tasksName.push(taskData)
+                })
+                newProgressData.push(data)
+            })
+        };
+        return newProgressData
+    }
+    fillProgressData()
     return ( 
         <div className="progress-block">
             <div className="progress-header">
@@ -17,7 +63,7 @@ function Progress({onClickExit}:ProgressProps) {
                 <p>Мой прогресс</p>
             </div>
             <div className="progress-content">
-                {ProgressData.map(progress => <ProgressBlock key={progress.id} id={progress.id} name={progress.name} listBlock={progress.listBlock}/>)}
+                {progressData.map(progress => <ProgressBlock key={progress.id} name={progress.name} listBlock={progress.tasksName}/>)}
             </div>
         </div>
      );

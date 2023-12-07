@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { NotificationData } from "../../mocks/notifications"
 import Notifications from "../notifications"
 import ProfileButtons from "../profile-buttons"
 import { Link, useLocation } from "react-router-dom"

@@ -1,12 +1,11 @@
 
 type ListBlockProps = {
-    id: string,
     name: string,
     completed: boolean,
 }
 
 
-function ListBlock({id, name, completed}:ListBlockProps) {
+function ListBlock({name, completed}:ListBlockProps) {
     return ( 
         <li className="list-block-item">
             <p>{name}</p>

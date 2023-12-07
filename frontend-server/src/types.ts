@@ -90,6 +90,17 @@ export type NotificationType = {
     task: PlanetTask
 }
 
+export type Achievement = {
+    name: string,
+    description: string,
+    completed: boolean,
+}
+
+export type EmployeePlanets = Planet & {
+    completed: number,
+    task_count: number,
+}
+
 export enum Products {
     datapkIndustrialKit = 'datapk industrial kit',
     industrialFirewall = 'industrial firewall',

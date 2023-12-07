@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CuratorPlanetData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, UserData, UserOnPlanetData } from "../../types";
+import { CuratorPlanetData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, UserData, UserOnPlanetData, Achievement, EmployeePlanets } from "../../types";
 
 export const redirectToRoute = createAction<string>('user/redirectToRoute');
 
@@ -30,3 +30,9 @@ export const changeCurrentTask = createAction<PlanetTask>('task/changeCurrentTas
 export const setTaskForVerification = createAction<PlanetTaskForVerification[]>('task/setTaskForVerification')
 
 export const setNotifications = createAction<NotificationType[]>('notification/setTaskForVerification')
+
+export const setAchievements = createAction<Achievement[]>('achievements/setAchievements')
+
+export const setPercentageCompletedPlanets = createAction<number>('user/percentage')
+
+export const setCompletedPlanets = createAction<EmployeePlanets[]>('user/completedPlanets')
