@@ -1,15 +1,28 @@
 import Notification from "./notification";
 import { NotificationData } from "../mocks/notifications";
+import { NotificationType } from "../types";
+import { useAppDispatch } from "./hooks";
+import { readAllNotification } from "./store/api-actions/patch-action";
 
-function Notifications() {
+type NotificationsProps = {
+    notificationsList: NotificationType[]
+    onClickExit: () => void
+}
+
+function Notifications({notificationsList, onClickExit}: NotificationsProps){
+    const dispatch = useAppDispatch()
+    function readAllNotifications(){
+        dispatch(readAllNotification())
+    }
+
     return ( 
         <div className="notification-block">
             <div className="read-all-notifications">
-                <img src="/ring-bell.svg" alt="Пометить как прочитанное"></img>
+                <img src="/ring-bell.svg" alt="Пометить как прочитанное" onClick={readAllNotifications}></img>
                 <p>Уведомления</p>
             </div>
             <div className="notification-list">
-                {NotificationData.map((notification) => <Notification key={notification.id} id={notification.id} avatar={notification.avatar} sender={notification.sender} data={notification.data} date={notification.date} checked={notification.checked}/>)}
+                {notificationsList.map((notification) => <Notification onClickExit={onClickExit} key={notification.id} task={notification.task} employee={notification.employee} planet={notification.planet} id={notification.id} data={notification.notification_type} date={notification.created_at} checked={notification.is_read}/>)}
             </div>
         </div>
      );

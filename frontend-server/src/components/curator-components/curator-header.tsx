@@ -1,14 +1,17 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NotificationData } from "../../mocks/notifications"
 import Notifications from "../notifications"
 import ProfileButtons from "../profile-buttons"
 import { Link, useLocation } from "react-router-dom"
 import ImageCropper from "../image-cropper"
-import { useAppSelector } from "../hooks"
+import { useAppDispatch, useAppSelector } from "../hooks"
 import { BACKEND_URL } from "../services/api"
 import UsefulLinks from "../user-components/useful-links"
+import { getNotifications, getTasksBeingChecked } from "../store/api-actions/get-actions"
+import { store } from "../store"
 
 function CuratorHeader() {
+    const dispatch = useAppDispatch()
     const [isVisibleProfileButtons, setVisibleProfileButtons] = useState(false)
     const [isVisibleUsefulLinks, setVisibleUsefulLinks] = useState(false)
     const [isVisibleProgress, setVisibleProgress] = useState(false)
@@ -19,8 +22,12 @@ function CuratorHeader() {
 
     const userData = useAppSelector((state) => state.userData);
     const location = useLocation().pathname
+    const notifications = useAppSelector((state) => state.notifications);
+    const notReadNotifications = notifications.filter(notification => !notification.is_read).length
 
-    const notReadNotifications = NotificationData.filter(notification => !notification.checked).length
+    useEffect(() => {
+        store.dispatch(getNotifications())
+      }, [])
     
     function profileClickHandler(action: boolean) {
         setVisibleProfileButtons(action); 
@@ -67,7 +74,6 @@ function CuratorHeader() {
         setVisibleEditImage(false);
     }
 
-
     return ( 
         <header>
             <div className="logo">
@@ -75,7 +81,7 @@ function CuratorHeader() {
             </div>
             <nav className="header-nav">
                 <Link className={location === '/curator' ? 'active' : ''} to={"/curator"}>Конструктор адаптации</Link>
-                <Link className={location === '/curator/tasks-for-verification' ? 'active' : ''} to={"/curator/tasks-for-verification"}>Проверка прохождения</Link>
+                <Link className={location.split('/')[2] === 'tasks-for-verification' ? 'active' : ''} to={"/curator/tasks-for-verification"} onClick={() => dispatch(getTasksBeingChecked())}>Проверка прохождения</Link>
                 <Link className={location === '/curator/personal' ? 'active' : ''} to={"/curator/personal"}>Сотрудники</Link>
             </nav>
             <div className="flex notification-profile-block">
@@ -91,7 +97,7 @@ function CuratorHeader() {
                     </button>
                 </div>
             </div>
-            {isVisibleNotification && <Notifications/>}
+            {isVisibleNotification && <Notifications notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
             {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEdit={()=>editImageClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
             {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}
             {isVisibleEditImage && <ImageCropper onClickExit={()=>editImageClickHandler(false)}/>}

@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setEmployees, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from './action';
-import { CuratorPlanetData, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
+import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setEmployees, setNotifications, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from './action';
+import { CuratorPlanetData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
 
 type InitialState = {
   authorizationStatus: boolean;
@@ -11,6 +11,7 @@ type InitialState = {
   employees: UserOnPlanetData[];
   currentTask: PlanetTask;
   taskForVerification: PlanetTaskForVerification[]
+  notifications: NotificationType[],
 }
 
 const initialState: InitialState = {
@@ -44,7 +45,8 @@ const initialState: InitialState = {
     created_at: '',
     updated_at: '',
   },
-  taskForVerification: []
+  taskForVerification: [],
+  notifications: [],
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -99,19 +101,7 @@ export const reducer = createReducer(initialState, (builder) => {
       .addCase(setTaskForVerification,(state, action) => {
         state.taskForVerification = action.payload
       })
+      .addCase(setNotifications,(state, action) => {
+        state.notifications = action.payload
+      })
 });
-
-/*export const reducer = createReducer(initialState, (builder) => {
-  builder
-    .addCase(changeGenre, (state, action) => {
-      const {genre} = action.payload;
-      state.genre = genre;
-    })
-    .addCase(changeListFilmsByGenre, (state) => {
-      if(state.genre === 'All genres'){
-        state.filmByGenre = FilmList;
-      } else{
-        state.filmByGenre = FilmList.filter((film) => film.genre === state.genre);
-      }
-    });
-});*/

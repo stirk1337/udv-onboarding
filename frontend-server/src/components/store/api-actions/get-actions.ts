@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance, AxiosRequestConfig } from "axios";
-import { login, redirectToRoute, setEmployees, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from "../action";
-import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification } from "../../../types";
+import { login, redirectToRoute, setEmployees, setNotifications, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from "../action";
+import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification, NotificationType } from "../../../types";
 
 export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     dispatch: AppDispatch;
@@ -40,14 +40,13 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     },
   );
 
-  export const getPlanetTasks = createAsyncThunk<void, Id, {
+  export const getPlanetTasks = createAsyncThunk<PlanetTask[], Id, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
   }>(
     'user/get-planet-with-status',
     async (id, {dispatch, extra: api}) => {
-      try {
         const {data: tasks} = await api.get<PlanetTask[]>(`/task/get_tasks_with_status`, {params: {planet_id: id}});
         dispatch(setPlanetTasks(tasks))
         let task = tasks.find(task => task.task_status === TaskStatus.completed)
@@ -57,9 +56,7 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
         if(location.pathname.split('/').length === 2){
             dispatch(redirectToRoute(`employee/${id}/${task.id}`));
         }
-      } catch {
-        dispatch(login(false));
-      }
+        return tasks
     },
   );
 
@@ -121,6 +118,26 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
       try {
         const {data: taskData} = await api.get<PlanetTaskForVerification[]>(`/task/get_tasks_being_checked`);
         dispatch(setTaskForVerification(taskData))
+        const currentTask = taskData[0]
+        if(location.pathname.split('/').length === 3){
+          dispatch(redirectToRoute(`/curator/tasks-for-verification/${currentTask.planet_id}${currentTask.id}`))
+        }
+      } catch {
+        dispatch(login(false));
+      }
+    },
+  );
+
+  export const getNotifications = createAsyncThunk<void, undefined, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/getNotifications',
+    async (_arg, {dispatch, extra: api}) => {
+      try {
+        const {data: notificationData} = await api.get<NotificationType[]>(`/notification/get_notifications`);
+        dispatch(setNotifications(notificationData))
       } catch {
         dispatch(login(false));
       }

@@ -6,7 +6,7 @@ type PlanetProps = {
 function Planet({id, onPlanetClick}: PlanetProps) {
     return ( 
         <button onClick={() => onPlanetClick(id)}>
-            <img src="/planet-icon.svg" alt="Блок"></img>
+            <img src="/planet.gif" alt="Блок"></img>
         </button>
      );
 }

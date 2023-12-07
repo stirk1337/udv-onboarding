@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Notifications from "../notifications";
 import ProfileButtons from "../profile-buttons";
 import ProgressBarComponent from "./progress-bar";
 import UsefulLinks from "./useful-links";
-import { NotificationData } from "../../mocks/notifications";
 import Achievements from "./achievements";
 import Progress from "./progress";
 import ImageCropper from "../image-cropper";
 import { useAppSelector } from "../hooks";
 import { BACKEND_URL } from "../services/api";
+import { getNotifications } from "../store/api-actions/get-actions";
+import { store } from "../store";
 
 function Header() {
 
@@ -21,7 +22,12 @@ function Header() {
     const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
 
     const userData = useAppSelector((state) => state.userData);
-    const notReadNotifications = NotificationData.filter(notification => !notification.checked).length
+    const notifications = useAppSelector((state) => state.notifications);
+    const notReadNotifications = notifications.filter(notification => !notification.is_read).length
+
+    useEffect(() => {
+        store.dispatch(getNotifications())
+      }, [])
     
     function profileClickHandler(action: boolean) {
         setVisibleProfileButtons(action); 
@@ -93,7 +99,7 @@ function Header() {
                     </button>
                 </div>
             </div>
-            {isVisibleNotification && <Notifications/>}
+            {isVisibleNotification && <Notifications notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
             {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEdit={()=>editImageClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
             {isVisibleAchievements && <Achievements onClickExit={()=>AchievementsClickHandler(false)}/>}
             {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}

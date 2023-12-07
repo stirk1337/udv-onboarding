@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
 import { Id, UpdateAnswer } from "../../../types";
-import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
+import { getCurrentUserInfo, getEmployees, getNotifications, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     dispatch: AppDispatch;
@@ -154,6 +154,38 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
             'Content-Type': 'multipart/form-data'
           }});
           dispatch(getCurrentUserInfo())
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const readNotification = createAsyncThunk<void, Id, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'notification/readNotification',
+    async (id, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/notification/read_notification?notification_id=${id}`);
+          dispatch(getNotifications())
+        } catch {
+            dispatch(login(false));
+        }
+    },
+  );
+
+  export const readAllNotification = createAsyncThunk<void, undefined, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'notification/readAllNotification',
+    async (_arg, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/notification/read_all_notifications`);
+          dispatch(getNotifications())
         } catch {
             dispatch(login(false));
         }
