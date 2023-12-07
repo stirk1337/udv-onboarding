@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.task.models import EmployeeTask, Task, TaskStatus
+from src.task.models import EmployeeTask, Task, TaskImage, TaskStatus
 from src.user.models import Employee
 from src.user.validators import EmployeeOut
 
@@ -11,6 +11,7 @@ from src.user.validators import EmployeeOut
 class TaskInCreate(BaseModel):
     name: Optional[str]
     description: Optional[str]
+    image: Optional[TaskImage]
 
 
 class TaskInUpdate(BaseModel):
@@ -33,6 +34,7 @@ class TaskOut(BaseModel):
     planet_id: int
     created_at: datetime.datetime
     updated_at: datetime.datetime
+    image: TaskImage
 
     @staticmethod
     def parse(task: Task):
@@ -41,7 +43,8 @@ class TaskOut(BaseModel):
                        description=task.description,
                        planet_id=task.planet_id,
                        created_at=task.created_at,
-                       updated_at=task.updated_at)
+                       updated_at=task.updated_at,
+                       image=task.image)
 
 
 class EmployeeTaskOut(BaseModel):

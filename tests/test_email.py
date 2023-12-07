@@ -1,6 +1,6 @@
 from src.email.email import fm
 from tests.conftest import (client, create_planet, create_task, login_curator1,
-                            login_employee1, login_superuser)
+                            login_employee1)
 
 fm.config.SUPPRESS_SEND = 1
 
@@ -22,19 +22,19 @@ def test_send_register_employee_email():
         assert len(outbox) == 1
 
 
-def test_send_register_curator_email():
-    with fm.record_messages() as outbox:
-        response = client.post('/user/register_new_curator',
-                               json={
-                                   'email': 'some_email2@mail.ru',
-                                   'name': 'Employee1',
-                                   'password': 'passwordpassword'
-                               },
-                               headers={
-                                   'Authorization': f'Bearer {login_superuser()}'
-                               })
-        assert response.status_code == 200
-        assert len(outbox) == 1
+# def test_send_register_curator_email():
+#     with fm.record_messages() as outbox:
+#         response = client.post('/user/register_new_curator',
+#                                json={
+#                                    'email': 'some_email2@mail.ru',
+#                                    'name': 'Employee1',
+#                                    'password': 'passwordpassword'
+#                                },
+#                                headers={
+#                                    'Authorization': f'Bearer {login_superuser()}'
+#                                })
+#         assert response.status_code == 200
+#         assert len(outbox) == 1
 
 
 def test_send_invite_to_planet():

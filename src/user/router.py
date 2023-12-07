@@ -82,15 +82,16 @@ async def get_curator_employees(user: User = Depends(curator_user),
              responses=responses)
 async def register_curator(curator_in: CuratorInCreate,
                            session: AsyncSession = Depends(get_async_session)) -> UserOut:
-    user = await create_user(session=session,
-                             email=curator_in.email,
-                             name=curator_in.name,
-                             role=Role.curator,
-                             password=curator_in.password)
-    if user is None:
+    created_user_data = await create_user(session=session,
+                                          email=curator_in.email,
+                                          name=curator_in.name,
+                                          role=Role.curator,
+                                          password=curator_in.password)
+    if created_user_data is None:
         raise HTTPException(status_code=409, detail='User already exists')
-    emails = [(EmailBody(email=user.email, body={'email': user.email}))]
-    await send_register_email(EmailSchema(emails=emails))
+    # emails = [(EmailBody(email=user.email, body={'email': user.email}))]
+    # await send_register_email(EmailSchema(emails=emails))
+    user = created_user_data[0]
     return UserOut.parse(user)
 
 
@@ -105,11 +106,16 @@ async def create_new_employee(employee_in: EmployeeInCreate,
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
 
-    employee_user = await create_user(session=session,
-                                      email=employee_in.email,
-                                      name=employee_in.name,
-                                      role=Role.employee,
-                                      password=employee_in.password)
+    created_user_data = await create_user(session=session,
+                                          email=employee_in.email,
+                                          name=employee_in.name,
+                                          role=Role.employee,
+                                          password=employee_in.password)
+    employee_user = None
+    password = None
+    if created_user_data:
+        employee_user = created_user_data[0]
+        password = created_user_data[1]
     if employee_user:
         employee = await employee_dal.create_employee(
             employee_user,
@@ -118,6 +124,7 @@ async def create_new_employee(employee_in: EmployeeInCreate,
             employee_in.product_role)
     else:  # if user already exists
         user_dal = UserDAL(session)
+        password = 'Вы были повторны приглашены на сайт. Пароль остаётся тем же.'
         employee_user = await user_dal.get_user_by_email(employee_in.email)
         if employee_user.role == Role.curator:
             raise HTTPException(
@@ -134,7 +141,10 @@ async def create_new_employee(employee_in: EmployeeInCreate,
     for planet in first_day_planets:
         await planet_dal.add_employees_to_planet(planet, [employee])
     emails = [(EmailBody(email=employee_user.email,
-                         body={'email': employee_user.email}))]
+                         body={
+                             'user': employee_user,
+                             'password': password
+                         }))]
     await send_register_email(EmailSchema(emails=emails))
     return EmployeeOut.parse(employee)
 

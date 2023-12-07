@@ -12,6 +12,7 @@ def test_create_first_day_planet():
     response = client.post('/planet/create_planet',
                            json={
                                'name': '123',
+                               'image': 'planet1'
                            },
                            headers={
                                'Authorization': f'Bearer {login_superuser()}'
@@ -26,12 +27,14 @@ def test_create_first_day_planet_no_rights():
     response = client.post('/planet/create_planet',
                            json={
                                'name': '123',
+                               'image': 'planet1',
                            },
                            headers={
                                'Authorization': f'Bearer {login_curator1()}'
                            },
                            params={
-                               'is_first_day': True
+                               'is_first_day': True,
+                               'image': 'planet1',
                            })
     assert response.status_code == 403
 
@@ -69,7 +72,8 @@ def test_create_and_update_planet_by_id():
                                      'planet_id': create.json()['id']
                                  },
                                  json={
-                                     'name': '1337'
+                                     'name': '1337',
+                                     'image': 'planet1',
                                  },
                                  headers={
                                      'Authorization': f'Bearer {login_curator1()}'

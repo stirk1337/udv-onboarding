@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.planet.models import Planet
-from src.task.models import EmployeeTask, Task, TaskStatus
+from src.task.models import EmployeeTask, Task, TaskImage, TaskStatus
 from src.user.models import Employee
 
 
@@ -71,11 +71,13 @@ class TaskDAL:
 
     async def create_task(self, name: str,
                           description: str,
-                          planet: Planet) -> Task:
+                          planet: Planet,
+                          image: TaskImage) -> Task:
         new_task = Task(name=name,
                         description=description,
                         planet_id=planet.id,
-                        employees=planet.employees)
+                        employees=planet.employees,
+                        image=image)
         self.db_session.add(new_task)
         await self.db_session.commit()
         return new_task
