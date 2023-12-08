@@ -19,6 +19,10 @@ class TaskInUpdate(BaseModel):
     description: Optional[str]
 
 
+class TaskInChangePos(BaseModel):
+    new_pos: int
+
+
 class TaskInAnswer(BaseModel):
     answer: str
 
@@ -35,6 +39,7 @@ class TaskOut(BaseModel):
     created_at: datetime.datetime
     updated_at: datetime.datetime
     image: TaskImage
+    pos: int
 
     @staticmethod
     def parse(task: Task):
@@ -44,7 +49,8 @@ class TaskOut(BaseModel):
                        planet_id=task.planet_id,
                        created_at=task.created_at,
                        updated_at=task.updated_at,
-                       image=task.image)
+                       image=task.image,
+                       pos=task.pos)
 
 
 class EmployeeTaskOut(BaseModel):
@@ -74,6 +80,8 @@ class TaskOutForEmployee(BaseModel):
     task_status: TaskStatus
     created_at: datetime.datetime
     updated_at: datetime.datetime
+    image: TaskImage
+    pos: int
 
     @staticmethod
     def parse(task: Task, employee_task: EmployeeTask):
@@ -84,7 +92,9 @@ class TaskOutForEmployee(BaseModel):
                                   employee_answer=employee_task.employee_answer,
                                   task_status=employee_task.task_status,
                                   created_at=employee_task.created_at,
-                                  updated_at=employee_task.updated_at)
+                                  updated_at=employee_task.updated_at,
+                                  image=task.image,
+                                  pos=task.pos)
 
 
 class TaskOutForChecking(BaseModel):
@@ -97,6 +107,8 @@ class TaskOutForChecking(BaseModel):
     created_at: datetime.datetime
     updated_at: datetime.datetime
     employee: EmployeeOut
+    image: TaskImage
+    pos: int
 
     @staticmethod
     def parse(task: Task, employee: Employee, employee_task: EmployeeTask):
@@ -108,4 +120,6 @@ class TaskOutForChecking(BaseModel):
                                   task_status=employee_task.task_status,
                                   created_at=employee_task.created_at,
                                   updated_at=employee_task.updated_at,
-                                  employee=EmployeeOut.parse(employee))
+                                  employee=EmployeeOut.parse(employee),
+                                  image=task.image,
+                                  pos=task.pos)

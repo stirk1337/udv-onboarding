@@ -53,6 +53,9 @@ class Planet(Base):
         Boolean, default=False, nullable=False
     )
     image: Mapped[PlanetImage]
+    pos: Mapped[int] = mapped_column(
+        Integer, default=1000000, nullable=False
+    )
 
 
 class EmployeePlanet(Base):

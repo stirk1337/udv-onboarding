@@ -12,7 +12,8 @@ from src.notification.notification import send_notifications_with_emails
 from src.planet.dals import PlanetDAL
 from src.planet.dependencies import have_planet
 from src.planet.models import Planet, PlanetImage
-from src.planet.validators import (PlanetIn, ShowPlanet,
+from src.planet.validators import (PlanetInChangePos, PlanetInCreate,
+                                   PlanetInUpdate, ShowPlanet,
                                    ShowPlanetWithCompletionStatus,
                                    ShowPlanetWithEmployees,
                                    ShowPlanetWithEmployeesAndTaskCount)
@@ -59,7 +60,7 @@ async def get_planets(user: User = Depends(current_user),
     planets = [
         ShowPlanet.parse(planet) for planet in planets
     ]
-    planets = sorted(planets, key=lambda x: x.id)
+    planets = sorted(planets, key=lambda x: x.pos)
     return planets
 
 
@@ -78,7 +79,8 @@ async def get_employee_planets_by_employee_id(
         planet_dal = PlanetDAL(session)
         task_dal = TaskDAL(session)
         planets = await planet_dal.get_planets_for_employee(employee)
-        for planet in planets:
+        sorted_planets = sorted(planets, key=lambda x: x.pos)
+        for planet in sorted_planets:
             tasks = await task_dal.get_tasks_by_planet(planet)
             employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
             completed_task_count = len(list(filter(lambda x: x == TaskStatus.completed,
@@ -102,7 +104,8 @@ async def get_employee_planets(
     planet_dal = PlanetDAL(session)
     task_dal = TaskDAL(session)
     planets = await planet_dal.get_planets_for_employee(employee)
-    for planet in planets:
+    sorted_planets = sorted(planets, key=lambda x: x.pos)
+    for planet in sorted_planets:
         tasks = await task_dal.get_tasks_by_planet(planet)
         employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
         completed_task_count = len(list(filter(lambda x: x == TaskStatus.completed,
@@ -116,7 +119,7 @@ async def get_employee_planets(
 
 @router.post('/create_planet',
              responses=responses)
-async def create_planet(planet_in: PlanetIn,
+async def create_planet(planet_in: PlanetInCreate,
                         is_first_day: Union[bool, None] = False,
                         session: AsyncSession = Depends(get_async_session),
                         user: User = Depends(curator_user),
@@ -141,7 +144,7 @@ async def create_planet(planet_in: PlanetIn,
 @router.patch('/update_planet',
               responses=planet_responses,
               dependencies=[Depends(curator_user)])
-async def patch_planet(planet_in: PlanetIn,
+async def patch_planet(planet_in: PlanetInUpdate,
                        session: AsyncSession = Depends(get_async_session),
                        planet: Planet = Depends(have_planet)) -> ShowPlanet:
     """Update a planet. Rights: curator, you must have this planet"""
@@ -150,13 +153,37 @@ async def patch_planet(planet_in: PlanetIn,
     return ShowPlanet.parse(planet)
 
 
+@router.patch('/change_planet_pos',
+              responses=planet_responses,
+              status_code=200)
+async def change_planet_position(planet_in: PlanetInChangePos,
+                                 session: AsyncSession = Depends(
+                                     get_async_session),
+                                 user: User = Depends(curator_user),
+                                 planet: Planet = Depends(have_planet)):
+    """Endpoint for re-pos a planet. This high value operation will re-pos all your planets by one provided planet.
+    Rights: curator"""
+    planet_dal = PlanetDAL(session)
+    curator_dal = CuratorDAL(session)
+    curator = await curator_dal.get_curator_by_user(user)
+    planets = await planet_dal.get_planets_for_curator(curator)
+    sorted_planets = sorted(planets, key=lambda x: x.pos)
+
+    if planet_in.new_pos < 0 or planet_in.new_pos >= len(sorted_planets):
+        raise HTTPException(
+            status_code=409, detail=f'Wrong position: {planet_in.new_pos}. Value must be in range [0, len(planets))')
+
+    await planet_dal.reorder_planets_by_planet(sorted_planets, planet, planet_in.new_pos)
+    return {'detail': 'success'}
+
+
 @router.patch('/add_employees_to_planet',
               responses=planet_responses)
 async def set_employee(ids: EmployeesIdItem,
                        background_tasks: BackgroundTasks,
                        session: AsyncSession = Depends(get_async_session),
                        user: User = Depends(curator_user),
-                       planet: Planet = Depends(have_planet),) -> ShowPlanetWithEmployees:
+                       planet: Planet = Depends(have_planet), ) -> ShowPlanetWithEmployees:
     """Add new employees to a planet. Rights: curator, you must have this planet, you must have linked to this
     employees"""
     planet_dal = PlanetDAL(session)
