@@ -55,6 +55,9 @@ class Task(Base):
     notifications: Mapped[List['Notification']
                           ] = relationship(back_populates='task')
     image: Mapped[TaskImage]
+    pos: Mapped[int] = mapped_column(
+        Integer, default=1000000, nullable=False
+    )
 
 
 class EmployeeTask(Base):

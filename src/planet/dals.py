@@ -74,6 +74,13 @@ class PlanetDAL:
         await self.db_session.commit()
         return new_planet
 
+    async def reorder_planets_by_planet(self, planets: List[Planet], planet: Planet, new_pos: int):
+        planets.remove(planet)
+        planets.insert(new_pos, planet)
+        for index, plan in enumerate(planets):
+            plan.pos = index
+        await self.db_session.commit()
+
     async def get_planet_with_employees(self, planet_id: int) -> Planet:
         planet = await self.db_session.scalar(
             select(Planet)

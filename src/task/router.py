@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.dependencies import curator_user, employee_user
@@ -14,9 +14,10 @@ from src.request_codes import planet_responses, responses, task_responses
 from src.task.dals import TaskDAL
 from src.task.dependencies import have_task
 from src.task.models import Task, TaskImage, TaskStatus
-from src.task.validators import (EmployeeTaskOut, TaskInAnswer, TaskInCheck,
-                                 TaskInCreate, TaskInUpdate, TaskOut,
-                                 TaskOutForChecking, TaskOutForEmployee)
+from src.task.validators import (EmployeeTaskOut, TaskInAnswer,
+                                 TaskInChangePos, TaskInCheck, TaskInCreate,
+                                 TaskInUpdate, TaskOut, TaskOutForChecking,
+                                 TaskOutForEmployee)
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.dependencies import have_employee
 from src.user.models import Employee
@@ -40,8 +41,8 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
     task_dal = TaskDAL(session)
     tasks = await task_dal.get_tasks_by_planet(planet)
     tasks = [TaskOut.parse(task) for task in tasks]
-    tasks = sorted(tasks, key=lambda x: x.id)
-    return tasks
+    sorted_tasks = sorted(tasks, key=lambda x: x.pos)
+    return sorted_tasks
 
 
 @router.get('/get_tasks_with_status',
@@ -59,8 +60,8 @@ async def get_tasks_by_planet_id_with_status(session: AsyncSession = Depends(get
     employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
     tasks = [TaskOutForEmployee.parse(task, employee_task)
              for task, employee_task in zip(tasks, employee_tasks)]
-    tasks = sorted(tasks, key=lambda x: x.id)
-    return tasks
+    sorted_tasks = sorted(tasks, key=lambda x: x.pos)
+    return sorted_tasks
 
 
 @router.get('/get_tasks_being_checked',
@@ -93,7 +94,8 @@ async def create_new_task(task_in: TaskInCreate,
                           user: User = Depends(curator_user)) -> TaskOut:
     """Create task linked to planet. Rights: curator, you must have this planet"""
     task_dal = TaskDAL(session)
-    task = await task_dal.create_task(task_in.name, task_in.description, planet, task_in.image if task_in.image else TaskImage.octopus1)
+    task = await task_dal.create_task(task_in.name, task_in.description, planet,
+                                      task_in.image if task_in.image else TaskImage.octopus1)
     employee_dal = EmployeeDAL(session)
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
@@ -118,6 +120,28 @@ async def patch_task(task_in: TaskInUpdate,
     task_dal = TaskDAL(session)
     task = await task_dal.patch_task(task, task_in.name, task_in.description)
     return TaskOut.parse(task)
+
+
+@router.patch('/change_task_pos',
+              responses=task_responses,
+              status_code=200,
+              dependencies=[Depends(curator_user)])
+async def change_task_position(task_in: TaskInChangePos,
+                               session: AsyncSession = Depends(
+                                   get_async_session),
+                               task: Task = Depends(have_task)):
+    """Endpoint for re-pos a task. This high value operation will re-pos all your tasks by one provided task.
+    Rights: curator"""
+    task_dal = TaskDAL(session)
+    tasks = await task_dal.get_tasks_by_planet(task.planet)
+    sorted_tasks = sorted(tasks, key=lambda x: x.pos)
+
+    if task_in.new_pos < 0 or task_in.new_pos >= len(sorted_tasks):
+        raise HTTPException(status_code=409,
+                            detail=f'Wrong position: {task_in.new_pos}. Value must be in range [0, len(tasks))')
+
+    await task_dal.reorder_tasks_by_task(sorted_tasks, task, task_in.new_pos)
+    return {'detail': 'success'}
 
 
 @router.delete('/delete_task',

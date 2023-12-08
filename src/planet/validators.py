@@ -8,9 +8,17 @@ from src.user.router import EmployeeOut
 from src.user.validators import CuratorOut
 
 
-class PlanetIn(BaseModel):
+class PlanetInCreate(BaseModel):
     name: Optional[str]
     image: Optional[PlanetImage]
+
+
+class PlanetInUpdate(BaseModel):
+    name: Optional[str]
+
+
+class PlanetInChangePos(BaseModel):
+    new_pos: int
 
 
 class ShowPlanet(BaseModel):
@@ -21,6 +29,7 @@ class ShowPlanet(BaseModel):
     updated_at: datetime
     is_first_day: bool
     image: PlanetImage
+    pos: int
 
     @staticmethod
     def parse(planet: Planet):
@@ -30,7 +39,8 @@ class ShowPlanet(BaseModel):
                           created_at=planet.created_at,
                           updated_at=planet.updated_at,
                           is_first_day=planet.is_first_day,
-                          image=planet.image)
+                          image=planet.image,
+                          pos=planet.pos)
 
 
 class ShowPlanetWithCurator(BaseModel):
@@ -40,6 +50,8 @@ class ShowPlanetWithCurator(BaseModel):
     created_at: datetime
     updated_at: datetime
     is_first_day: bool
+    image: PlanetImage
+    pos: int
 
     @staticmethod
     def parse(planet: Planet):
@@ -48,7 +60,9 @@ class ShowPlanetWithCurator(BaseModel):
                                      curator=CuratorOut.parse(planet.curator),
                                      created_at=planet.created_at,
                                      updated_at=planet.updated_at,
-                                     is_first_day=planet.is_first_day)
+                                     is_first_day=planet.is_first_day,
+                                     image=planet.image,
+                                     pos=planet.pos)
 
 
 class ShowPlanetWithCompletionStatus(BaseModel):
@@ -60,6 +74,8 @@ class ShowPlanetWithCompletionStatus(BaseModel):
     completed: int
     task_count: int
     is_first_day: bool
+    image: PlanetImage
+    pos: int
 
     @staticmethod
     def parse(planet: Planet, completed: int, task_count: int):
@@ -70,7 +86,9 @@ class ShowPlanetWithCompletionStatus(BaseModel):
                                               updated_at=planet.updated_at,
                                               completed=completed,
                                               task_count=task_count,
-                                              is_first_day=planet.is_first_day)
+                                              is_first_day=planet.is_first_day,
+                                              image=planet.image,
+                                              pos=planet.pos)
 
 
 class ShowPlanetWithEmployees(BaseModel):
@@ -81,6 +99,8 @@ class ShowPlanetWithEmployees(BaseModel):
     updated_at: datetime
     employees: List[EmployeeOut]
     is_first_day: bool
+    image: PlanetImage
+    pos: int
 
     @staticmethod
     def parse(planet: Planet):
@@ -92,7 +112,9 @@ class ShowPlanetWithEmployees(BaseModel):
                                        created_at=planet.created_at,
                                        updated_at=planet.updated_at,
                                        employees=employees,
-                                       is_first_day=planet.is_first_day
+                                       is_first_day=planet.is_first_day,
+                                       image=planet.image,
+                                       pos=planet.pos
                                        )
 
 
@@ -105,6 +127,8 @@ class ShowPlanetWithEmployeesAndTaskCount(BaseModel):
     employees: List[EmployeeOut]
     task_count: int
     is_first_day: bool
+    image: PlanetImage
+    pos: int
 
     @staticmethod
     def parse(planet: Planet, task_count: int):
@@ -117,5 +141,7 @@ class ShowPlanetWithEmployeesAndTaskCount(BaseModel):
                                                    updated_at=planet.updated_at,
                                                    employees=employees,
                                                    task_count=task_count,
-                                                   is_first_day=planet.is_first_day
+                                                   is_first_day=planet.is_first_day,
+                                                   image=planet.image,
+                                                   pos=planet.pos
                                                    )

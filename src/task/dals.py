@@ -89,6 +89,13 @@ class TaskDAL:
         )
         return list(tasks)
 
+    async def reorder_tasks_by_task(self, tasks: List[Task], task: Task, new_pos: int):
+        tasks.remove(task)
+        tasks.insert(new_pos, task)
+        for index, t in enumerate(tasks):
+            t.pos = index
+        await self.db_session.commit()
+
     async def patch_task(self, task: Task,
                          name: str,
                          description: str) -> Task:
