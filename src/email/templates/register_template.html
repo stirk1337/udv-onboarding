@@ -1,2 +1,48 @@
-<p>register</p>
-<span>Hello, {{user.name }} {{ user.email }}  {{ password }}  !</span>
+<div style="padding-top: 90px;padding-bottom: 90px;background: #0F0D0D;">
+    <div class="enter-page" style="font-family: Roboto, Helvetica, Arial, sans-serif; color: white; display: block; font-size: 25px; font-weight: 400; width: 70%;
+    background: #272626;  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);  border-radius: 33px; padding: 38px 97px 38px 97px; box-sizing: border-box; font-style: normal; margin: 0px auto;">
+        <img style="display: block;margin: 0 auto;margin-bottom: 10px;" src="" alt="" width='299px' height='57px'></img>
+        <div style="font-size: 22px;margin-top: 10%;margin-bottom: 10%;">
+            <p style="color: white!important;text-decoration: none;text-align: center;"><b>Добро пожаловать в команду <span style="color: #00E19C">UDV Group</span></b></p>
+            <p style="color: white !important;text-decoration: none;">
+                <b>Привет, {{user.name }}!</b><br><br>
+                Куратор  <!--curator.name--> уже пригласил тебя на онбординг в компании. В системе онбординга UDV Group уже создан аккаунт специально для тебя.<br>
+                Кратко о структуре сайта:
+            </p>
+            <ol class="number" id="id29" style="padding: 0;counter-reset: item;">
+                <li style="counter-increment: item;margin-bottom: 5px;position: relative;">
+                    Для прохождения адаптации нужно выполнять этапы. Группы этапов на сайте представлены планетами.
+                </li>
+                <li style="counter-increment: item;margin-bottom: 5px;position: relative;">
+                    Для выполнения этапа прочитай всё его содержание, напиши ответ или комментарий и отправь этап на проверку. Твой куратор постарается как можно скорее оценить выполнение этапа и дать тебе обратную связь.
+                </li>
+                <li style="counter-increment: item;margin-bottom: 5px;position: relative;">
+                    Новые задания, которые будет давать тебе куратор, будут появляться прямо здесь – регулярно проверяй почту, чтобы не пропустить уведомление о появлении новой планеты.
+                </li>
+                <li style="counter-increment: item;margin-bottom: 5px;position: relative;">
+                    В профиле можно посмотреть свой общий прогресс и достижения, а также отредактировать его – добавить контакты и поставить красивую аватарку.
+                </li>
+                <li style="counter-increment: item;margin-bottom: 5px;position: relative;">
+                    Также в профиле находятся полезные ссылки, которые помогут тебе с навигацией в компании.
+                </li>
+            </ol>
+            <p style="color: white!important;text-decoration: none;text-align: center;"><b>На сайте уже есть <span style="color: #00E19C">три планеты</span>, посвящённые онбордингу <span style="color: #00E19C">первого дня</span>, так что бегом их выполнять!</b></p>
+            <p style="color: white !important;text-decoration: none;">
+                Для входа можешь использовать следующие данные:<br>
+                <span style="color: #00E19C">Логин для входа:</span> {{ user.email }}<br>
+                <span style="color: #00E19C">Пароль для входа:</span> {{ password }} <br>
+                Если захочешь поменять пароль под себя, нажми на <a style="color: #00E19C;" href="http://localhost:3000/login/forgot-password">ссылку</a> (также пароль можно восстановить на экране логина).
+            </p><br>
+            <p style="color: white !important;text-decoration: none;">
+                Добавляйся в социальные сети <span style="color: #00E19C">UDV Group</span>:
+            </p>
+            <div style="width: 50%; margin: 0 auto">
+                <a style="margin-right: 14%;" href="https://career.habr.com/companies/udv"><img src="" alt="Хабр" width="128px" height="128px"></a>
+                <a style="margin-right: 14%;" href="https://vk.com/udv_dev"><img src="" alt="vk" width="128px" height="128px"></a>
+                <a href="https://www.instagram.com/udv.dev/"><img src="" alt="Инстаграм" width="128px" height="128px"></a>
+            </div>
+        </div>
+        <a style="color: white !important; text-align: center; text-decoration: none;display: block;width: 183px;border-radius: 10px;background: #00c996;margin: 0 auto;margin-top: 30px;font-size: 24px;padding-top: 7px;padding-bottom: 7px;" href="http://localhost:3000/login">
+            Перейти</a>
+    </div>
+</div>

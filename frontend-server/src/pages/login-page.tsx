@@ -1,18 +1,14 @@
 import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, redirect, useNavigate } from "react-router-dom";
 import InputComponent from "../components/input-component";
 import { store } from "../components/store";
 import { loginAction } from "../components/store/api-actions/post-actions";
 import { useAppDispatch, useAppSelector } from "../components/hooks";
 import { UserRoles } from "../types";
 
-type LoginPageProps = {
-  isAuth: boolean;
-}
-
-function LoginPage({isAuth}: LoginPageProps) {
+function LoginPage() {
     const dispatch = useAppDispatch()
-    const userRole = useAppSelector((state) => state.userData.role);
+    const navigate = useNavigate();
 
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
@@ -38,11 +34,11 @@ function LoginPage({isAuth}: LoginPageProps) {
         <div className="enter-page">
             <img src="logo.svg" alt="" width={299} height={57}></img>
             <form onSubmit={handleSubmit}>
-                <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' type='email' onchange={handleEmail}/>
-                <InputComponent name="Пароль" icon='password-icon.svg' value={password} placeholder='Введите пароль' type="password" onchange={handlePassword}/>
+                  <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' type='email' onchange={handleEmail}/>
+                  <InputComponent name="Пароль" icon='password-icon.svg' value={password} placeholder='Введите пароль' type="password" onchange={handlePassword}/>
                 <div className="assistance-block">
                   <span className="error-message"></span>
-                  <button className="forget-password-button">Забыли пароль?</button>
+                  <button className="forget-password-button" onClick={() => navigate('/login/forgot-password')}>Забыли пароль?</button>
                 </div>
                 <button type="submit" className="send-button">Войти</button>
             </form>

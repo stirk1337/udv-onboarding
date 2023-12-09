@@ -11,13 +11,13 @@ type InputComponentProps = {
 
 function InputComponent({name, icon, value,placeholder, type, onchange}: InputComponentProps) {
     return ( 
-        <>
+        <div className="input-block">
             <label htmlFor="email">{name}</label>
             <div className="label-container">
                 <img src={icon} alt="" width={26} height={26}></img>
                 <input required type={type} name="email" placeholder={placeholder} value={value} onChange={onchange}></input>
             </div>
-        </>
+        </div>
      );
 }
 
