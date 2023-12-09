@@ -16,7 +16,8 @@ from src.request_codes import (curator_responses, employee_responses,
 from src.user.dals import CuratorDAL, EmployeeDAL
 from src.user.models import EmployeeStatus
 from src.user.validators import (CuratorInCreate, CuratorOut, EmployeeIdItem,
-                                 EmployeeInCreate, EmployeeOut, UserOut)
+                                 EmployeeInCreate, EmployeeOut, UserInUpdate,
+                                 UserOut)
 
 router = APIRouter(
     prefix='/user',
@@ -55,11 +56,12 @@ async def get_curator_profile(curator_id: int,
 
 @router.patch('/edit_user_profile',
               responses=responses)
-async def patch_user_profile(contact: str,
+async def patch_user_profile(user_in_update: UserInUpdate,
                              user: User = Depends(current_user),
                              session: AsyncSession = Depends(get_async_session)) -> UserOut:
+    """Change user info. Rights: curator, employee. Contact: max length 100"""
     user_dal = UserDAL(session)
-    user = await user_dal.patch_profile(user, contact)
+    user = await user_dal.patch_profile(user, user_in_update.contact)
     return UserOut.parse(user)
 
 
@@ -143,7 +145,8 @@ async def create_new_employee(employee_in: EmployeeInCreate,
     emails = [(EmailBody(email=employee_user.email,
                          body={
                              'user': employee_user,
-                             'password': password
+                             'password': password,
+                             'curator': user
                          }))]
     await send_register_email(EmailSchema(emails=emails))
     return EmployeeOut.parse(employee)

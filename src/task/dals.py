@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from src.planet.models import Planet
 from src.task.models import EmployeeTask, Task, TaskImage, TaskStatus
+from src.task.validators import TaskInCheck
 from src.user.models import Employee
 
 
@@ -126,14 +127,15 @@ class TaskDAL:
 
     async def check_task(self, task: Task,
                          employee: Employee,
-                         task_status: TaskStatus) -> EmployeeTask:
+                         task_in: TaskInCheck) -> EmployeeTask:
         employee_task = await self.get_employee_task(task, employee)
         if employee_task.task_status != TaskStatus.being_checked:
             raise HTTPException(
                 status_code=400, detail='Task is not being checked, cannot check')
-        employee_task.task_status = task_status
-        if task_status == TaskStatus.completed:
+        employee_task.task_status = task_in.task_status
+        if task_in.task_status == TaskStatus.completed:
             employee.complete_task_count += 1
+        employee_task.curator_answer = task_in.curator_answer
         await self.db_session.commit()
         await self.db_session.refresh(employee_task)
         await self.db_session.refresh(employee)

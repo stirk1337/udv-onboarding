@@ -141,7 +141,7 @@ def test_edit_profile():
                             headers={
                                 'Authorization': f'Bearer {login_employee1()}'
                             },
-                            params={
+                            json={
                                 'contact': '123'
                             })
     assert response.json()['contact'] == '123'

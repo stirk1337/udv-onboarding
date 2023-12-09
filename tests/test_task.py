@@ -264,7 +264,8 @@ def test_check_task_accept():
                                   'employee_id': 1,
                               },
                               json={
-                                  'task_status': 'completed'
+                                  'task_status': 'completed',
+                                  'curator_answer': 'lol'
                               },
                               headers={
                                   'Authorization': f'Bearer {login_curator1()}'
@@ -301,7 +302,8 @@ def test_check_task_decline():
                                   'employee_id': 1,
                               },
                               json={
-                                  'task_status': 'in_progress'
+                                  'task_status': 'in_progress',
+                                  'curator_answer': 'xd'
                               },
                               headers={
                                   'Authorization': f'Bearer {login_curator1()}'
@@ -318,7 +320,8 @@ def test_check_task_with_no_rights():
                                   'employee_id': 1
                               },
                               json={
-                                  'task_status': 'completed'
+                                  'task_status': 'completed',
+                                  'curator_answer': 'xd1337'
                               },
                               headers={
                                   'Authorization': f'Bearer {login_curator2()}'
@@ -356,7 +359,8 @@ def test_check_first_day_task():
                                   'employee_id': 1
                               },
                               json={
-                                  'task_status': 'completed'
+                                  'task_status': 'completed',
+                                  'curator_answer': 'some_answer'
                               },
                               headers={
                                   'Authorization': f'Bearer {login_curator1()}'
@@ -384,7 +388,8 @@ def test_check_first_day_task_no_rights():
                                   'employee_id': 1
                               },
                               json={
-                                  'task_status': 'completed'
+                                  'task_status': 'completed',
+                                  'curator_answer': 'null'
                               },
                               headers={
                                   'Authorization': f'Bearer {login_curator2()}'

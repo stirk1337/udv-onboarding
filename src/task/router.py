@@ -191,7 +191,7 @@ async def check_task_by_its_id(task_in: TaskInCheck,
     """Check competed employee task by its id. Rights: curator, you must have this task"""
     task_dal = TaskDAL(session)
     task = await task_dal.get_task_with_planet_employees(task_id)
-    employee_task = await task_dal.check_task(task, employee, task_in.task_status)
+    employee_task = await task_dal.check_task(task, employee, task_in)
     notify_type = NotificationType.accept if task_in.task_status == TaskStatus.completed else NotificationType.decline
     background_tasks.add_task(send_notifications_with_emails,
                               user,
