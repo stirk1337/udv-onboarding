@@ -15,6 +15,8 @@ import HistoryRouter from "./history-route"
 import browserHistory from "../browser-history"
 import { UserRoles } from "../types"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import NewPasswordPage from "../pages/new-password-page"
+import EmailPage from "../pages/email-page"
 
 function App() {
   const isRegistered = useAppSelector((state) => state.authorizationStatus);
@@ -47,7 +49,11 @@ function App() {
             <Route path="personal" element={<Personal/>}/>
             <Route path="tasks/:id" element={<TaskEditor/>}/>
           </Route>
-          <Route path="/login" element={<LoginPage isAuth={isRegistered}/>}/>
+          <Route path="/login">
+            <Route index element={<LoginPage/>}/>
+            <Route path="new-password" element={<NewPasswordPage/>}/>
+            <Route path="forgot-password" element={<EmailPage/>}/>
+          </Route>
         </Route>
       </Routes>
     </HistoryRouter>

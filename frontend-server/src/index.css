@@ -131,8 +131,13 @@ button, input[type="submit"], input[type="reset"] {
     margin-bottom: 20px;
 }
 
-.enter-page input:nth-last-child(1){
+.enter-page .input-block:nth-child(2) input{
     margin-bottom: 10px;
+}
+
+.solo-input{
+    margin-top: 10%;
+    margin-bottom: 10%;
 }
 
 .enter-page input::placeholder{
@@ -166,6 +171,13 @@ button, input[type="submit"], input[type="reset"] {
 .forget-password-button{
     font-size: 18px;
     margin-left: auto;
+}
+
+.enter-page .message{
+    text-align: center;
+    font-size: 22px;
+    margin-top: 10%;
+    margin-bottom: 10%;
 }
 
 .send-button{

@@ -93,3 +93,34 @@ export const loginAction = createAsyncThunk<void, Login, {
         }
     },
   );
+
+  
+  export const forgotPassword = createAsyncThunk<void, {email: string}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/forgotPassword',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.post<PlanetTask>(`/auth/forgot-password`, {email: data.email})
+        } catch {
+          dispatch(login(false));
+        }
+    },
+  );
+
+  export const newPassword = createAsyncThunk<void, {token: string, password: string}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/newPassword',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.post<PlanetTask>(`/auth/reset-password`, {token: data.token, password: data.password})
+        } catch {
+          dispatch(login(false));
+        }
+    },
+  );

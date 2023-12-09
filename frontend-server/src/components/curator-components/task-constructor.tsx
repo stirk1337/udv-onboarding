@@ -12,11 +12,6 @@ function TaskConstructor() {
     const constructorPlanets = useAppSelector((state) => state.planets);
     const currentConstructorPlanet = useAppSelector((state) => state.currentPlanet);
     const dispatch = useDispatch<AppDispatch>()
-
-    useEffect(() => {
-        
-    }, [])
-
     let personalList = currentConstructorPlanet.employees
 
     function blockClickHandler(evt: React.MouseEvent<HTMLLIElement>,id: number) {
