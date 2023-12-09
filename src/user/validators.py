@@ -12,6 +12,7 @@ class UserInUpdate(BaseModel):
     contact: str
 
     @field_validator('contact')
+    @classmethod
     def validate_length(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: contact')
@@ -32,6 +33,7 @@ class CuratorInCreate(BaseModel):
     password: Union[str, None] = None
 
     @field_validator('name')
+    @classmethod
     def validate_length(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
@@ -46,6 +48,7 @@ class EmployeeInCreate(BaseModel):
     password: Union[str, None] = None
 
     @field_validator('name')
+    @classmethod
     def validate_length(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')

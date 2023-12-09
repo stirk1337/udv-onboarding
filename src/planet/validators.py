@@ -13,6 +13,7 @@ class PlanetInCreate(BaseModel):
     image: Optional[PlanetImage]
 
     @field_validator('name')
+    @classmethod
     def validate_length(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
@@ -23,6 +24,7 @@ class PlanetInUpdate(BaseModel):
     name: Optional[str]
 
     @field_validator('name')
+    @classmethod
     def validate_length(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')

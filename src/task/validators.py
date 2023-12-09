@@ -14,12 +14,14 @@ class TaskInCreate(BaseModel):
     image: Optional[TaskImage]
 
     @field_validator('name')
+    @classmethod
     def validate_length_name(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
         return value
 
     @field_validator('description')
+    @classmethod
     def validate_length_description(cls, value):
         if len(value) > 1000000:
             raise ValueError('Too long field: description')
@@ -31,12 +33,14 @@ class TaskInUpdate(BaseModel):
     description: Optional[str]
 
     @field_validator('name')
+    @classmethod
     def validate_length_name(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
         return value
 
     @field_validator('description')
+    @classmethod
     def validate_length_description(cls, value):
         if len(value) > 1000000:
             raise ValueError('Too long field: description')
@@ -51,6 +55,7 @@ class TaskInAnswer(BaseModel):
     answer: str
 
     @field_validator('answer')
+    @classmethod
     def validate_length(cls, value):
         if len(value) > 1000:
             raise ValueError('Too long field: answer')
@@ -62,6 +67,7 @@ class TaskInCheck(BaseModel):
     curator_answer: Optional[str]
 
     @field_validator('curator_answer')
+    @classmethod
     def validate_length(cls, value):
         if value is None:
             return value
