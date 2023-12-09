@@ -72,6 +72,9 @@ class EmployeeTask(Base):
     employee_answer: Mapped[str] = mapped_column(
         String(1000), nullable=True
     )
+    curator_answer: Mapped[str] = mapped_column(
+        String(1000), nullable=True
+    )
     task_status: Mapped[TaskStatus] = mapped_column(
         Enum(TaskStatus), nullable=False, default=TaskStatus.in_progress
     )

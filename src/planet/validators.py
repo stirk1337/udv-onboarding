@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from src.planet.models import Planet, PlanetImage
 from src.user.router import EmployeeOut
@@ -12,9 +12,23 @@ class PlanetInCreate(BaseModel):
     name: Optional[str]
     image: Optional[PlanetImage]
 
+    @field_validator('name')
+    @classmethod
+    def validate_length(cls, value):
+        if len(value) > 100:
+            raise ValueError('Too long field: name')
+        return value
+
 
 class PlanetInUpdate(BaseModel):
     name: Optional[str]
+
+    @field_validator('name')
+    @classmethod
+    def validate_length(cls, value):
+        if len(value) > 100:
+            raise ValueError('Too long field: name')
+        return value
 
 
 class PlanetInChangePos(BaseModel):

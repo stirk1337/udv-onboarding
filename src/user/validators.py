@@ -1,11 +1,22 @@
 import datetime
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 
 from src.auth.models import Role, User
 from src.user.models import (Curator, Employee, EmployeeStatus, Product,
                              ProductRole)
+
+
+class UserInUpdate(BaseModel):
+    contact: str
+
+    @field_validator('contact')
+    @classmethod
+    def validate_length(cls, value):
+        if len(value) > 100:
+            raise ValueError('Too long field: contact')
+        return value
 
 
 class EmployeeIdItem(BaseModel):
@@ -21,6 +32,13 @@ class CuratorInCreate(BaseModel):
     name: str
     password: Union[str, None] = None
 
+    @field_validator('name')
+    @classmethod
+    def validate_length(cls, value):
+        if len(value) > 100:
+            raise ValueError('Too long field: name')
+        return value
+
 
 class EmployeeInCreate(BaseModel):
     email: EmailStr
@@ -28,6 +46,13 @@ class EmployeeInCreate(BaseModel):
     product: Product
     product_role: ProductRole
     password: Union[str, None] = None
+
+    @field_validator('name')
+    @classmethod
+    def validate_length(cls, value):
+        if len(value) > 100:
+            raise ValueError('Too long field: name')
+        return value
 
 
 class CuratorOut(BaseModel):
