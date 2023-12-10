@@ -53,7 +53,7 @@ function TaskForVerification() {
         <>
             <div className="task-for-verification-block">
                 <ul className="task-for-verification-list">
-                    {TaskForVerification.map(task => <TaskConstructorTasks key={String(task.planet_id) + String(task.id)} currentTaskId={String(task.planet_id) + String(task.id) === String(selectedTask.planet_id) + String(selectedTask.id)} taskId={task.id} blockId={task.planet_id} icon={task.employee.image_url} name={task.employee.name} date={task.updated_at} isCanDelete={false} onClickElement={taskClickHandler}/>)}
+                    {TaskForVerification.map((task, index) => <TaskConstructorTasks index={index} isDraggable={false} key={String(task.planet_id) + String(task.id)} currentTaskId={String(task.planet_id) + String(task.id) === String(selectedTask.planet_id) + String(selectedTask.id)} taskId={task.id} blockId={task.planet_id} icon={task.employee.image_url} name={task.employee.name} date={task.updated_at} isCanDelete={false} onClickElement={taskClickHandler}/>)}
                 </ul>
                 <div className="task-approve-content">
                     {selectedTask &&<> <TaskData id={selectedTask.id} planetId={selectedTask.planet_id} currentAnswer={selectedTask.employee_answer} taskStatus={selectedTask.task_status} name={selectedTask.name} data={selectedTask.description} isApprovePage={true}/>

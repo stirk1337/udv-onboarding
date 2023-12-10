@@ -16,16 +16,16 @@ function UsefulLinks({onClickExit}: UsefulLinksProps) {
             <div className="useful-links-content">
                 <ul>
                     <li>
-                        <img src="/link-icon.svg" alt="" width={63} height={63}></img><a href="">Confluence</a>
+                        <a href="https://confluence.ussc.ru/display/HR/Onboarding"><div className="links-image"><img src="/link-icon.png" alt="" width={63} height={63}></img></div>Confluence</a>
                     </li>
                     <li>
-                        <img src="/link-icon.svg" alt="" width={63} height={63}></img><a href="">Карьерерный сайт</a>
+                        <a href="https://udv.dev/"><img src="/career-site.png" alt="" width={63} height={63}></img>Карьерный сайт</a>
                     </li>
                     <li>
-                        <img src="/link-icon.svg" alt="" width={63} height={63}></img><a href="">Коммерческий сайт</a>
+                        <a href="https://udv.group/"><img src="/commercial-site.png" alt="" width={63} height={63}></img>Коммерческий сайт</a>
                     </li>
                     <li>
-                        <img src="/link-icon.svg" alt="" width={63} height={63}></img><a href="">Welcome-page</a>
+                        <a href="https://welcomeudv.tilda.ws/"><img src="/welcome-page.png" alt="" width={63} height={63}></img>Welcome-page</a>
                     </li>
                 </ul>
             </div>
