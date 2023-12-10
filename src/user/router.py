@@ -27,8 +27,13 @@ router = APIRouter(
 
 @router.get('/get_current_user_info',
             responses=responses)
-async def get_current_user_info(user: User = Depends(current_user)) -> UserOut:
+async def get_current_user_info(user: User = Depends(current_user),
+                                session: AsyncSession = Depends(get_async_session)) -> UserOut:
     """Get current user info. Rights: authorized"""
+    if user.role == Role.employee:
+        employee_dal = EmployeeDAL(session)
+        employee = await employee_dal.get_employee_by_user_with_curator(user)
+        return UserOut.parse(user, employee.curator)
     return UserOut.parse(user)
 
 

@@ -80,15 +80,17 @@ class UserOut(BaseModel):
     role: Role
     image_url: Optional[str] = None
     contact: Optional[str] = None
+    curator: Optional[CuratorOut] = None
 
     @staticmethod
-    def parse(user: User):
+    def parse(user: User, curator: Curator = None):
         return UserOut(id=user.id,
                        name=user.name,
                        email=user.email,
                        role=user.role,
                        image_url=user.image_url,
-                       contact=user.contact)
+                       contact=user.contact,
+                       curator=CuratorOut.parse(curator) if curator else None)
 
 
 class EmployeeOut(BaseModel):
