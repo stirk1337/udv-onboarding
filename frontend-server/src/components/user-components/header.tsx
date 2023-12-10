@@ -11,6 +11,7 @@ import { BACKEND_URL } from "../services/api";
 import { getEmployeePlanets, getNotifications } from "../store/api-actions/get-actions";
 import { store } from "../store";
 import { Link } from "react-router-dom";
+import EditProfile from "../edit-profile";
 
 function Header() {
 
@@ -21,6 +22,7 @@ function Header() {
     const [isVisibleAchievements, setVisibleAchievements] = useState(false)
     const [isVisibleEditImage, setVisibleEditImage] = useState(false)
     const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
+    const [isVisibleProfileEdit, setVisibleProfileEdit] = useState(false)
 
     const userData = useAppSelector((state) => state.userData);
     const notifications = useAppSelector((state) => state.notifications);
@@ -64,6 +66,11 @@ function Header() {
 
     function editImageClickHandler(action: boolean){
         setVisibleEditImage(action);
+        setVisibleProfileButtons(false);
+    }
+    
+    function editProfileClickHandler(action: boolean){
+        setVisibleProfileEdit(action);
         setVisibleBackdrop(action)
         setVisibleProfileButtons(false);
     }
@@ -76,6 +83,7 @@ function Header() {
         setVisibleNotification(false);
         setVisibleAchievements(false);
         setVisibleEditImage(false);
+        setVisibleProfileEdit(false);
     }
 
 
@@ -104,11 +112,12 @@ function Header() {
                 </div>
             </div>
             {isVisibleNotification && <Notifications notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
-            {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEdit={()=>editImageClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
+            {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEditProfile={()=>editProfileClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
             {isVisibleAchievements && <Achievements onClickExit={()=>AchievementsClickHandler(false)}/>}
             {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}
             {isVisibleProgress && <Progress onClickExit={()=>ProgressClickHandler(false)}/>}
             {isVisibleEditImage && <ImageCropper onClickExit={()=>editImageClickHandler(false)}/>}
+            {isVisibleProfileEdit && <EditProfile userData={userData} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>}
             {isVisibleBackdrop && <div onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>}
         </header>
      );

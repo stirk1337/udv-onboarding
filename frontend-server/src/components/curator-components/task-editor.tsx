@@ -7,17 +7,21 @@ import TaskConstructorTasks from './task-constructor-tasks';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from '../store/api-actions/get-actions';
 import { deleteTask } from '../store/api-actions/delete-action';
-import { updateTask } from '../store/api-actions/patch-action';
+import { changeTaskPosition, updateTask } from '../store/api-actions/patch-action';
 import { createTask } from '../store/api-actions/post-actions';
 import { changeCurrentTask, clearCurrentPlanet, clearCurrentTask } from '../store/action';
+import { taskNumber } from '../../const-data';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { PlanetTask } from '../../types';
 
 function TaskEditor() {
     const dispatch = useAppDispatch()
     const {id} = useParams()
     const [description, setDescription] = useState('');
-    const tasks = useAppSelector((state) => state.planetTasks);
+    const tasksStore = useAppSelector((state) => state.planetTasks)
+    const [tasks, setTasks] = useState<PlanetTask[]>(tasksStore)
     const currentTask = useAppSelector((state) => state.currentTask);
-    console.log(currentTask);
+    console.log(tasks);
     const [name, setName] = useState('');
 
     useEffect(() => {
@@ -26,6 +30,10 @@ function TaskEditor() {
         setDescription(currentTask ? currentTask.description : '')
       }
     }, [])
+
+    useEffect(() => {
+      setTasks(tasksStore)
+  }, [tasksStore])
 
     useEffect(() => {
       setName(currentTask.name ? currentTask.name : '')
@@ -68,6 +76,44 @@ function TaskEditor() {
   function onBlurHandler(){
     dispatch(updateTask({name: name, description: description, taskId: currentTask.id}))
   }
+
+  function onClickAddRask(){
+    if(tasks.length === 0){
+      dispatch(createTask({id: Number(id), imageId: 1}))
+        return
+    }
+    const lastPlanet = tasks[tasks.length - 1].image
+    const iconId = Number(lastPlanet[lastPlanet.length - 1])
+    if(iconId === taskNumber){
+      dispatch(createTask({id: Number(id), imageId: 1}))
+    }
+    else{
+      dispatch(createTask({id: Number(id), imageId: iconId + 1}))
+    }
+}
+
+    function onDragEnd(result: { destination: any; source: any; draggableId: any; }){
+      const { destination, source, draggableId } = result;
+
+      if (!destination) {
+          return;
+        }
+
+        if (
+          destination.droppableId === source.droppableId &&
+          destination.index === source.index
+        ) {
+          return;
+        }
+
+        const array = [...tasks]
+        console.log(array)
+        const element = array[source.index]
+        array.splice(source.index, 1)
+        array.splice(destination.index, 0, element)
+        setTasks(array)
+        dispatch(changeTaskPosition({taskId: draggableId, position: destination.index}))
+    };
     
     return ( 
         <div className='task-edit-block'>
@@ -77,13 +123,24 @@ function TaskEditor() {
                   <p><img src="/back-arrow.svg" alt=""></img> Вернуться к блокам</p>
                 </button>
               </div>
-              <ul>
-                {tasks.map(task => <TaskConstructorTasks key={task.id} currentTaskId={task.id === currentTask.id} taskId={task.id} blockId={task.planet_id} icon={''} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
-              </ul>
-              <button className='new-task-button' type="submit" onClick={() => dispatch(createTask(Number(id)))}>                    <svg xmlns="http://www.w3.org/2000/svg" width="57" height="58" viewBox="0 0 57 58" fill="none">
-                        <circle cx="28.5" cy="29" r="28.5" fill="#676767"/>
-                        <path d="M28.5001 17.6L28.5001 40.4M17.1001 29H39.9001" stroke="white" stroke-width="5" stroke-linecap="round"/>
-                    </svg>Добавить новый этап</button>
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId={'1'}>
+                  {(provided) => (
+                    <ul
+                    ref={provided.innerRef} 
+                    {...provided.droppableProps}>
+                      {tasks.map((task, index) => <TaskConstructorTasks index={index} key={task.id} currentTaskId={task.id === currentTask.id} taskId={task.id} blockId={task.planet_id} icon={task.image} name={task.name} date={task.created_at} onClickElement={constructorClickHandler} onDelete={deleteTaskHandler}/>)}
+                    {provided.placeholder}
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
+              <button className='new-task-button' type="submit" onClick={onClickAddRask}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="57" height="58" viewBox="0 0 57 58" fill="none">
+                  <circle cx="28.5" cy="29" r="28.5" fill="#676767"/>
+                  <path d="M28.5001 17.6L28.5001 40.4M17.1001 29H39.9001" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                </svg>Добавить новый этап
+              </button>
             </div>
             {currentTask.id !== -1 && <div className='edit-content'>
               <input className="selected-block-name" value={name} onChange={onChangeNameHandler} placeholder="Введите название этапа" onBlur={onBlurHandler}></input>
