@@ -20,30 +20,16 @@ https://udv.group/
 * поддержка версии для слабовидящих
 
 ## Технический стек
-- React
-Язык гипертекстовой разметки HTML
-Формальный язык описания внешнего вида CSS
-Операционная система Ubuntu Linux
-Протокол сеансов HTTPS
-Протокол передачи данных RESTful (json)
-RabbitMQ - программный брокер сообщений на основе стандарта AMQP
-
-База данных PostgreSQL
-Язык программирования SQL
-Операционная система Ubuntu Linux		
-Язык разработки Python
-Python-фреймворк FastAPI
-ASGI сервер для запуска асинхронного приложения FastAPI
-Python-библиотека для генерации SQL запросов SQLAlchemy
-Python-библиотека для контроля версий СУБД Alembic
-Операционная система Ubuntu Linux
-Протокол сеансов HTTPS
-Протокол передачи данных RESTful (json)
-Python-библиотеки для тестирования Pytest и Coverage
-Система непрерывной интеграции CI/CD Github Actions
-ПО для автоматизации развёртывания тестовых стендов Docker
-Система контроля версий Git
-Хостинг репозитория Git: Github
+* React, Typescriipt
+* HTML, CSS
+* Ubuntu Linux
+* Restful Json
+* PostgreSQL
+* Python, FastAPI
+* SQLAlchemy, Alembic
+* Pytest, Coverage
+* CI/CD Github Actions
+* Docker
 
 ## Документация
 
