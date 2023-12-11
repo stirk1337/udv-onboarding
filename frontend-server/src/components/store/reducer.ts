@@ -24,7 +24,8 @@ const initialState: InitialState = {
     name: '',
     email: '',
     role: UserRoles.undefined,
-    image_url: ''
+    image_url: '',
+    contact: '',
   },
   planets: [],
   currentPlanet: {
@@ -34,7 +35,9 @@ const initialState: InitialState = {
     created_at: '',
     updated_at: '',
     employees: [],
-    task_count: 0
+    task_count: 0,
+    image: '',
+    pos: 0,
   },
   planetTasks: [],
   employees: [],
@@ -47,6 +50,7 @@ const initialState: InitialState = {
     task_status: TaskStatus.inProgress,
     created_at: '',
     updated_at: '',
+    image: '',
   },
   taskForVerification: [],
   notifications: [],

@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
 import { Id, UpdateAnswer } from "../../../types";
-import { getCurrentUserInfo, getEmployees, getNotifications, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
+import { getCurrentUserInfo, getEmployees, getNotifications, getPlanet, getPlanetTasks, getPlanets, getTasksBeingChecked } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     dispatch: AppDispatch;
@@ -188,6 +188,52 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
           dispatch(getNotifications())
         } catch {
             dispatch(login(false));
+        }
+    },
+  );
+
+  export const editUserProfile = createAsyncThunk<void, {contact: string}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'user/editUserProfile',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/user/edit_user_profile`, {contact: data.contact});
+          dispatch(getCurrentUserInfo())
+        } catch {
+          dispatch(login(false));
+        }
+    },
+  );
+
+  export const changePlanerPosition = createAsyncThunk<void, {planetId: number, position: number}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'planet/changePlanerPosition',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/planet/change_planet_pos?planet_id=${data.planetId}`, {new_pos: data.position});
+        } catch {
+          dispatch(login(false));
+        }
+    },
+  );
+
+  export const changeTaskPosition = createAsyncThunk<void, {taskId: number, position: number}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'task/changeTaskPosition',
+    async (data, {dispatch, extra: api}) => {
+        try {
+          await api.patch(`/task/change_task_pos?task_id=${data.taskId}`, {new_pos: data.position});
+        } catch {
+          dispatch(login(false));
         }
     },
   );

@@ -20,6 +20,7 @@
     "http-status-codes": "^2.3.0",
     "react": "^18.2.0",
     "react-advanced-cropper": "^0.19.4",
+    "react-beautiful-dnd": "^13.1.1",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^5.0.2",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
+    "@types/react-beautiful-dnd": "^13.1.7",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

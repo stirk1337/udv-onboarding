@@ -13,7 +13,7 @@ function Content() {
 
     return ( 
         <main>
-            {blockData.map((block) => <PlanetBlock key={block.id} id={block.id} onPlanetClick={PlanetClickHandler}/>)}
+            {blockData.map((block) => <PlanetBlock key={block.id} image={block.image} id={block.id} onPlanetClick={PlanetClickHandler}/>)}
         </main>
      );
 }

@@ -42,15 +42,15 @@ export const loginAction = createAsyncThunk<void, Login, {
     },
   );
 
-  export const createPlanet = createAsyncThunk<void, undefined, {
+  export const createPlanet = createAsyncThunk<void, Id, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
   }>(
     'planet/createPlanet',
-    async (_arg, {dispatch, extra: api}) => {
+    async (id, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<Planet>(`/planet/create_planet`, {name: null})
+          const {data: planet} = await api.post<Planet>(`/planet/create_planet`, {name: '', image: 'planet' + id})
             dispatch(getPlanets())
             dispatch(getPlanet(planet.id))
         } catch {
@@ -59,16 +59,16 @@ export const loginAction = createAsyncThunk<void, Login, {
     },
   );
 
-  export const createTask = createAsyncThunk<void, Id, {
+  export const createTask = createAsyncThunk<void, {id: number, imageId: number}, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
   }>(
     'planet/createTask',
-    async (id, {dispatch, extra: api}) => {
+    async (data, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<PlanetTask>(`/task/create_task?planet_id=${id}`, {name: null, description: null})
-            dispatch(getPlanetCuratorTasks(id))
+          const {data: planet} = await api.post<PlanetTask>(`/task/create_task?planet_id=${data.id}`, {name: '', description: '', image: 'octopus' + data.imageId})
+            dispatch(getPlanetCuratorTasks(data.id))
             dispatch(changeCurrentTask(planet))
         } catch {
             dispatch(login(false));

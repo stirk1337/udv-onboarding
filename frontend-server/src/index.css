@@ -280,6 +280,11 @@ main{
 
 .notification-data{
     position: relative;
+    width: 100%;
+}
+
+.notification-data-text{
+    padding-right: 20px;
 }
 
 .notification-item{
@@ -288,11 +293,16 @@ main{
     padding: 5px;
 }
 
+.notification-item img{
+    border-radius: 50%;
+}
+
 .notification-item p,  .notification-item b{
     font-size: 0.8rem;
 }
 
 .notification-date{
+    margin-top: 20px;
     text-align: end;
 }
 
@@ -308,6 +318,7 @@ main{
 }
 
 .user-name{
+    width: 95%;
     text-align: center;
     font-size: 24px;
     margin-bottom: 10px;
@@ -358,7 +369,7 @@ main{
     width: 100%;
 }
 
-.achievements-block, .progress-block, .useful-links-block, .decline-comment-dialog, .add-employee-form, .employee-data, .update-image{
+.achievements-block, .progress-block, .useful-links-block, .decline-comment-dialog, .add-employee-form, .employee-data, .update-image, .edit-profile-page{
     z-index: 100;
     box-sizing: border-box;
     position: absolute;
@@ -375,17 +386,16 @@ main{
     padding: 20px 0 0 20px;
 }
 
-.achievements-header, .progress-header, .useful-links-header, .update-image-header{
+.achievements-header, .progress-header, .useful-links-header, .update-image-header, .edit-profile-page-header{
     font-weight: 600;
     font-size: 25px;
     text-align: center;
     margin-bottom: 30px;
 }
 
-.achievements-header button, .progress-header button, .update-image-header button{
+.achievements-header button, .progress-header button, .update-image-header button, .edit-profile-page-header button{
     position: absolute;
-    left: 95%;
-    top: 2%;
+    left: 94%;
 }
 
 .achievements-progress-bar{
@@ -398,7 +408,7 @@ main{
     box-sizing: border-box;
     overflow: auto;
     overflow-x: hidden;
-    height: 651px;
+    max-height: 651px;
     margin-bottom: 20px;
     padding-right: 20px;
 }
@@ -406,6 +416,7 @@ main{
 .achievements-content{
     display: flex;
     gap: 15px;
+    height: fit-content;
 }
 
 .achievement{
@@ -471,11 +482,10 @@ main{
 
 .useful-links-header button{
     position: absolute;
-    left: 95%;
-    top: 5%;
+    left: 94%;
 }
 
-.useful-links-header button:hover svg path, .achievements-header button:hover svg path,  .progress-header button:hover svg path, .update-image-header button:hover svg path{
+.useful-links-header button:hover svg path, .achievements-header button:hover svg path,  .progress-header button:hover svg path, .update-image-header button:hover svg path, .edit-profile-page-header button:hover svg path{
     stroke:rgba(255, 112, 112, 1)
 }
 
@@ -506,12 +516,16 @@ main{
     padding-top: 15px;
 }
 
+.useful-links-content a{
+    height: 100%;
+    display: block;
+}
+
 .useful-links-content img{
     position: absolute;
     left: 0;
     top: 0;
     border-radius: 50%;
-    padding: 8px;
     background: #312F2F;
 }
 
@@ -670,6 +684,7 @@ main{
 }
 
 .constructor-planet-list ul, .selected-block-monster-list ul, .task-for-verification-list{
+    position: relative;
     max-height: 85%;
     overflow: auto;
     overflow-x: hidden;
@@ -680,6 +695,7 @@ main{
 }
 
 .constructor-planet-list-item, .selected-block-monster-list-item, .task-for-verification-list-item{
+    left: 0% !important;
     cursor: pointer;
     padding: 15px;
     display: flex;
@@ -690,6 +706,10 @@ main{
     font-size: 18px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     user-select: none !important;
+}
+
+.constructor-planet-list-item img{
+    object-fit: contain;
 }
 
 .constructor-planet-list-item.active, .selected-block-monster-list-item.active, .task-for-verification-list-item.active, .monster.active button{
@@ -1168,6 +1188,7 @@ table .approve-button{
 .update-image{
     padding-left: 0;
     padding-bottom: 20px;
+    z-index: 300;
 }
 
 .update-image input {
@@ -1182,6 +1203,85 @@ table .approve-button{
     text-align: center;
     font-size: 25px;
     margin-bottom: 30px;
+}
+
+.edit-profile-page-content{
+    display: flex;
+    gap: 10%;
+    border-top: 1px solid #00C996;
+    padding-top: 40px;
+    font-size: 25px;
+}
+
+.edit-profile-page .send-button{
+    width: fit-content;
+    padding: 0 10px;
+    margin-bottom: 20px;
+    margin: 0;
+    margin-left: 2% !important;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    background-color: rgba(0, 106, 79, 1);
+    font-size: 20px;
+}
+
+.edit-profile-page .send-button:hover{
+    background-color: #00C996;
+}
+
+.profile-data{
+    width: 60%;
+}
+
+.profile-data input{
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.70);
+    background-color: #272626;
+    height: 30px;
+    padding-left: 10px;
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+.profile-data input[disabled]{
+    background: #454545;
+    border: none;
+}
+
+.profile-edit-image-data{
+    position: relative;
+    border-radius: 50%;
+    width: 197px;
+    height:197px;
+    margin-left: 30px;
+    margin-top: 10px
+}
+
+.profile-edit-image-data img{
+    border-radius: 50% !important;
+}
+
+.profile-edit-image-data:hover .edit-icon-shower{
+    display: initial !important;
+}
+
+.edit-icon-shower{
+    cursor: pointer;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    border-radius: 50%;
+    width: 197px;
+    height:197px;
+    background-color: rgba(0, 0, 0, 0.69);
+    display: none;
+}
+
+.edit-icon-shower img{
+    border-radius: 0 !important;
+    margin-left: 15%;
+    margin-top: 15%;
 }
 
 .update-image-content p{
@@ -1330,6 +1430,29 @@ table .approve-button{
 
 .ql-snow .ql-tooltip[data-mode=video]::before{
     content: 'ссылка на видео';
+}
+
+.user-name-info{
+    display: flex;
+    gap: 5%;
+}
+
+.exit-button{
+    position: absolute !important;
+    left: 90%;
+    height: 20%;
+    margin-left: auto !important;
+    width: 10% !important;
+    border-radius: 50% !important;
+    padding-left: 9px !important;
+}
+
+.exit-button:hover{
+    background-color: #1B1A1A !important;
+}
+
+.exit-button:hover path{
+    stroke: #FF7070;
 }
 
 @media (max-width: 1920px) {

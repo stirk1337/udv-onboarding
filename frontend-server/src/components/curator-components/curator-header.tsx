@@ -8,6 +8,7 @@ import { BACKEND_URL } from "../services/api"
 import UsefulLinks from "../user-components/useful-links"
 import { getNotifications, getTasksBeingChecked } from "../store/api-actions/get-actions"
 import { store } from "../store"
+import EditProfile from "../edit-profile"
 
 function CuratorHeader() {
     const dispatch = useAppDispatch()
@@ -18,6 +19,7 @@ function CuratorHeader() {
     const [isVisibleAchievements, setVisibleAchievements] = useState(false)
     const [isVisibleEditImage, setVisibleEditImage] = useState(false)
     const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
+    const [isVisibleProfileEdit, setVisibleProfileEdit] = useState(false)
 
     const userData = useAppSelector((state) => state.userData);
     const location = useLocation().pathname
@@ -59,6 +61,11 @@ function CuratorHeader() {
 
     function editImageClickHandler(action: boolean){
         setVisibleEditImage(action);
+        setVisibleProfileButtons(false);
+    }
+    
+    function editProfileClickHandler(action: boolean){
+        setVisibleProfileEdit(action);
         setVisibleBackdrop(action)
         setVisibleProfileButtons(false);
     }
@@ -71,6 +78,7 @@ function CuratorHeader() {
         setVisibleNotification(false);
         setVisibleAchievements(false);
         setVisibleEditImage(false);
+        setVisibleProfileEdit(false);
     }
 
     return ( 
@@ -97,9 +105,10 @@ function CuratorHeader() {
                 </div>
             </div>
             {isVisibleNotification && <Notifications notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
-            {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEdit={()=>editImageClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
+            {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEditProfile={()=>editProfileClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
             {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}
             {isVisibleEditImage && <ImageCropper onClickExit={()=>editImageClickHandler(false)}/>}
+            {isVisibleProfileEdit && <EditProfile name={userData.name} email={userData.email} contactUser={userData.contact} avatar={userData.image_url} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>}
             {isVisibleBackdrop && <div onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>}
         </header>
     );
