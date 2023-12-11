@@ -58,6 +58,8 @@ root@udv-group:~$ docker-compose up
 ```
 
 ## Документация
+![image](https://github.com/stirk1337/udv-onboarding/assets/63664630/638c016f-750f-4224-8c8a-9c093afdc0a8)  
+
 
 http://localhost/api/v1/docs 
 
