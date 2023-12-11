@@ -42,12 +42,19 @@ https://udv.group/
   
 В корневой директории
 ```console
-root@udv-group:~$ python3 main.pyz
+root@udv-group:~$ python3 main.py
 ```
 
 В директории frontend-server
 ```console
 root@udv-group:~$ npm run dev
+```
+## Docker-compose
+Так же возможен запуск через Docker. Установите его.
+
+В корневой директории
+```console
+root@udv-group:~$ docker-compose up
 ```
 
 ## Документация
