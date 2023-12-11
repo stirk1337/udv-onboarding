@@ -32,9 +32,12 @@ https://udv.group/
 * Docker
 
 ## Настройка и запуск
-Вам нужно установить Python3, NodeJS, PostgreSQL.  
+Вам нужно установить Python3, NodeJS, PostgreSQL. 
+  
 Запустите СУБД PostgreSQL и сконфигурируйте ее.  
+  
 Для запуска Python сервера сконфигурируйте все настройки в .env (есть пример в .env.example).  
+  
 В корневой директории
 ```console
 root@udv-group:~$ python3 main.py
