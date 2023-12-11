@@ -1,6 +1,6 @@
 # Сервис для онбординга новых сотрудников UDV Group
-![udv_space_logo](https://github.com/stirk1337/udv-onboarding/assets/63664630/6d67bcf9-b2d2-4bec-aa33-22e20766a4c1)
-  https://udv.group/
+![udv_space_logo](https://github.com/stirk1337/udv-onboarding/assets/63664630/6d67bcf9-b2d2-4bec-aa33-22e20766a4c1)  
+https://udv.group/
 
 ## Назначение
 * Прохождение сотрудником онбординга первого дня и части последующего адаптационного периода 
