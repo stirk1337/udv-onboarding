@@ -40,11 +40,13 @@ function TaskConstructor() {
             return
         }
         const lastPlanet = constructorPlanets[constructorPlanets.length - 1].image
-        const iconId = Number(lastPlanet[lastPlanet.length - 1])
+        const iconId = Number(lastPlanet.split('planet')[1])
+        console.log(iconId, planetNumber)
         if(iconId === planetNumber){
             dispatch(createPlanet(1))
         }
         else{
+            console.log(iconId)
             dispatch(createPlanet(iconId + 1))
         }
     }

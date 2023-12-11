@@ -38,7 +38,7 @@ function LoginPage() {
                   <InputComponent name="Пароль" icon='password-icon.svg' value={password} placeholder='Введите пароль' type="password" onchange={handlePassword}/>
                 <div className="assistance-block">
                   <span className="error-message"></span>
-                  <button className="forget-password-button" onClick={() => navigate('/login/forgot-password')}>Забыли пароль?</button>
+                  <button className="forget-password-button" type="button" onClick={() => navigate('/login/forgot-password')}>Забыли пароль?</button>
                 </div>
                 <button type="submit" className="send-button">Войти</button>
             </form>
