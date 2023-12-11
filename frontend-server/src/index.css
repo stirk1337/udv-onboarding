@@ -708,6 +708,10 @@ main{
     user-select: none !important;
 }
 
+.constructor-planet-list-item img{
+    object-fit: contain;
+}
+
 .constructor-planet-list-item.active, .selected-block-monster-list-item.active, .task-for-verification-list-item.active, .monster.active button{
     background: #5E5E5E;
 }

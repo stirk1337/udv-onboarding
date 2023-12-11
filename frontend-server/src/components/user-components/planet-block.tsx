@@ -3,12 +3,13 @@ import Planet from "./planet";
 type PlanetBlockProps = {
     onPlanetClick: (id:number) => void;
     id: number;
+    image: string;
 }
 
-function PlanetBlock({id, onPlanetClick}: PlanetBlockProps) {
+function PlanetBlock({id, image, onPlanetClick}: PlanetBlockProps) {
     return ( 
         <div className="planet">
-            <Planet id={id} onPlanetClick={onPlanetClick}/>
+            <Planet id={id} image={image} onPlanetClick={onPlanetClick}/>
         </div>
      );
 }

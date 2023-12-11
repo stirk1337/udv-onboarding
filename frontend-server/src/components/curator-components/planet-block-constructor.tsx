@@ -18,7 +18,7 @@ function PlanetBlockConstructor({id,index, icon, type, date, currentPlanetId, on
         <Draggable draggableId={String(id)} index={index}>
             {(provided) => (
                 <li {...provided.draggableProps}  {...provided.dragHandleProps} ref={provided.innerRef} onClick={(evt) => onClickBlock(evt, id)} className={"constructor-planet-list-item " + active}>
-                    <img src={icon} alt="" width={56} height={56}></img>
+                    <img src={`/planet-prev/${icon}.png`} alt="" width={56} height={56}></img>
                     <div className="constructor-planet-list-item-content">
                         <p>{type}</p>
                         <p className="date">{`${convertedDate[2]}.${convertedDate[1]}.${convertedDate[0]}`}</p>
