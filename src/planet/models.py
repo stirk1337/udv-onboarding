@@ -21,6 +21,13 @@ class PlanetImage(enum.Enum):
     planet10 = 'planet10'
     planet11 = 'planet11'
     planet12 = 'planet12'
+    planet13 = 'planet13'
+    planet14 = 'planet14'
+    planet15 = 'planet15'
+    planet16 = 'planet16'
+    planet17 = 'planet17'
+    planet18 = 'planet18'
+    planet19 = 'planet19'
 
 
 class Planet(Base):
