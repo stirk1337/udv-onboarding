@@ -57,16 +57,12 @@ root@udv-group:~$ npm run dev
 root@udv-group:~$ docker-compose up
 ```
 
-## Документация
+## Документация http://localhost/api/v1/docs 
 ![image](https://github.com/stirk1337/udv-onboarding/assets/63664630/638c016f-750f-4224-8c8a-9c093afdc0a8)  
 
 
-http://localhost/api/v1/docs 
-
-## Админка
+## Админка http://localhost/api/v1/admin
 ![image](https://github.com/stirk1337/udv-onboarding/assets/63664630/35a0bdb5-2fc4-49ff-bf54-85aac3a5a18c)  
-
-http://localhost/api/v1/admin
 
 ## Тесты
 
