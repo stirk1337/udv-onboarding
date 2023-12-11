@@ -64,6 +64,7 @@ root@udv-group:~$ docker-compose up
 http://localhost/api/v1/docs 
 
 ## Админка
+![image](https://github.com/stirk1337/udv-onboarding/assets/63664630/35a0bdb5-2fc4-49ff-bf54-85aac3a5a18c)  
 
 http://localhost/api/v1/admin
 
