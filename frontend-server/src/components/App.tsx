@@ -5,7 +5,6 @@ import TaskConstructor from "./curator-components/task-constructor"
 import CuratorPageLayout from "./curator-components/curator-page-layout"
 import TaskEditor from "./curator-components/task-editor"
 import TaskBlock from "./user-components/task-block"
-import TaskForVerification from "./curator-components/task-for-verification"
 import Personal from "./curator-components/personal"
 import { useAppSelector } from "./hooks"
 import { store } from "./store"
@@ -17,6 +16,8 @@ import { UserRoles } from "../types"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import NewPasswordPage from "../pages/new-password-page"
 import EmailPage from "../pages/email-page"
+import NotFoundPage from "../pages/not-found-page"
+import TaskForVerification from "./curator-components/task-for-verification"
 
 function App() {
   const isRegistered = useAppSelector((state) => state.authorizationStatus);
@@ -37,7 +38,8 @@ function App() {
             <Route index element={
               <MainPage/>
             }/>
-            <Route path=":planetId/:taskId" element={<TaskBlock tasks={tasks}/>}/>
+            <Route path="planet" element={<TaskBlock tasks={tasks}/>}/>
+            <Route path="planet/:planetId/:taskId" element={<TaskBlock tasks={tasks}/>}/>
           </Route>
 
           <Route path="/curator" element={
@@ -55,6 +57,7 @@ function App() {
             <Route path="forgot-password" element={<EmailPage/>}/>
           </Route>
         </Route>
+        <Route path='*' element={<NotFoundPage />}/>
       </Routes>
     </HistoryRouter>
   )

@@ -36,3 +36,5 @@ export const setAchievements = createAction<Achievement[]>('achievements/setAchi
 export const setPercentageCompletedPlanets = createAction<number>('user/percentage')
 
 export const setCompletedPlanets = createAction<EmployeePlanets[]>('user/completedPlanets')
+
+export const setErrorMessage = createAction<string>('error/setErrorMessage')

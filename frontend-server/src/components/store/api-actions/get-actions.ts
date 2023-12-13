@@ -53,8 +53,11 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
         if(task === undefined){
             task = tasks[0]
         }
-        if(location.pathname.split('/').length === 2){
-            dispatch(redirectToRoute(`employee/${id}/${task.id}`));
+        if(!task){
+          dispatch(redirectToRoute(`employee/planet`));
+        }
+        else if(location.pathname.split('/').length === 2){
+            dispatch(redirectToRoute(`employee/planet/${id}/${task.id}`));
         }
         return tasks
     },
@@ -108,23 +111,23 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     },
   );
 
-  export const getTasksBeingChecked = createAsyncThunk<void, undefined, {
+  export const getTasksBeingChecked = createAsyncThunk<PlanetTaskForVerification[], undefined, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
   }>(
     'user/getTasksBeingChecked',
     async (_arg, {dispatch, extra: api}) => {
-      try {
         const {data: taskData} = await api.get<PlanetTaskForVerification[]>(`/task/get_tasks_being_checked`);
         dispatch(setTaskForVerification(taskData))
         const currentTask = taskData[0]
-        if(location.pathname.split('/').length === 3){
+        if(location.pathname.split('/').length === 3 && currentTask){
           dispatch(redirectToRoute(`/curator/tasks-for-verification/${currentTask.planet_id}${currentTask.id}`))
         }
-      } catch {
-        dispatch(login(false));
-      }
+        else if(!currentTask){
+          dispatch(redirectToRoute(`/curator/tasks-for-verification`))
+        }
+        return taskData
     },
   );
 
@@ -170,7 +173,12 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
       try {
         const {data: planetsData} = await api.get<EmployeePlanets[]>(`/planet/get_employee_planets`);
         const numberCompletedPlanets = planetsData.filter(planet => planet.completed === planet.task_count).length;
-        dispatch(setPercentageCompletedPlanets(numberCompletedPlanets / planetsData.length * 100));
+        if(numberCompletedPlanets){
+          dispatch(setPercentageCompletedPlanets(Math.round(numberCompletedPlanets / planetsData.length * 100)));
+        }
+        else{
+          dispatch(setPercentageCompletedPlanets(0));
+        }
       } catch {
         dispatch(login(false));
       }

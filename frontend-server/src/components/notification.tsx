@@ -31,14 +31,13 @@ function Notification({id, data, date, checked, task, planet, employee, onClickE
     const dispatch = useAppDispatch()
     const convertedDate = date.split('T')[0].split('-');
     const convertedTime = date.split('T')[1].split(':');
-    console.log(convertedTime)
     const avatar = employee ? employee.image_url : planet.curator.image_url
     const senderName = employee ? employee.name : planet.curator.name
 
 
     function notificationClickHandle(){
         if(task && !employee){
-            navigate(`/employee/${planet.id}/${task.id}`)
+            navigate(`/employee/planet/${planet.id}/${task.id}`)
         }
         else if(!employee){
             dispatch(getPlanetTasks(planet.id))
@@ -54,6 +53,7 @@ function Notification({id, data, date, checked, task, planet, employee, onClickE
 
     function getTextByType(type: string){
         if(type === 'new'){
+            console.log(id)
             return `${NotificationTextByType.new} "${task.name}"`
         }
         else if(type === 'accept'){

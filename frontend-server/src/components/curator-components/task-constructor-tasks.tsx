@@ -19,7 +19,6 @@ type TaskConstructorTasksProps = {
 function TaskConstructorTasks({isDraggable=true, taskId, currentTaskId,  blockId, icon, name, date,index, isCanDelete=true, onClickElement, onDelete=() => {}}: TaskConstructorTasksProps) {
     const convertedDate = date.split('T')[0].split('-'); 
     const active = currentTaskId && 'active'
-    console.log(taskId)
     if(isDraggable){
         return ( 
             <Draggable draggableId={String(taskId)} index={index}>

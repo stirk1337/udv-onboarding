@@ -1,9 +1,18 @@
+import { ChangeEvent, useState } from "react";
+
 type DeclineTaskProps = {
     onDialogClick: () => void
-    onDeclineClick: () => void
+    onDeclineClick: (message: string) => void
 }
 
 function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
+    const [message, setMessage] = useState('')
+
+    function onMessageHandler(evt: ChangeEvent<HTMLTextAreaElement>){
+        setMessage(evt.target.value)
+    }
+
+
     return ( 
         <div className="decline-comment-dialog">
             <div onClick={onDialogClick} className="useful-links-header">
@@ -14,8 +23,8 @@ function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
                 </button>
                 <p>Причина отказа</p>
             </div>
-            <textarea placeholder="Введите причину отказа"></textarea>
-            <button onClick={onDeclineClick} className="decline-button">Отклонить</button>
+            <textarea placeholder="Введите причину отказа" value={message} onChange={onMessageHandler}></textarea>
+            <button onClick={() => onDeclineClick(message)} className="decline-button">Отклонить</button>
         </div>
      );
 }
