@@ -108,7 +108,7 @@ function CuratorHeader() {
             {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEditProfile={()=>editProfileClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
             {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}
             {isVisibleEditImage && <ImageCropper onClickExit={()=>editImageClickHandler(false)}/>}
-            {isVisibleProfileEdit && <EditProfile name={userData.name} email={userData.email} contactUser={userData.contact} avatar={userData.image_url} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>}
+            {isVisibleProfileEdit && <EditProfile userData={userData} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>}
             {isVisibleBackdrop && <div onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>}
         </header>
     );

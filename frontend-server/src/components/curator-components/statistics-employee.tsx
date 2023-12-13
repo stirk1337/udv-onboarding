@@ -17,7 +17,7 @@ function StatisticEmployee({id, onDelete, avatar, name, clickExit}: StatisticEmp
 
     useEffect(() => {
         dispatch(getEmployeePlanetsForCurator(id))
-    })
+    }, [])
 
     return ( 
         <div className="employee-data">

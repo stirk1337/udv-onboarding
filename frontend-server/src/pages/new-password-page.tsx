@@ -37,6 +37,9 @@ function NewPasswordPage() {
         if(password !== againPassword){
             setErrorMessage('Пароли не совпадают')
         }
+        else if(password.length < 8){
+            setErrorMessage('Пароль должен быть хотя бы 8 символов')
+        }
         else{
             dispatch(newPassword(data))
             setNewPasswordIsSend(true)

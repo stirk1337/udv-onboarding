@@ -50,7 +50,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     'planet/createPlanet',
     async (id, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<Planet>(`/planet/create_planet`, {name: '', image: 'planet' + id})
+          const {data: planet} = await api.post<Planet>(`/planet/create_planet`, {name: 'Название планеты', image: 'planet' + id})
             dispatch(getPlanets())
             dispatch(getPlanet(planet.id))
         } catch {
@@ -67,7 +67,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     'planet/createTask',
     async (data, {dispatch, extra: api}) => {
         try {
-          const {data: planet} = await api.post<PlanetTask>(`/task/create_task?planet_id=${data.id}`, {name: '', description: '', image: 'octopus' + data.imageId})
+          const {data: planet} = await api.post<PlanetTask>(`/task/create_task?planet_id=${data.id}`, {name: 'Название этапа', description: '', image: 'octopus' + data.imageId})
             dispatch(getPlanetCuratorTasks(data.id))
             dispatch(changeCurrentTask(planet))
         } catch {
@@ -76,7 +76,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     },
   );
 
-  export const registerNewEmployee = createAsyncThunk<void, {email: string, name: string, product: string, productRole: string}, {
+  export const registerNewEmployee = createAsyncThunk<boolean, {email: string, name: string, product: string, productRole: string}, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
@@ -88,8 +88,9 @@ export const loginAction = createAsyncThunk<void, Login, {
           const role = data.productRole.split(' ').join('_')
           await api.post<PlanetTask>(`/user/register_new_employee`, {email: data.email, name: data.name, product: product, product_role: role})
           dispatch(getEmployees())
+          return true;
         } catch {
-            dispatch(login(false));
+          return false;
         }
     },
   );

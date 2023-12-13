@@ -11,6 +11,7 @@ type TaskDataProps = {
     name: string;
     data: string;
     currentAnswer: string | null;
+    curatorAnswer: string | null;
     taskStatus: string
     isApprovePage?: boolean
 }
@@ -27,7 +28,7 @@ enum ButtonsContent {
     inProgress = 'Завершить'
 }
 
-function TaskData({id, planetId, name, data, currentAnswer, taskStatus, isApprovePage=false}: TaskDataProps) {
+function TaskData({id, curatorAnswer, planetId, name, data, currentAnswer, taskStatus, isApprovePage=false}: TaskDataProps) {
     const [answer, setAnswer] = useState(currentAnswer !== null ? currentAnswer : '')
 
     useEffect(() => {
@@ -66,17 +67,29 @@ function TaskData({id, planetId, name, data, currentAnswer, taskStatus, isApprov
     return ( 
         <>
             <p className="task-name">{name}</p>
-            <div className="task-data" dangerouslySetInnerHTML={{__html: data}}></div>
+            <div style={curatorAnswer ? {height: '65%'}: {height:'75%'}} className="task-data" dangerouslySetInnerHTML={{__html: data}}></div>
             {!isApprovePage ?
                         <form onSubmit={handleSubmit} className="task-comments">
                             <label htmlFor="comment"><p>Введите комментарий к этапу:</p></label>
                             <input type="text" autoComplete="off" value={answer} onChange={handleAnswer} id="comment"></input>
+                            {curatorAnswer &&
+                                <>
+                                    <p>Комментарий Куратора:</p>
+                                    <p id="comment">{curatorAnswer}</p>
+                                </>
+                            }
                             {!isApprovePage && <button type="submit" disabled={buttonInfo[0] !== 'approve-button'} className={buttonInfo[0]}>{buttonInfo[1]}</button>}
                         </form>
                             :
                         <div className="task-comments">
                             <p>Комментарий к этапу:</p>
                             <p id="comment">{answer}</p>
+                            {curatorAnswer &&
+                                <>
+                                    <p>Ваш комментарий:</p>
+                                    <p id="comment">{curatorAnswer}</p>
+                                </>
+                            }
                             {!isApprovePage && <button type="submit" className={buttonInfo[0]}>{buttonInfo[1]}</button>}
                         </div>
             }
