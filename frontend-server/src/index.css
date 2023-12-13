@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     color: white;
@@ -6,37 +6,37 @@
     box-sizing: border-box !important;
 }
 
-ul{
+ul {
     list-style: none;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-iframe{
+iframe {
     width: 100%;
 }
 
-input{
+input {
     border-color: rgba(1, 1, 1, 0);
 }
 
-textarea{
-    resize: none; 
+textarea {
+    resize: none;
 }
 
-html{
+html {
     background-color: #0F0D0D;
     font-size: 21px;
 }
 
-.bold{
+.bold {
     font-weight: 700;
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
+input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
@@ -44,61 +44,63 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-text-fill-color: white !important;
-  -webkit-box-shadow: 0 0 0px 1000px #5E5E5E inset;
-  transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0px 1000px #5E5E5E inset;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
-main::-webkit-scrollbar, html::-webkit-scrollbar{
+main::-webkit-scrollbar,
+html::-webkit-scrollbar {
     width: 0;
 }
 
-div::-webkit-scrollbar, 
+div::-webkit-scrollbar,
 textarea::-webkit-scrollbar,
 select::-webkit-scrollbar,
-ul::-webkit-scrollbar{
+ul::-webkit-scrollbar {
     background: #D9D9D970;
     border-radius: 7.5px;
     width: 10px;
 }
 
-div::-webkit-scrollbar-thumb:hover, 
+div::-webkit-scrollbar-thumb:hover,
 textarea::-webkit-scrollbar-thumb:hover,
 select::-webkit-scrollbar-thumb:hover,
-ul::-webkit-scrollbar-thumb:hover{
+ul::-webkit-scrollbar-thumb:hover {
     background: #BEBEBE;
 }
 
-div::-webkit-scrollbar-thumb:active, 
+div::-webkit-scrollbar-thumb:active,
 textarea::-webkit-scrollbar-thumb:active,
-ul::-webkit-scrollbar-thumb:active{
+ul::-webkit-scrollbar-thumb:active {
     background: rgba(0, 0, 0, 0.44);
 }
 
-div::-webkit-scrollbar-thumb, 
+div::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb,
 select::-webkit-scrollbar-thumb,
-ul::-webkit-scrollbar-thumb{
+ul::-webkit-scrollbar-thumb {
     background: #D9D9D9;
     border-radius: 7.5px;
 }
 
-button, input[type="submit"], input[type="reset"] {
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+button,
+input[type="submit"],
+input[type="reset"] {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
 }
 
-.enter-page{
+.enter-page {
     display: inline-block;
     font-size: 25px;
     font-weight: 400;
     width: 654px;
-    height: 389px;
     background: #272626;
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 33px;
@@ -113,13 +115,13 @@ button, input[type="submit"], input[type="reset"] {
     font-size: 25px;
 }
 
-.enter-page img{
+.enter-page img {
     display: block;
     margin: 0 auto;
     margin-bottom: 10px;
 }
 
-.enter-page input{
+.enter-page input {
     display: block;
     width: 100%;
     border-radius: 6px;
@@ -131,56 +133,56 @@ button, input[type="submit"], input[type="reset"] {
     margin-bottom: 20px;
 }
 
-.enter-page .input-block:nth-child(2) input{
+.enter-page .input-block:nth-child(2) input {
     margin-bottom: 10px;
 }
 
-.solo-input{
+.solo-input {
     margin-top: 10%;
     margin-bottom: 10%;
 }
 
-.enter-page input::placeholder{
+.enter-page input::placeholder {
     color: rgba(255, 255, 255, 0.55);
 }
 
-.enter-page label{
+.enter-page label {
     display: block;
     margin-bottom: 10px;
 }
 
-.label-container{
+.label-container {
     position: relative;
 }
 
-.label-container img{
+.label-container img {
     position: absolute;
     top: 10%;
     left: 1%;
 }
 
-.assistance-block{
+.assistance-block {
     display: flex;
 }
 
-.error-message{
+.error-message {
     color: #FFBABA;
     font-size: 18px;
 }
 
-.forget-password-button{
+.forget-password-button {
     font-size: 18px;
     margin-left: auto;
 }
 
-.enter-page .message{
+.enter-page .message {
     text-align: center;
     font-size: 22px;
     margin-top: 10%;
     margin-bottom: 10%;
 }
 
-.send-button{
+.send-button {
     display: block;
     width: 183px;
     height: 42px;
@@ -191,7 +193,7 @@ button, input[type="submit"], input[type="reset"] {
     font-size: 24px;
 }
 
-header{
+header {
     height: 65px;
     box-sizing: border-box;
     padding: 6px 12%;
@@ -200,21 +202,21 @@ header{
     justify-content: space-between;
 }
 
-main{
+main {
     max-width: 1440px;
     max-height: 93vh;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     overflow: auto;
-    overflow-x:  hidden;
+    overflow-x: hidden;
 }
 
-.logo{
+.logo {
     margin-top: 5px;
 }
 
-.progress-bar{
+.progress-bar {
     margin-top: 5px;
     font-size: 1em;
     min-width: 15%;
@@ -227,18 +229,18 @@ main{
     min-width: 280px
 }
 
-.notification-profile-block{
+.notification-profile-block {
     width: 122px;
     justify-content: space-between;
     display: flex;
     position: relative;
 }
 
-.notifications{
+.notifications {
     margin-top: 4px;
 }
 
-.notifications-number{
+.notifications-number {
     position: absolute;
     top: 5%;
     left: 15%;
@@ -253,7 +255,7 @@ main{
     box-sizing: border-box;
 }
 
-.notification-block{
+.notification-block {
     z-index: 100;
     box-sizing: border-box;
     position: absolute;
@@ -265,48 +267,54 @@ main{
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 }
 
-.read-all-notifications{
+.read-all-notifications {
     display: flex;
     gap: 6px;
     border-bottom: 0.7px solid rgba(0, 0, 0, 0.22);
     padding: 12px 0 12px 13px;
 }
 
-.notification-list{
+.notification-list {
     overflow: auto;
     overflow-x: hidden;
     height: 700px;
 }
 
-.notification-data{
+.notification-data {
     position: relative;
     width: 100%;
 }
 
-.notification-data-text{
-    padding-right: 20px;
+.notification-data-text {
+    padding-right: 25px;
+    word-break: break-word;
 }
 
-.notification-item{
+.notification-item {
     display: flex;
     gap: 8px;
     padding: 5px;
 }
 
-.notification-item img{
+.notification-item:hover{
+    background-color: #5E5E5E;
+}
+
+.notification-item img {
     border-radius: 50%;
 }
 
-.notification-item p,  .notification-item b{
+.notification-item p,
+.notification-item b {
     font-size: 0.8rem;
 }
 
-.notification-date{
+.notification-date {
     margin-top: 20px;
     text-align: end;
 }
 
-.not-checked{
+.not-checked {
     position: absolute;
     left: 95%;
     top: 25%;
@@ -317,14 +325,14 @@ main{
     background-color: #00C996;
 }
 
-.user-name{
+.user-name {
     width: 95%;
     text-align: center;
     font-size: 24px;
     margin-bottom: 10px;
 }
 
-.profile-buttons{
+.profile-buttons {
     z-index: 100;
     box-sizing: border-box;
     position: absolute;
@@ -339,17 +347,17 @@ main{
     padding: 9px;
 }
 
-.profile-buttons .flex{
+.profile-buttons .flex {
     display: flex;
     margin-bottom: 6px;
     gap: 6px;
 }
 
-.profile-buttons .flex:nth-last-child(1){
+.profile-buttons .flex:nth-last-child(1) {
     margin-bottom: 0;
 }
 
-.profile-buttons button{
+.profile-buttons button {
     width: 50%;
     display: flex;
     text-align: center;
@@ -361,15 +369,22 @@ main{
     user-select: none !important;
 }
 
-.profile-buttons button:hover{
+.profile-buttons button:hover {
     background-color: #5E5E5E;
 }
 
-.profile-buttons button p{
+.profile-buttons button p {
     width: 100%;
 }
 
-.achievements-block, .progress-block, .useful-links-block, .decline-comment-dialog, .add-employee-form, .employee-data, .update-image, .edit-profile-page{
+.achievements-block,
+.progress-block,
+.useful-links-block,
+.decline-comment-dialog,
+.add-employee-form,
+.employee-data,
+.update-image,
+.edit-profile-page {
     z-index: 100;
     box-sizing: border-box;
     position: absolute;
@@ -386,24 +401,32 @@ main{
     padding: 20px 0 0 20px;
 }
 
-.achievements-header, .progress-header, .useful-links-header, .update-image-header, .edit-profile-page-header{
+.achievements-header,
+.progress-header,
+.useful-links-header,
+.update-image-header,
+.edit-profile-page-header {
     font-weight: 600;
     font-size: 25px;
     text-align: center;
     margin-bottom: 30px;
 }
 
-.achievements-header button, .progress-header button, .update-image-header button, .edit-profile-page-header button{
+.achievements-header button,
+.progress-header button,
+.update-image-header button,
+.edit-profile-page-header button {
     position: absolute;
     left: 94%;
 }
 
-.achievements-progress-bar{
+.achievements-progress-bar {
     margin-bottom: 30px;
     margin-right: 30px;
 }
 
-.achievements-content, .progress-content{
+.achievements-content,
+.progress-content {
     flex-wrap: wrap;
     box-sizing: border-box;
     overflow: auto;
@@ -413,13 +436,13 @@ main{
     padding-right: 20px;
 }
 
-.achievements-content{
+.achievements-content {
     display: flex;
     gap: 15px;
     height: fit-content;
 }
 
-.achievement{
+.achievement {
     box-sizing: border-box;
     display: flex;
     gap: 6px;
@@ -431,40 +454,40 @@ main{
     padding: 5px;
 }
 
-.achievement .type{
+.achievement .type {
     font-weight: 700;
 }
 
-.achievement .completed-icon{
+.achievement .completed-icon {
     position: absolute;
     left: 87%;
     top: 60%;
 }
 
-.progress-data{
+.progress-data {
     border-radius: 21px;
     background: #3F3F3F;
     margin-bottom: 35px;
     padding: 20px 20px;
 }
 
-.progress-data-header{
+.progress-data-header {
     text-align: center;
     margin-bottom: 25px;
 }
 
-.progress-data-header p{
+.progress-data-header p {
     font-size: 25px;
     font-weight: 600;
     margin-bottom: 10px;
 }
 
-.progress-progress-bar{
+.progress-progress-bar {
     width: 50%;
     margin: 0 auto;
 }
 
-.progress-list ul{
+.progress-list ul {
     font-size: 25px;
     display: flex;
     flex-wrap: wrap;
@@ -472,7 +495,7 @@ main{
     gap: 30px;
 }
 
-.list-block-item{
+.list-block-item {
     display: flex;
     gap: 15px;
     border-radius: 2px;
@@ -480,16 +503,20 @@ main{
     padding: 5px;
 }
 
-.useful-links-header button{
+.useful-links-header button {
     position: absolute;
     left: 94%;
 }
 
-.useful-links-header button:hover svg path, .achievements-header button:hover svg path,  .progress-header button:hover svg path, .update-image-header button:hover svg path, .edit-profile-page-header button:hover svg path{
-    stroke:rgba(255, 112, 112, 1)
+.useful-links-header button:hover svg path,
+.achievements-header button:hover svg path,
+.progress-header button:hover svg path,
+.update-image-header button:hover svg path,
+.edit-profile-page-header button:hover svg path {
+    stroke: rgba(255, 112, 112, 1)
 }
 
-.useful-links-content{
+.useful-links-content {
     box-sizing: border-box;
     overflow: auto;
     overflow-x: hidden;
@@ -498,14 +525,14 @@ main{
     padding-right: 20px;
 }
 
-.useful-links-content ul{
+.useful-links-content ul {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     font-size: 25px;
 }
 
-.useful-links-content li{
+.useful-links-content li {
     position: relative;
     width: 49%;
     height: 63px;
@@ -516,12 +543,12 @@ main{
     padding-top: 15px;
 }
 
-.useful-links-content a{
+.useful-links-content a {
     height: 100%;
     display: block;
 }
 
-.useful-links-content img{
+.useful-links-content img {
     position: absolute;
     left: 0;
     top: 0;
@@ -529,23 +556,28 @@ main{
     background: #312F2F;
 }
 
-.planet{
+.planet {
     user-select: none;
+    cursor: pointer;
 }
 
-.planet:nth-child(even){
+.planet img{
+    pointer-events: none;
+}
+
+.planet:nth-child(even) {
     align-self: flex-end;
     margin-top: 20px;
     margin-right: 15%;
 }
 
-.planet:nth-child(odd){
+.planet:nth-child(odd) {
     align-self: flex-start;
     margin-top: 20px;
     margin-left: 15%;
 }
 
-.task-block{
+.task-block {
     display: flex;
     gap: 5px;
     padding: 20px 10px 20px 20px;
@@ -557,29 +589,29 @@ main{
     height: 850px;
 }
 
-.monsters{
+.monsters {
     position: relative;
     width: 30%;
     flex-direction: column;
 }
 
-.monster-header{
+.monster-header {
     margin-bottom: 15px;
 }
 
-.monster-header p{
+.monster-header p {
     color: #00C996;
     font-size: 18px;
 }
 
-.monster-content{
+.monster-content {
     max-height: 95%;
     overflow: auto;
     overflow-x: hidden;
     padding-right: 10px;
 }
 
-.monster button{
+.monster button {
     display: flex;
     width: 100%;
     border-radius: 17px;
@@ -592,32 +624,33 @@ main{
     font-weight: 700;
 }
 
-.monster button .completed{
+.monster button .completed {
     margin-left: auto;
 }
 
-.task-content{
+.task-content {
     box-sizing: border-box;
     width: 70%;
     padding-right: 10px;
 }
 
-.task-name{
+.task-name {
     font-size: 25px;
     border-bottom: 1px solid #00C996;
     margin-bottom: 10px;
 }
 
-.task-data{
+.task-data {
     font-size: 20px;
     font-weight: 300;
     margin-bottom: 20px;
-    height: 75%;
+    height: 68%;
     overflow: auto;
     overflow-x: hidden;
 }
 
-.task-comments input, .task-comments #comment{
+.task-comments input,
+.task-comments #comment {
     width: 100%;
     border-radius: 8px;
     background: #454545;
@@ -625,12 +658,21 @@ main{
     height: 38px;
 }
 
-.task-comments #comment{
+.task-comments input{
+    margin-bottom: 10px;
+}
+
+.task-comments #comment {
     margin-top: 10px;
+    margin-bottom: 10px;
     padding: 5px;
 }
 
-.button-to-tasks, .decline-button, .approve-button, .completed-button, .being-checked{
+.button-to-tasks,
+.decline-button,
+.approve-button,
+.completed-button,
+.being-checked {
     display: block;
     background-color: #02392B;
     width: fit-content;
@@ -642,26 +684,30 @@ main{
     border-radius: 5px;
 }
 
-.button-to-tasks:hover, .approve-button:hover{
+.button-to-tasks:hover,
+.approve-button:hover {
     background-color: rgba(0, 122, 91, 1);
 }
 
-.decline-button:hover{
+.decline-button:hover {
     background-color: rgba(239, 34, 34, 1);
 }
 
-.header-nav{
+.header-nav {
     font-size: 25px;
     display: flex;
     gap: 50px;
     margin-top: 10px;
 }
 
-.header-nav .active{
+.header-nav .active {
     color: #45F5C9;
 }
 
-.constructor-block, .task-edit-block, .task-for-verification-block, .personal-block{
+.constructor-block,
+.task-edit-block,
+.task-for-verification-block,
+.personal-block {
     display: flex;
     border-radius: 25px;
     background: #272626;
@@ -676,25 +722,29 @@ main{
     height: 850px;
 }
 
-.constructor-planet-list{
+.constructor-planet-list {
     box-sizing: border-box;
     width: 30%;
     padding: 0 10px 0 20px;
     border-radius: 25px;
 }
 
-.constructor-planet-list ul, .selected-block-monster-list ul, .task-for-verification-list{
+.constructor-planet-list-block,
+.constructor-task-list-block,
+.task-for-verification-list {
     position: relative;
     max-height: 85%;
     overflow: auto;
     overflow-x: hidden;
 }
 
-.selected-block-monster-list ul{
+.constructor-task-list-block {
     max-height: 80%;
 }
 
-.constructor-planet-list-item, .selected-block-monster-list-item, .task-for-verification-list-item{
+.constructor-planet-list-item,
+.selected-block-monster-list-item,
+.task-for-verification-list-item {
     left: 0% !important;
     cursor: pointer;
     padding: 15px;
@@ -708,49 +758,66 @@ main{
     user-select: none !important;
 }
 
-.constructor-planet-list-item img{
+.constructor-planet-list-item img {
     object-fit: contain;
 }
 
-.constructor-planet-list-item.active, .selected-block-monster-list-item.active, .task-for-verification-list-item.active, .monster.active button{
+.constructor-planet-list-item.active,
+.selected-block-monster-list-item.active,
+.task-for-verification-list-item.active,
+.monster.active button {
     background: #5E5E5E;
 }
 
-.constructor-planet-list-item:hover, .selected-block-monster-list-item:hover, .task-for-verification-list-item:hover, .monster button:hover{
+.constructor-planet-list-item:hover,
+.selected-block-monster-list-item:hover,
+.task-for-verification-list-item:hover,
+.monster button:hover {
     background: #5E5E5E;
 }
 
-.constructor-planet-list button:hover circle, .selected-block-monster-list button:hover circle, .task-for-verification-list button:hover circle, .personal-block-header button:hover circle{
+.constructor-planet-list button:hover circle,
+.selected-block-monster-list button:hover circle,
+.task-for-verification-list button:hover circle,
+.personal-block-header button:hover circle {
     fill: rgba(0, 201, 150, 1);
 }
 
-.constructor-planet-list-item-content p, .selected-block-monster-list-item-content p, .task-name{
+.constructor-planet-list-item-content p,
+.selected-block-monster-list-item-content p,
+.task-name {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-.constructor-planet-list-item-content, .selected-block-monster-list-item-content, .task-for-verification-list-item-content{
+.constructor-planet-list-item-content,
+.selected-block-monster-list-item-content,
+.task-for-verification-list-item-content {
     width: 70%;
     margin-left: 5px;
     margin-top: 10px;
 }
 
-.delete-icon{
+.delete-icon {
     cursor: pointer;
     margin-left: auto;
     margin-top: 10px;
 }
 
-.delete-icon:hover path{
+.delete-icon:hover path {
     stroke: rgba(237, 66, 66, 1);
 }
 
-.constructor-planet-list-item .date, .constructor-planet-list button, .selected-block-monster-list .date, .selected-block-monster-list button{
+.constructor-planet-list-item .date,
+.constructor-planet-list button,
+.selected-block-monster-list .date,
+.selected-block-monster-list button {
     font-size: 14px;
 }
 
-.constructor-planet-list button, .new-task-button{
+.constructor-planet-list button,
+.new-task-button {
     position: relative;
     display: flex;
     border-radius: 25px;
@@ -765,12 +832,14 @@ main{
     justify-content: space-around;
 }
 
-.selected-block-content{
+.selected-block-content {
     width: 70%;
 }
 
-.selected-block-content input, .edit-content input{
+.selected-block-content input,
+.edit-content input {
     padding: 10px;
+    padding-right: 12%;
     box-sizing: border-box;
     border-radius: 13px;
     background: #191919;
@@ -778,7 +847,7 @@ main{
     font-size: 21px;
 }
 
-.selected-block-data{
+.selected-block-data {
     display: flex;
     gap: 20px;
     margin-top: 10px;
@@ -786,25 +855,25 @@ main{
     height: 90%;
 }
 
-.selected-block-monster-list{
+.selected-block-monster-list {
     width: 30%;
     box-sizing: border-box;
     padding: 0 10px 0 20px;
     border-radius: 25px;
 }
 
-.add-task-form-flex{
+.add-task-form-flex {
     width: 55%;
 }
 
-.header-task-form{
+.header-task-form {
     width: fit-content;
     margin-left: 10px;
     border-bottom: 1px solid #00C996;
     margin-bottom: 10px;
 }
 
-.add-task-form{
+.add-task-form {
     box-sizing: border-box;
     border-radius: 25px;
     background: #191919;
@@ -813,31 +882,31 @@ main{
     padding: 0 20px 10px 20px;
 }
 
-.add-task-form-choice{
+.add-task-form-choice {
     display: flex;
     justify-content: space-between;
     padding: 20px 40px 0 40px;
 }
 
-.add-task-form-choice .active-select{
+.add-task-form-choice .active-select {
     color: #00C996;
     stroke: #00C996;
     border-bottom: 1px solid #00C996;
 }
 
-.add-task-form-choice p{
+.add-task-form-choice p {
     user-select: none !important;
     cursor: pointer;
     position: relative;
 }
 
-.add-task-form-choice svg{
+.add-task-form-choice svg {
     position: absolute;
     left: -25px;
     top: 10%;
 }
 
-.add-task-form select{
+.add-task-form select {
     margin-top: 35px;
     width: 100%;
     border-radius: 3px;
@@ -846,7 +915,7 @@ main{
     font-size: 21px;
 }
 
-.add-task-form button{
+.add-task-form button {
     display: block;
     width: 40%;
     height: 40px;
@@ -857,12 +926,12 @@ main{
     margin-top: 35px;
 }
 
-.added-employee-block{
+.added-employee-block {
     width: 45%;
     height: 90%;
 }
 
-.added-employee-list{
+.added-employee-list {
     border-radius: 8px;
     background: #191919;
     padding: 13px 0 0 18px;
@@ -871,7 +940,7 @@ main{
     overflow-x: hidden;
 }
 
-.added-list-item{
+.added-list-item {
     position: relative;
     user-select: none;
     cursor: pointer;
@@ -883,22 +952,22 @@ main{
     gap: 10px;
 }
 
-.added-list-item p{
+.added-list-item p {
     width: 90%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-.added-list-item:hover .delete-user{
+.added-list-item:hover .delete-user {
     display: block !important;
 }
 
-.task-edit-block{
+.task-edit-block {
     display: flex;
 }
 
-.edit-content{
+.edit-content {
     width: 70%;
 }
 
@@ -908,103 +977,117 @@ main{
     color: black;
 }
 
-.ql-toolbar{
+
+.ql-toolbar {
     background: #797979;
 }
 
-.ql-editor{
+.ql-editor {
     font-size: 20px;
     background: rgba(105, 105, 105, 0.55);
 }
 
-.ql-fill{
+.ql-fill {
     fill: white !important;
 }
 
-.ql-toolbar button:hover .ql-fill{
-    fill:  #00C996 !important;
+.ql-toolbar button:hover .ql-fill {
+    fill: #00C996 !important;
 }
 
-.ql-picker-label:hover .ql-stroke{
-    stroke:  #00C996 !important;
+.ql-picker-label:hover .ql-stroke {
+    stroke: #00C996 !important;
 }
 
-.ql-picker-item:hover .ql-stroke{
-    stroke:  #00C996 !important;
+.ql-picker-item:hover .ql-stroke {
+    stroke: #00C996 !important;
 }
 
-.ql-stroke{
+.ql-stroke {
     stroke: white !important;
 }
 
-.ql-toolbar button:hover .ql-stroke{
-    stroke:  #00C996 !important;
+.ql-toolbar button:hover .ql-stroke {
+    stroke: #00C996 !important;
 }
 
-.ql-video{
+.ql-video {
     height: 500px;
 }
 
-.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options{
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
     background: #797979;
 }
 
-.ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected{
-    color:  #00C996 !important;
+.ql-snow.ql-toolbar button:hover,
+.ql-snow .ql-toolbar button:hover,
+.ql-snow.ql-toolbar button:focus,
+.ql-snow .ql-toolbar button:focus,
+.ql-snow.ql-toolbar button.ql-active,
+.ql-snow .ql-toolbar button.ql-active,
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow .ql-toolbar .ql-picker-label:hover,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.ql-snow.ql-toolbar .ql-picker-item:hover,
+.ql-snow .ql-toolbar .ql-picker-item:hover,
+.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+    color: #00C996 !important;
 }
 
-.task-for-verification-list{
+.task-for-verification-list {
     max-height: 100%;
     width: 30%;
     overflow: auto;
     overflow-x: hidden;
 }
 
-.task-approve-content{
+.task-approve-content {
     width: 70%;
 }
 
-.task-approve-buttons{
+.task-approve-buttons {
     display: flex;
     justify-content: center;
     gap: 60px;
 }
 
-.task-approve-buttons button{
+.task-approve-buttons button {
     margin-left: 0;
 }
 
 
-.task-for-verification-list-item-content .bold{
+.task-for-verification-list-item-content .bold {
     font-size: 20px;
 }
 
-.decline-button{
+.decline-button {
     background-color: #ED4242;
 }
 
-.approve-button{
+.approve-button {
     background-color: #02392B;
 }
 
-.completed-button{
-    cursor:default;
+.completed-button {
+    cursor: default;
     background-color: #00C996;
 }
 
-.being-checked{
-    cursor:default;
+.being-checked {
+    cursor: default;
     background-color: #F9A22F;
 }
 
-.decline-comment-dialog{
+.decline-comment-dialog {
     text-align: center;
     font-size: 24px;
     padding: 10px;
     padding-top: 40px;
 }
 
-.decline-comment-dialog textarea{
+.decline-comment-dialog textarea {
     margin: 20px;
     width: 90%;
     height: 500px;
@@ -1013,20 +1096,20 @@ main{
     padding: 20px;
 }
 
-.decline-comment-dialog textarea::placeholder{
+.decline-comment-dialog textarea::placeholder {
     font-size: 22px;
 }
 
-.decline-comment-dialog button{
+.decline-comment-dialog button {
     margin: 0 auto;
 }
 
-.personal-block{
+.personal-block {
     padding: 35px;
     display: block;
 }
 
-.personal-block-header{
+.personal-block-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1034,12 +1117,12 @@ main{
     border: 1px solid #505050;
 }
 
-.personal-block-header svg{
+.personal-block-header svg {
     width: 52px;
     height: 52px;
 }
 
-.personal-block-header input{
+.personal-block-header input {
     width: 20%;
     height: 32px;
     background-color: #3F3F3F;
@@ -1047,66 +1130,69 @@ main{
     padding-left: 5px;
 }
 
-.personal-block-header input::placeholder{
+.personal-block-header input::placeholder {
     color: #979797;
     font-size: 16px;
 }
 
-table, tr {
+table,
+tr {
     border: 1px solid #505050;
 }
 
-th{
+th {
     cursor: pointer;
     text-align: left;
     user-select: none
 }
 
-th, td{
+th,
+td {
     padding-left: 20px;
     width: 17%;
 }
 
-th:hover{
+th:hover {
     color: #00C996;
 }
 
-th img{
+th img {
     margin-left: 5px;
 }
 
-tr{
+tr {
     height: 63px;
 }
 
-table{
+table {
     border-collapse: collapse;
     font-size: 16px;
     width: 100%;
 }
 
-.personal-table{
+.personal-table {
     max-height: 80%;
     overflow: auto;
     overflow-x: hidden;
 }
 
-table .approve-button{
-    margin:0;
+table .approve-button {
+    margin: 0;
     margin-right: 20px;
 }
 
-.add-employee-form{
+.add-employee-form {
     padding: 40px 60px 40px 60px;
     text-align: center;
 }
 
-.add-employee-form p{
+.add-employee-form p {
     font-size: 24px;
     margin-bottom: 40px;
 }
 
-.add-employee-form input, .add-employee-form select{
+.add-employee-form input,
+.add-employee-form select {
     width: 100%;
     height: 40px;
     margin-bottom: 20px;
@@ -1116,18 +1202,17 @@ table .approve-button{
     padding-left: 10px;
 }
 
-.add-employee-form button[type="submit"]{
+.add-employee-form button[type="submit"] {
     width: 177px;
     height: 40px;
     border-radius: 11px;
-    background: #5C5C5C;
 }
 
-.employee-data{
+.employee-data {
     padding: 20px;
 }
 
-.employee-data-header{
+.employee-data-header {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -1136,56 +1221,84 @@ table .approve-button{
     padding-bottom: 10px;
 }
 
-.employee-data-header .profile-logo{
+.employee-data-header .profile-logo {
     width: 45px;
     height: 45px;
 }
 
-.employee-data-container{
+.employee-data-container {
     display: flex;
 }
 
-.employee-data-container ul li{
+.employee-data-container ul li {
     color: #00C996;
 }
 
-.selected-bock-header{
+.selected-bock-header {
     gap: 4%;
     display: flex;
     font-size: 25px;
 }
 
-.selected-bock-header input{
+.selected-bock-header div {
+    position: relative;
     width: 80%;
 }
 
-.selected-bock-header p{
+.selected-bock-header span,
+.selected-task-input span {
+    position: absolute;
+    text-align: right;
+    width: 10%;
+    left: 88%;
+    top: 45%;
+    font-size: 18px;
+}
+
+.weight-edit-data {
+    text-align: right;
+    margin-top: 50px;
+}
+
+.weight-edit-data .error-message {
+    font-size: 21px;
+}
+
+.selected-task-input {
+    position: relative;
+}
+
+.selected-bock-header p {
     align-self: center;
     width: fit-content;
     border-bottom: 1px solid #00C996;
 }
 
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=small]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=small]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
     content: '15px';
 }
 
-.ql-snow .ql-picker.ql-size .ql-picker-label::before, .ql-snow .ql-picker.ql-size .ql-picker-item::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
     content: '20px';
 }
 
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=large]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=large]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
     content: '30px';
 }
 
-.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=huge]::before, .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value=huge]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
     content: '50px';
 }
 
-.edit-profile{
+.edit-profile {
     cursor: pointer;
 }
 
-.update-image{
+.update-image {
     padding-left: 0;
     padding-bottom: 20px;
     z-index: 300;
@@ -1195,7 +1308,7 @@ table .approve-button{
     display: none;
 }
 
-.update-image-content{
+.update-image-content {
     border-top: 1px solid #00C996;
     border-bottom: 1px solid #00C996;
     padding-top: 90px;
@@ -1205,16 +1318,17 @@ table .approve-button{
     margin-bottom: 30px;
 }
 
-.edit-profile-page-content{
+.edit-profile-page-content {
     display: flex;
     gap: 10%;
     border-top: 1px solid #00C996;
     padding-top: 40px;
+    padding-bottom: 40px;
     font-size: 25px;
 }
 
-.edit-profile-page .send-button{
-    width: fit-content;
+.edit-profile-page .send-button {
+    width: 25%;
     padding: 0 10px;
     margin-bottom: 20px;
     margin: 0;
@@ -1225,15 +1339,15 @@ table .approve-button{
     font-size: 20px;
 }
 
-.edit-profile-page .send-button:hover{
+.edit-profile-page .send-button:hover {
     background-color: #00C996;
 }
 
-.profile-data{
+.profile-data {
     width: 60%;
 }
 
-.profile-data input{
+.profile-data input {
     width: 100%;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.70);
@@ -1244,51 +1358,52 @@ table .approve-button{
     margin-bottom: 10px;
 }
 
-.profile-data input[disabled]{
+.profile-data input[disabled] {
     background: #454545;
     border: none;
 }
 
-.profile-edit-image-data{
+.profile-edit-image-data {
     position: relative;
     border-radius: 50%;
     width: 197px;
-    height:197px;
+    height: 197px;
     margin-left: 30px;
     margin-top: 10px
 }
 
-.profile-edit-image-data img{
+.profile-edit-image-data img {
     border-radius: 50% !important;
 }
 
-.profile-edit-image-data:hover .edit-icon-shower{
+.profile-edit-image-data:hover .edit-icon-shower {
     display: initial !important;
 }
 
-.edit-icon-shower{
+.edit-icon-shower {
     cursor: pointer;
     position: absolute;
     top: 0%;
     left: 0%;
     border-radius: 50%;
     width: 197px;
-    height:197px;
+    height: 197px;
     background-color: rgba(0, 0, 0, 0.69);
     display: none;
 }
 
-.edit-icon-shower img{
+.edit-icon-shower img {
     border-radius: 0 !important;
     margin-left: 15%;
     margin-top: 15%;
 }
 
-.update-image-content p{
+.update-image-content p {
     margin-bottom: 50px;
 }
 
-.update-image-content .button, .edit-image button{
+.update-image-content .button,
+.edit-image button {
     cursor: pointer;
     font-size: 22px;
     display: block;
@@ -1299,28 +1414,29 @@ table .approve-button{
     background: var(--selected, #00C996);
 }
 
-.edit-image{
+.edit-image {
     text-align: center;
     font-size: 25px;
     padding: 0 20px;
 }
 
-.edit-image .cropper{
+.edit-image .cropper {
     margin: 50px 0;
     height: 500px;
 }
 
-.update-image-footer{
+.update-image-footer {
     font-size: 22px;
     text-align: center;
 }
 
-.profile-logo img, .profile-logo{
+.profile-logo img,
+.profile-logo {
     border-radius: 50%;
 }
 
-.backdrop{
-    background-color: rgba(0,0,0,0.5);
+.backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 50;
     position: absolute;
     left: 0;
@@ -1329,11 +1445,12 @@ table .approve-button{
     height: 100%;
 }
 
-.without-color{
+.without-color {
     background-color: rgba(1, 1, 1, 0);
 }
 
-.ql-editor .ql-video, .task-data .ql-video{
+.ql-editor .ql-video,
+.task-data .ql-video {
     width: 50%;
     height: 50%;
     margin: 0 auto;
@@ -1341,22 +1458,24 @@ table .approve-button{
     display: block !important;
 }
 
-.ql-editor img, .task-data img{
+.ql-editor img,
+.task-data img {
     max-width: 80% !important;
     max-height: 80% !important;
     display: block;
     margin: 0 auto;
 }
 
-.ql-editor p, .task-data p {
+.ql-editor p,
+.task-data p {
     margin-bottom: 10px;
 }
 
-.rotate{
+.rotate {
     transform: rotate(180deg);
 }
 
-.delete-user{
+.delete-user {
     display: none;
     position: absolute;
     width: 30px;
@@ -1364,19 +1483,19 @@ table .approve-button{
     left: 100%;
 }
 
-.ql-size-huge{
+.ql-size-huge {
     font-size: 50px;
 }
 
-.ql-size-small{
+.ql-size-small {
     font-size: 15px;
 }
 
-.ql-size-large{
+.ql-size-large {
     font-size: 30px;
 }
 
-.ql-snow a{
+.ql-snow a {
     color: #00C996;
 }
 
@@ -1385,20 +1504,22 @@ table .approve-button{
     color: #00C996;
 }
 
-.task-data ol, .task-data ul{
+.task-data ol,
+.task-data ul {
     padding-left: 2.5em;
     margin-bottom: 10px;
 }
 
-.task-data ul{
-    list-style:disc;
+.task-data ul {
+    list-style: disc;
 }
 
-.ql-editor ol, .ql-editor ul{
+.ql-editor ol,
+.ql-editor ul {
     margin-bottom: 10px;
 }
 
-.ql-editing{
+.ql-editing {
     position: absolute !important;
     top: 0 !important;
     left: 25% !important;
@@ -1411,7 +1532,7 @@ table .approve-button{
     content: "Введите ссылку";
 }
 
-.ql-snow .ql-tooltip.ql-editing a.ql-action::after{
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
     content: 'Сохранить';
 }
 
@@ -1419,7 +1540,7 @@ table .approve-button{
     margin: 0;
 }
 
-.ql-action{
+.ql-action {
     margin-left: 10px;
     border-radius: 5px;
     width: 10px !important;
@@ -1428,16 +1549,24 @@ table .approve-button{
     padding: 10px;
 }
 
-.ql-snow .ql-tooltip[data-mode=video]::before{
+.ql-snow .ql-tooltip[data-mode=video]::before {
     content: 'ссылка на видео';
 }
 
-.user-name-info{
+.ql-align-center{
+    text-align: center;
+}
+
+.ql-align-right{
+    text-align: right;
+}
+
+.user-name-info {
     display: flex;
     gap: 5%;
 }
 
-.exit-button{
+.exit-button {
     position: absolute !important;
     left: 90%;
     height: 20%;
@@ -1447,65 +1576,95 @@ table .approve-button{
     padding-left: 9px !important;
 }
 
-.exit-button:hover{
+.exit-button:hover {
     background-color: #1B1A1A !important;
 }
 
-.exit-button:hover path{
+.exit-button:hover path {
     stroke: #FF7070;
 }
 
+.not-found{
+    text-align: center;
+    margin-top: 20%;
+}
+
 @media (max-width: 1920px) {
-    .constructor-block, .task-edit-block, .task-for-verification-block, .personal-block, .task-block{
+
+    .constructor-block,
+    .task-edit-block,
+    .task-for-verification-block,
+    .personal-block,
+    .task-block {
         height: 90vh;
     }
 }
 
-@media (max-width: 1540px){
-    .header-nav{
+@media (max-width: 1540px) {
+    .header-nav {
         gap: 40px;
         align-items: center;
         font-size: 20px;
     }
-    .constructor-block, .task-edit-block, .task-for-verification-block, .personal-block, .task-block{
+
+    .constructor-block,
+    .task-edit-block,
+    .task-for-verification-block,
+    .personal-block,
+    .task-block {
         height: 85vh;
     }
-    .constructor-planet-list ul, .selected-block-monster-list ul, .task-for-verification-list{
+
+    .constructor-planet-list ul,
+    .selected-block-monster-list ul,
+    .task-for-verification-list {
         max-height: 75%;
     }
-    .selected-block-monster-list ul{
+
+    .selected-block-monster-list ul {
         max-height: 70%;
     }
-    .added-employee-list{
+
+    .added-employee-list {
         max-height: 75%;
     }
-    .task-data{
+
+    .task-data {
         max-height: 60%;
     }
+
     .quill {
         height: 75%;
     }
-    .personal-table{
+
+    .personal-table {
         height: 75%;
     }
-    .notification-list{
+
+    .notification-list {
         height: 500px;
     }
-    .edit-image .cropper{
+
+    .edit-image .cropper {
         height: 400px;
     }
-    .decline-comment-dialog textarea{
+
+    .decline-comment-dialog textarea {
         height: 400px;
     }
-    .monster-content{
+
+    .monster-content {
         max-height: 95%;
     }
-    .achievement{
+
+    .achievement {
         width: 48%;
     }
-    .achievements-content, .progress-content{
+
+    .achievements-content,
+    .progress-content {
         gap: 25px;
         height: 451px;
         padding-right: 10px;
     }
-}   
+}

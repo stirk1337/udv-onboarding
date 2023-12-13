@@ -2,6 +2,7 @@ import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react"
 import { ProductRoles, Products } from "../../types";
 import { useAppDispatch } from "../hooks";
 import { registerNewEmployee } from "../store/api-actions/post-actions";
+import { errors } from "../../const-data";
 
 type AddEmployeeFormProps = {
     onDialogClick: () => void
@@ -14,6 +15,22 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
     const [email, setEmail] = useState('')
     const [product, setProduct] = useState('')
     const [role, setRole] = useState('')
+    let [errorMessage, setErrorMessage] = useState('')
+
+    useEffect(() => {
+      const handleStorage = () => {
+        const error = localStorage.getItem('error') || ''
+        if(error){
+            setErrorMessage(errors['EMPLOYEE_WITH_EMAIL_IS_ACTIVE'])
+        }
+        else{
+            setErrorMessage(errors[error])
+        }
+      }
+    
+      window.addEventListener('storage', handleStorage)
+      return () => window.removeEventListener('storage', handleStorage)
+    }, [])
 
     function nameChangeHandler(evt: ChangeEvent<HTMLInputElement>){
         setName(evt.target.value)
@@ -21,6 +38,7 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
 
     function emailChangeHandler(evt: ChangeEvent<HTMLInputElement>){
         setEmail(evt.target.value)
+        setErrorMessage('')
     }
 
     function productSelectHandler(evt: ChangeEvent<HTMLSelectElement>){
@@ -31,10 +49,13 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
         setRole(evt.target.value)
     }
 
-    function submitHandle(evt: SyntheticEvent){
+    async function submitHandle(evt: SyntheticEvent){
         evt.preventDefault();
-        dispatch(registerNewEmployee({email: email, name: name, product: product, productRole: role}))
-        onDialogClick()
+        const isValid = await dispatch(registerNewEmployee({email: email, name: name, product: product, productRole: role}))
+        console.log(isValid.payload)
+        if(isValid.payload){
+            onDialogClick()
+        }
     }
 
     return ( 
@@ -58,7 +79,8 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
                         <option value="" disabled>Выбор роли</option>
                         {(Object.values(ProductRoles) as Array<keyof typeof ProductRoles>).map((role) => <option key={role} value={role}>{role}</option>)}
                     </select>
-                    <button type="submit">Отправить</button>
+                    <span className="error-message">{errorMessage}</span>
+                    <button className="send-button" type="submit">Отправить</button>
                 </form>
             </div>
      );

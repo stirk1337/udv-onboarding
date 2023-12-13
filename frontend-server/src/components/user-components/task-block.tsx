@@ -21,17 +21,28 @@ function TaskBlock({}: TaskBlockProps) {
     const [tasks, setTasks] =  useState<PlanetTask[]>(useAppSelector((state) => state.planetTasks))
     const [currentTask, setCurrentTask] =  useState<PlanetTask>(tasks.find((task) => task.id === tId) || tasks[0])
 
-    if(currentTask && currentTask.id !== tId) {
-        setCurrentTask(tasks.find((task) => task.id === tId) || tasks[0])
+    if((!tId && taskId) || (!pId && planetId)) {
+        navigate('/not-found')
     }
 
     useEffect(() =>{
-        dispatch(getPlanetTasks(pId)).then(unwrapResult).then((tasks) => {setTasks(tasks); setCurrentTask(tasks.find((task) => task.id === tId) || tasks[0])})
-    }, [JSON.stringify(data)])
+        dispatch(getPlanetTasks(pId)).then(unwrapResult).then((tasks) => {checkDispatch(tasks)})
+    }, [JSON.stringify(data), tId])
+
+    function checkDispatch(tasks: PlanetTask[]){
+        setTasks(tasks); 
+        const task = tasks.find((task) => task.id === tId) || 'not-found'
+        if(task === 'not-found'){
+            navigate(`/not-found`)
+        }
+        else{
+            setCurrentTask(task)
+        }
+    }
 
     function taskClickHandler(id: number){
         setCurrentTask(tasks.find((task) => task.id === id) || tasks[0])
-        navigate(`/employee/${pId}/${id}`)
+        navigate(`/employee/planet/${pId}/${id}`)
     }
     
     return ( 
@@ -47,7 +58,7 @@ function TaskBlock({}: TaskBlockProps) {
                 </div>
             </div>
             <div className="task-content">
-                {currentTask && <TaskData name={currentTask.name} id={currentTask.id} planetId={pId} data={currentTask.description} currentAnswer={currentTask.employee_answer} taskStatus={currentTask.task_status}/>}
+                {currentTask && <TaskData name={currentTask.name} curatorAnswer={currentTask.curator_answer} id={currentTask.id} planetId={pId} data={currentTask.description} currentAnswer={currentTask.employee_answer} taskStatus={currentTask.task_status}/>}
             </div>
         </div>
      );

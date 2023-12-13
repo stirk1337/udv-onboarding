@@ -15,32 +15,47 @@ type SelectedBlockContentProps = {
     idBlock: number,
     blockName: string,
     numberTask: number,
+    inputRef: React.MutableRefObject<HTMLInputElement | null>
 }
 
-function SelectedBlockContent({numberTask, personalList, idBlock, blockName}: SelectedBlockContentProps) {
+function SelectedBlockContent({numberTask, personalList, idBlock, blockName, inputRef}: SelectedBlockContentProps) {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [name, setName] = useState(blockName);
+    const [errorMessage, setErrorMessage] = useState(`${name.length}/100`)
 
     useEffect(() => {
         dispatch(getEmployees())
         setName(blockName ? blockName : '')
+        setErrorMessage(`${blockName.length}/100`)
     }, [idBlock])
 
     const [isSoloSelection, setIsSoloSelection] = useState(true)
 
     function blockNameHandler(evt: ChangeEvent<HTMLInputElement>){
-        setName(evt.target.value);
+        const name = evt.target.value
+        const nameLength = name.length > 999 ? '999+' : name.length
+        setName(name);
+        setErrorMessage(`${nameLength}/100`)
     }
 
     function onDeleteEmployeeHandler(id: number){
         dispatch(updateEmployeeOnPlanet({planetId: idBlock, employeeId: id}))
     }
 
+    function onBlurNamePlaner(){
+        if(name.length <= 100){
+            dispatch(updatePlanetName({name, idBlock}))
+        }
+    }
+
     return ( 
         <div className="selected-block-content">
             <div className="selected-bock-header">
-                <input className="selected-block-name" placeholder="Введите название блока" value={name} onChange={blockNameHandler} onBlur={()=> dispatch(updatePlanetName({name, idBlock}))}></input>
+                <div>
+                    <input ref={inputRef} className="selected-block-name" placeholder="Введите название блока" value={name} onChange={blockNameHandler} onBlur={onBlurNamePlaner}></input>
+                    <span className={name.length > 100 ? `error-message` : 'message'}>{errorMessage}</span>
+                </div>
                 <p>{numberTask} этапов</p>
             </div>
             <div className="selected-block-data">

@@ -16,7 +16,7 @@ export type UserData = {
     role: UserRoles,
     image_url: string,
     contact: string,
-    curator: UserData,
+    curator: UserData | null,
 }
 
 export enum EmployeeStatus {
@@ -65,6 +65,7 @@ export type PlanetTask = {
     description: string,
     planet_id: number,
     employee_answer: null | string,
+    curator_answer: null | string,
     task_status: TaskStatus,
     created_at: string,
     updated_at: string,

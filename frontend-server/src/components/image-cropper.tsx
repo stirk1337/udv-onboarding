@@ -17,6 +17,7 @@ function ImageCropper({onClickExit}: ImageCropperProps) {
     const dispatch = useAppDispatch()
     const cropperRef = useRef<CropperRef>(null);
     const [image, setImage] = useState<Image | null>(null);
+    const [errorMessage, setErrorMessage] = useState('')
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -53,6 +54,14 @@ function ImageCropper({onClickExit}: ImageCropperProps) {
     const onLoadImage = (event: ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
         if (files && files[0]) {
+            console.log(files[0].type)
+            if(files[0].type.split('/')[0] !== 'image'){
+                setErrorMessage('Этот формат файлов не поддерживается')
+                return
+            }
+            else{
+                setErrorMessage('')
+            }
             const blob = URL.createObjectURL(files[0]);
             setImage({
                 src: blob,
@@ -88,6 +97,7 @@ function ImageCropper({onClickExit}: ImageCropperProps) {
                             <input ref={inputRef} type="file" accept="image/*" onChange={onLoadImage} />
                             Выбрать файл
                         </div>
+                        <span className="error-message">{errorMessage}</span>
                     </div>
                     <div className='update-image-footer'>
                         <p>Если возникают проблемы с загрузкой попробуйте выбрать фотографию меньшего размера</p>

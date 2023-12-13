@@ -6,6 +6,7 @@ import { redirectToRoute } from '../store/action';
 type DetailMessageType = {
   type: string;
   message: string;
+  detail: string;
 }
 
 export type Token = {
@@ -40,6 +41,9 @@ export const createAPI = (): AxiosInstance => {
     },
     (error: AxiosError<DetailMessageType>) => {
       console.log(error.response?.statusText)
+      if(error.response?.statusText === 'Not Found' || error.response?.statusText === 'Unprocessable Entity'){
+        window.location.href = '/Not-found'
+      }
       if(error.response?.statusText === 'Unauthorized'){
         if(window.location.href.split('/')[3] !== 'login'){
           window.location.href = '/login'
@@ -48,6 +52,10 @@ export const createAPI = (): AxiosInstance => {
       if (error.response && shouldDisplayError(error.response)) {
         const detailMessage = (error.response.data);
         toast.warn(detailMessage.message);
+      }
+      if(error.response?.statusText === 'Bad Request' || error.response?.statusText === 'Forbidden'){
+        localStorage.setItem('error', error.response?.data.detail)
+        window.dispatchEvent(new Event('storage'))
       }
       throw error;
     }

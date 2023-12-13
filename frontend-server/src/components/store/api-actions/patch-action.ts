@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
-import { Id, UpdateAnswer } from "../../../types";
+import { CuratorPlanetData, Id, Planet, UpdateAnswer } from "../../../types";
 import { getCurrentUserInfo, getEmployees, getNotifications, getPlanet, getPlanetTasks, getPlanets, getTasksBeingChecked } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
@@ -31,7 +31,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
             const name = data.name;
             const idBlock = data.idBlock;
-            await api.patch(`/planet/update_planet?planet_id=${idBlock}`, {name: name});
+            await api.patch<CuratorPlanetData>(`/planet/update_planet?planet_id=${idBlock}`, {name: name});
             dispatch(changePlanetName({name, idBlock}))
         } catch {
             dispatch(login(false));
@@ -49,9 +49,8 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
         try {
           await api.patch(`/planet/add_employees_to_planet?planet_id=${data.planetId}`, {employee_ids: [data.employeeId]});
           await dispatch(getPlanet(data.planetId))
-            dispatch(getEmployees())
+          dispatch(getEmployees())
         } catch {
-            dispatch(login(false));
         }
     },
   );
@@ -124,7 +123,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     },
   );
 
-  export const checkTask = createAsyncThunk<void, {employeeId: number, taskId: number, isApproved: boolean}, {
+  export const checkTask = createAsyncThunk<void, {employeeId: number, taskId: number, isApproved: boolean, curatorAnswer: string}, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
@@ -132,7 +131,7 @@ export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     'user/disableEmployee',
     async (data, {dispatch, extra: api}) => {
         try {
-          await api.patch(`/task/check_task?employee_id=${data.employeeId}&task_id=${data.taskId}`, {task_status: data.isApproved ? 'completed' : 'in_progress'});
+          await api.patch(`/task/check_task?employee_id=${data.employeeId}&task_id=${data.taskId}`, {task_status: data.isApproved ? 'completed' : 'in_progress', curator_answer: data.curatorAnswer});
           dispatch(getTasksBeingChecked())
         } catch {
             dispatch(login(false));
