@@ -37,7 +37,7 @@ class Planet(Base):
         Integer, primary_key=True
     )
     name: Mapped[str] = mapped_column(
-        String(length=100), nullable=True
+        String(length=100), nullable=False
     )
     employees: Mapped[List['Employee']] = (
         relationship(secondary='employee_planet', back_populates='planets'))
@@ -55,7 +55,7 @@ class Planet(Base):
         server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
     )
     notifications: Mapped[List['Notification']
-                          ] = relationship(back_populates='planet')
+                          ] = relationship(back_populates='planet', cascade='all, delete')
     is_first_day: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )

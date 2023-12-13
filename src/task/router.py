@@ -41,7 +41,7 @@ async def get_tasks_by_planet_id(session: AsyncSession = Depends(get_async_sessi
     task_dal = TaskDAL(session)
     tasks = await task_dal.get_tasks_by_planet(planet)
     tasks = [TaskOut.parse(task) for task in tasks]
-    sorted_tasks = sorted(tasks, key=lambda x: x.pos)
+    sorted_tasks = sorted(tasks, key=lambda x: (x.pos, x.id))
     return sorted_tasks
 
 
@@ -60,7 +60,7 @@ async def get_tasks_by_planet_id_with_status(session: AsyncSession = Depends(get
     employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
     tasks = [TaskOutForEmployee.parse(task, employee_task)
              for task, employee_task in zip(tasks, employee_tasks)]
-    sorted_tasks = sorted(tasks, key=lambda x: x.pos)
+    sorted_tasks = sorted(tasks, key=lambda x: (x.pos, x.id))
     return sorted_tasks
 
 
@@ -134,7 +134,7 @@ async def change_task_position(task_in: TaskInChangePos,
     Rights: curator"""
     task_dal = TaskDAL(session)
     tasks = await task_dal.get_tasks_by_planet(task.planet)
-    sorted_tasks = sorted(tasks, key=lambda x: x.pos)
+    sorted_tasks = sorted(tasks, key=lambda x: (x.pos, x.id))
 
     if task_in.new_pos < 0 or task_in.new_pos >= len(sorted_tasks):
         raise HTTPException(status_code=409,

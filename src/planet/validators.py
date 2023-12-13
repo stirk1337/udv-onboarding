@@ -9,25 +9,39 @@ from src.user.validators import CuratorOut
 
 
 class PlanetInCreate(BaseModel):
-    name: Optional[str]
+    name: str
     image: Optional[PlanetImage]
 
     @field_validator('name')
     @classmethod
-    def validate_length(cls, value):
+    def validate_length_right(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
         return value
 
+    @field_validator('name')
+    @classmethod
+    def validate_length_name_left(cls, value):
+        if len(value) == 0:
+            raise ValueError('Name field can not be empty')
+        return value
+
 
 class PlanetInUpdate(BaseModel):
-    name: Optional[str]
+    name: str
 
     @field_validator('name')
     @classmethod
-    def validate_length(cls, value):
+    def validate_length_right(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
+        return value
+
+    @field_validator('name')
+    @classmethod
+    def validate_length_name_left(cls, value):
+        if len(value) == 0:
+            raise ValueError('Name field can not be empty')
         return value
 
 
@@ -37,7 +51,7 @@ class PlanetInChangePos(BaseModel):
 
 class ShowPlanet(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     curator_id: int
     created_at: datetime
     updated_at: datetime
@@ -59,7 +73,7 @@ class ShowPlanet(BaseModel):
 
 class ShowPlanetWithCurator(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     curator: CuratorOut
     created_at: datetime
     updated_at: datetime
@@ -81,7 +95,7 @@ class ShowPlanetWithCurator(BaseModel):
 
 class ShowPlanetWithCompletionStatus(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     curator_id: int
     created_at: datetime
     updated_at: datetime
@@ -107,7 +121,7 @@ class ShowPlanetWithCompletionStatus(BaseModel):
 
 class ShowPlanetWithEmployees(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     curator_id: int
     created_at: datetime
     updated_at: datetime
@@ -134,7 +148,7 @@ class ShowPlanetWithEmployees(BaseModel):
 
 class ShowPlanetWithEmployeesAndTaskCount(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     curator_id: int
     created_at: datetime
     updated_at: datetime

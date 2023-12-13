@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.background import BackgroundTasks
 
 from src.auth.dals import UserDAL
 from src.auth.dependencies import curator_user, current_user
@@ -103,7 +104,8 @@ async def register_curator(curator_in: CuratorInCreate,
 
 
 @router.post('/register_new_employee')
-async def create_new_employee(employee_in: EmployeeInCreate,
+async def create_new_employee(background_tasks: BackgroundTasks,
+                              employee_in: EmployeeInCreate,
                               user: User = Depends(curator_user),
                               session: AsyncSession = Depends(
                                   get_async_session)) -> EmployeeOut:
@@ -153,7 +155,9 @@ async def create_new_employee(employee_in: EmployeeInCreate,
                              'password': password,
                              'curator': user
                          }))]
-    await send_register_email(EmailSchema(emails=emails))
+    # await send_register_email(EmailSchema(emails=emails))
+    background_tasks.add_task(send_register_email,
+                              EmailSchema(emails=emails))
     return EmployeeOut.parse(employee)
 
 

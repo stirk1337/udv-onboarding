@@ -34,7 +34,7 @@ class Task(Base):
         Integer, primary_key=True
     )
     name: Mapped[str] = mapped_column(
-        String(length=100), nullable=True
+        String(length=100), nullable=False
     )
     description: Mapped[str] = mapped_column(
         String(length=1000000), nullable=True
@@ -53,7 +53,7 @@ class Task(Base):
         server_default=text("TIMEZONE('utc', now())"), onupdate=text("TIMEZONE('utc', now())")
     )
     notifications: Mapped[List['Notification']
-                          ] = relationship(back_populates='task')
+                          ] = relationship(back_populates='task', cascade='all, delete')
     image: Mapped[TaskImage]
     pos: Mapped[int] = mapped_column(
         Integer, default=1000000, nullable=False
