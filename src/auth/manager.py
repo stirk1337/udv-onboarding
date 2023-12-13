@@ -39,6 +39,10 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         if user.email in password:
             raise HTTPException(
                 status_code=400, detail='Password should not contain e-mail')
+        if len(password) > 100:
+            raise HTTPException(
+                status_code=400, detail='Password should be less or equal 100 characters'
+            )
 
     async def create(
             self,

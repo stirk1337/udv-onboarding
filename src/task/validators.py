@@ -9,15 +9,22 @@ from src.user.validators import EmployeeOut
 
 
 class TaskInCreate(BaseModel):
-    name: Optional[str]
+    name: str
     description: Optional[str]
     image: Optional[TaskImage]
 
     @field_validator('name')
     @classmethod
-    def validate_length_name(cls, value):
+    def validate_length_name_right(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
+        return value
+
+    @field_validator('name')
+    @classmethod
+    def validate_length_name_left(cls, value):
+        if len(value) == 0:
+            raise ValueError('Name field can not be empty')
         return value
 
     @field_validator('description')
@@ -29,14 +36,21 @@ class TaskInCreate(BaseModel):
 
 
 class TaskInUpdate(BaseModel):
-    name: Optional[str]
+    name: str
     description: Optional[str]
 
     @field_validator('name')
     @classmethod
-    def validate_length_name(cls, value):
+    def validate_length_name_right(cls, value):
         if len(value) > 100:
             raise ValueError('Too long field: name')
+        return value
+
+    @field_validator('name')
+    @classmethod
+    def validate_length_name_left(cls, value):
+        if len(value) == 0:
+            raise ValueError('Name field can not be empty')
         return value
 
     @field_validator('description')
@@ -78,7 +92,7 @@ class TaskInCheck(BaseModel):
 
 class TaskOut(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     description: Optional[str]
     planet_id: int
     created_at: datetime.datetime
@@ -120,7 +134,7 @@ class EmployeeTaskOut(BaseModel):
 
 class TaskOutForEmployee(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     description: Optional[str]
     planet_id: int
     employee_answer: Optional[str]
@@ -148,7 +162,7 @@ class TaskOutForEmployee(BaseModel):
 
 class TaskOutForChecking(BaseModel):
     id: int
-    name: Optional[str]
+    name: str
     description: Optional[str]
     planet_id: int
     employee_answer: Optional[str]
