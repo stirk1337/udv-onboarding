@@ -38,7 +38,7 @@ function App() {
             <Route index element={
               <MainPage/>
             }/>
-            <Route path="planet" element={<TaskBlock tasks={tasks}/>}/>
+            <Route path="planet/:planetId" element={<TaskBlock tasks={tasks}/>}/>
             <Route path="planet/:planetId/:taskId" element={<TaskBlock tasks={tasks}/>}/>
           </Route>
 

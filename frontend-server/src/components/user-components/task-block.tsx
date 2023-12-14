@@ -25,6 +25,8 @@ function TaskBlock({}: TaskBlockProps) {
         navigate('/not-found')
     }
 
+    console.log(pId)
+
     useEffect(() =>{
         dispatch(getPlanetTasks(pId)).then(unwrapResult).then((tasks) => {checkDispatch(tasks)})
     }, [JSON.stringify(data), tId])
@@ -32,10 +34,10 @@ function TaskBlock({}: TaskBlockProps) {
     function checkDispatch(tasks: PlanetTask[]){
         setTasks(tasks); 
         const task = tasks.find((task) => task.id === tId) || 'not-found'
-        if(task === 'not-found'){
+        if(task === 'not-found' && tasks.length !== 0) {
             navigate(`/not-found`)
         }
-        else{
+        else if(task !== 'not-found'){
             setCurrentTask(task)
         }
     }
@@ -54,7 +56,7 @@ function TaskBlock({}: TaskBlockProps) {
                     </button>
                 </div>
                 <div className="monster-content">
-                    {tasks && currentTask && tasks.map(task => <Task key={task.id} currentTask={task.id === currentTask.id} id={task.id} name={task.name} isCompleted={task.task_status} taskClick={taskClickHandler}/>)}
+                    {tasks && currentTask && tasks.map(task => <Task key={task.id} icon={task.image} currentTask={task.id === currentTask.id} id={task.id} name={task.name} taskStatus={task.task_status} taskClick={taskClickHandler}/>)}
                 </div>
             </div>
             <div className="task-content">

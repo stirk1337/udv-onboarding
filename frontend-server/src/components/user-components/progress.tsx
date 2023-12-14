@@ -11,6 +11,7 @@ type ProgressProps = {
 type TProgressData = {
     id: number,
     name: string,
+    icon: string,
     tasksName: ProgressTaskData[]
 }
 
@@ -36,6 +37,7 @@ function Progress({onClickExit}:ProgressProps) {
                 const data: TProgressData = {
                     id: planet.id,
                     name: planet.name,
+                    icon: planet.image,
                     tasksName: []
                 }
                 tasks.forEach(task => {
@@ -63,7 +65,7 @@ function Progress({onClickExit}:ProgressProps) {
                 <p>Мой прогресс</p>
             </div>
             <div className="progress-content">
-                {progressData.map(progress => <ProgressBlock key={progress.id} name={progress.name} listBlock={progress.tasksName}/>)}
+                {progressData.map(progress => <ProgressBlock key={progress.id} icon={progress.icon} name={progress.name} listBlock={progress.tasksName}/>)}
             </div>
         </div>
      );

@@ -53,11 +53,12 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
         if(task === undefined){
             task = tasks[0]
         }
+        console.log(id)
         if(!task){
-          dispatch(redirectToRoute(`employee/planet`));
+          dispatch(redirectToRoute(`/employee/planet/${id}`));
         }
         else if(location.pathname.split('/').length === 2){
-            dispatch(redirectToRoute(`employee/planet/${id}/${task.id}`));
+          dispatch(redirectToRoute(`/employee/planet/${id}/${task.id}`));
         }
         return tasks
     },
@@ -172,9 +173,14 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     async (_arg, {dispatch, extra: api}) => {
       try {
         const {data: planetsData} = await api.get<EmployeePlanets[]>(`/planet/get_employee_planets`);
-        const numberCompletedPlanets = planetsData.filter(planet => planet.completed === planet.task_count).length;
-        if(numberCompletedPlanets){
-          dispatch(setPercentageCompletedPlanets(Math.round(numberCompletedPlanets / planetsData.length * 100)));
+        let allTasks = 0
+        let completed = 0
+        planetsData.forEach(element => {
+          allTasks += element.task_count
+          completed += element.completed
+        });
+        if(allTasks){
+          dispatch(setPercentageCompletedPlanets(Math.round(completed / allTasks * 100)));
         }
         else{
           dispatch(setPercentageCompletedPlanets(0));

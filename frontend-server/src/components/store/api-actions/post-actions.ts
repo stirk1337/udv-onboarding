@@ -111,7 +111,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     },
   );
 
-  export const newPassword = createAsyncThunk<void, {token: string, password: string}, {
+  export const newPassword = createAsyncThunk<boolean, {token: string, password: string}, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
@@ -120,8 +120,9 @@ export const loginAction = createAsyncThunk<void, Login, {
     async (data, {dispatch, extra: api}) => {
         try {
           await api.post<PlanetTask>(`/auth/reset-password`, {token: data.token, password: data.password})
+          return true
         } catch {
-          dispatch(login(false));
+          return false
         }
     },
   );

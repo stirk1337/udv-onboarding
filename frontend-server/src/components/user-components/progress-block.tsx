@@ -2,6 +2,7 @@ import ListBlock from "./list-block";
 import ProgressBarComponent from "./progress-bar";
 type ProgressBlockProps = {
     name: string,
+    icon: string
     listBlock: ListBlock[],
 }
 
@@ -12,12 +13,15 @@ type ListBlock = {
 }
 
 
-function ProgressBlock({name, listBlock}: ProgressBlockProps) {
+function ProgressBlock({name, icon, listBlock}: ProgressBlockProps) {
     const completedTaskNumber = listBlock.filter((block) => block.completed === true).length;
     return ( 
         <div className="progress-data">
             <div className="progress-data-header">
-                <p>{name}</p>
+                <div className="progress-header-data">
+                    <img width={50} height={50} src={`/planet-prev/${icon}.png`} alt=""></img>
+                    <p>{name}</p>
+                </div>
                 <div className="progress-progress-bar">
                     <ProgressBarComponent percentage={completedTaskNumber / listBlock.length * 100}/>
                 </div>

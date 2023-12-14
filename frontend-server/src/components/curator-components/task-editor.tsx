@@ -64,6 +64,7 @@ function TaskEditor() {
       setErrorMessage(`${currentTask.name.length}/100`)
       setEditWeight(countWeight(currentTask.description.length))
     }, [currentTask])
+
     const modules = {
         toolbar: [
           [{ 'size': ['small', false, 'large', 'huge'] }],
@@ -116,7 +117,7 @@ function TaskEditor() {
   }
 
   function onBlurHandler(){
-    if(name.length < 100 && description.length < maxWeightEdit){
+    if(name.length <= 100 && name.length !== 0 && description.length < maxWeightEdit){
       dispatch(updateTask({name: name, description: description, taskId: currentTask.id}))
     }
   }
@@ -193,9 +194,11 @@ function TaskEditor() {
             {currentTask.id !== -1 && <div className='edit-content'>
               <div className='selected-task-input'>
                 <input ref={inputRef} className="selected-block-name" value={name} onChange={onChangeNameHandler} placeholder="Введите название этапа" onBlur={onBlurHandler}></input>
-                <span className={name.length > 100 ? `error-message` : 'message'}>{errorMessage}</span>
+                <span className={name.length > 100 || name.length === 0 ? `error-message` : 'message'}>{errorMessage}</span>
               </div>
-              <ReactQuill theme="snow" value={description} onChange={onChangeDescriptionHandler} modules={modules} onBlur={onBlurHandler} />
+              <div className='quill-block' onBlur={onBlurHandler}>
+                <ReactQuill theme="snow" value={description} onChange={onChangeDescriptionHandler} modules={modules} />
+              </div>
               <div className='weight-edit-data'>
                 <span className={editWeight >= 100 ? `error-message` : 'edit-message'}>{editWeight}% {String.fromCodePoint(getSmileByWeight(editWeight))}</span>
               </div>

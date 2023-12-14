@@ -22,12 +22,12 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName, inp
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [name, setName] = useState(blockName);
-    const [errorMessage, setErrorMessage] = useState(`${name.length}/100`)
+    const [nameCount, setNameCount] = useState(`${name.length}/100`)
 
     useEffect(() => {
         dispatch(getEmployees())
         setName(blockName ? blockName : '')
-        setErrorMessage(`${blockName.length}/100`)
+        setNameCount(`${blockName.length}/100`)
     }, [idBlock])
 
     const [isSoloSelection, setIsSoloSelection] = useState(true)
@@ -36,7 +36,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName, inp
         const name = evt.target.value
         const nameLength = name.length > 999 ? '999+' : name.length
         setName(name);
-        setErrorMessage(`${nameLength}/100`)
+        setNameCount(`${nameLength}/100`)
     }
 
     function onDeleteEmployeeHandler(id: number){
@@ -44,7 +44,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName, inp
     }
 
     function onBlurNamePlaner(){
-        if(name.length <= 100){
+        if(name.length <= 100 && name.length !== 0){
             dispatch(updatePlanetName({name, idBlock}))
         }
     }
@@ -54,7 +54,7 @@ function SelectedBlockContent({numberTask, personalList, idBlock, blockName, inp
             <div className="selected-bock-header">
                 <div>
                     <input ref={inputRef} className="selected-block-name" placeholder="Введите название блока" value={name} onChange={blockNameHandler} onBlur={onBlurNamePlaner}></input>
-                    <span className={name.length > 100 ? `error-message` : 'message'}>{errorMessage}</span>
+                    <span className={name.length > 100 || name.length === 0 ? `error-message` : 'message'}>{nameCount}</span>
                 </div>
                 <p>{numberTask} этапов</p>
             </div>
