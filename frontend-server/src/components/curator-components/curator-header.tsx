@@ -25,6 +25,7 @@ function CuratorHeader() {
     const location = useLocation().pathname
     const notifications = useAppSelector((state) => state.notifications);
     const notReadNotifications = notifications.filter(notification => !notification.is_read).length
+    const navigate = '/' + userData.role
 
     useEffect(() => {
         store.dispatch(getNotifications())
@@ -84,7 +85,7 @@ function CuratorHeader() {
     return ( 
         <header>
             <div className="logo">
-            <a href="/"><img src="/logo.svg" alt="udv group space exploration" width={210} height={40}></img></a>
+            <Link to={navigate}><img src="/logo.svg" alt="udv group space exploration" width={210} height={40}></img></Link>
             </div>
             <nav className="header-nav">
                 <Link className={location === '/curator' ? 'active' : ''} to={"/curator"}>Конструктор адаптации</Link>

@@ -1,10 +1,11 @@
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import InputComponent from "../components/input-component";
 import { store } from "../components/store";
 import { loginAction, newPassword } from "../components/store/api-actions/post-actions";
 import { useAppDispatch, useAppSelector } from "../components/hooks";
 import { UserRoles } from "../types";
+import { errors } from "../const-data";
 
 function NewPasswordPage() {
     const dispatch = useAppDispatch()
@@ -17,6 +18,17 @@ function NewPasswordPage() {
     let [errorMessage, setErrorMessage] = useState('')
     let [newPasswordIsSend, setNewPasswordIsSend] = useState(false)
 
+    useEffect(() => {
+        const handleStorage = () => {
+          const error = localStorage.getItem('error') || ''
+          console.log(error)
+          setErrorMessage(errors[error])
+        }
+      
+        window.addEventListener('storage', handleStorage)
+        return () => window.removeEventListener('storage', handleStorage)
+      }, [])
+
     function handlePassword(evt: ChangeEvent<HTMLInputElement>){
         setPassword(evt.target.value)
         setErrorMessage('')
@@ -27,7 +39,7 @@ function NewPasswordPage() {
         setErrorMessage('')
     }
 
-    function handleSubmit(evt: SyntheticEvent){
+    async function handleSubmit(evt: SyntheticEvent){
         evt.preventDefault()
         setSearchParams(location.search)
         const data = {
@@ -40,9 +52,14 @@ function NewPasswordPage() {
         else if(password.length < 8){
             setErrorMessage('Пароль должен быть хотя бы 8 символов')
         }
-        else{
-            dispatch(newPassword(data))
-            setNewPasswordIsSend(true)
+        else if(password.length > 100){
+            setErrorMessage('Длинный пароль')
+        }
+        else if(!errorMessage){
+            const isValid = await dispatch(newPassword(data))
+            if(isValid.payload){
+                setNewPasswordIsSend(true)
+            }
         }
     }
 

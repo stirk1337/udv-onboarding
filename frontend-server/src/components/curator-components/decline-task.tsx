@@ -7,9 +7,23 @@ type DeclineTaskProps = {
 
 function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
     const [message, setMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     function onMessageHandler(evt: ChangeEvent<HTMLTextAreaElement>){
-        setMessage(evt.target.value)
+        const declineMessage = evt.target.value
+        if(declineMessage.length > 1000){
+            setErrorMessage('Превышен лимит причины отказа')
+        }
+        else{
+            setErrorMessage('')
+        }
+        setMessage(declineMessage)
+    }
+
+    function onDeclineClickHover(){
+        if(!errorMessage){
+            onDeclineClick(message)
+        }
     }
 
 
@@ -23,8 +37,11 @@ function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
                 </button>
                 <p>Причина отказа</p>
             </div>
-            <textarea placeholder="Введите причину отказа" value={message} onChange={onMessageHandler}></textarea>
-            <button onClick={() => onDeclineClick(message)} className="decline-button">Отклонить</button>
+            <div className="decline-comment-field">
+                <textarea placeholder="Введите причину отказа" value={message} onChange={onMessageHandler}></textarea>
+                <span className='error-message'>{errorMessage}</span>
+            </div>
+            {!errorMessage && <button onClick={onDeclineClickHover} className="decline-button">Отклонить</button>}
         </div>
      );
 }

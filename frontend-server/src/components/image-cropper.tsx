@@ -92,7 +92,7 @@ function ImageCropper({onClickExit}: ImageCropperProps) {
             {!image && 
                 <> 
                     <div className='update-image-content'>
-                        <p>Вы можете загрузить изображении в форматах: PNG, JPEG</p>
+                        <p>Вы можете загрузить любое изображение!</p>
                         <div className="button" onClick={onUpload}>
                             <input ref={inputRef} type="file" accept="image/*" onChange={onLoadImage} />
                             Выбрать файл

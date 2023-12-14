@@ -4,6 +4,7 @@
     color: white;
     font-family: 'Montserrat';
     box-sizing: border-box !important;
+    word-break: break-word;
 }
 
 ul {
@@ -238,6 +239,7 @@ main {
 
 .notifications {
     margin-top: 4px;
+    user-select: none;
 }
 
 .notifications-number {
@@ -260,11 +262,12 @@ main {
     box-sizing: border-box;
     position: absolute;
     width: 470px;
-    background-color: #272626;
+    background-color: #3E3D3D;
     right: 15%;
     top: 65px;
     border-radius: 11px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+    user-select: none;
 }
 
 .read-all-notifications {
@@ -272,6 +275,14 @@ main {
     gap: 6px;
     border-bottom: 0.7px solid rgba(0, 0, 0, 0.22);
     padding: 12px 0 12px 13px;
+}
+
+.read-all-notifications svg{
+    cursor: pointer;
+}
+
+.read-all-notifications svg:hover path{
+    fill:#00C996;
 }
 
 .notification-list {
@@ -329,6 +340,7 @@ main {
     width: 95%;
     text-align: center;
     font-size: 24px;
+    margin-top: 5px;
     margin-bottom: 10px;
 }
 
@@ -337,7 +349,7 @@ main {
     box-sizing: border-box;
     position: absolute;
     width: 446px;
-    background-color: #272626;
+    background-color: rgba(62, 61, 61, 1);
     right: 12%;
     top: 65px;
     border-radius: 11px;
@@ -345,6 +357,7 @@ main {
     font-weight: 700;
     font-size: 0.8rem;
     padding: 9px;
+    user-select: none;
 }
 
 .profile-buttons .flex {
@@ -479,7 +492,6 @@ main {
 .progress-data-header p {
     font-size: 25px;
     font-weight: 600;
-    margin-bottom: 10px;
 }
 
 .progress-progress-bar {
@@ -514,6 +526,17 @@ main {
 .update-image-header button:hover svg path,
 .edit-profile-page-header button:hover svg path {
     stroke: rgba(255, 112, 112, 1)
+}
+
+.progress-header-data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.progress-header-data img{
+    object-fit: contain;
 }
 
 .useful-links-content {
@@ -628,6 +651,16 @@ main {
     margin-left: auto;
 }
 
+.monster p.completed {
+    margin-left: 0 !important;
+    color: #00C996;
+}
+
+.monster p.in_progress {
+    margin-left: 0 !important;
+    color: #F39314;
+}
+
 .task-content {
     box-sizing: border-box;
     width: 70%;
@@ -655,7 +688,16 @@ main {
     border-radius: 8px;
     background: #454545;
     font-size: 20px;
-    height: 38px;
+    height: 50px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+.user-answer {
+    margin-bottom: 10px;
+}
+
+.user-answer textarea {
+    margin-bottom: 0 !important;
 }
 
 .task-comments input{
@@ -783,9 +825,7 @@ main {
     fill: rgba(0, 201, 150, 1);
 }
 
-.constructor-planet-list-item-content p,
-.selected-block-monster-list-item-content p,
-.task-name {
+.monster p, .constructor-planet-list-item-content p {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -971,10 +1011,14 @@ main {
     width: 70%;
 }
 
-.quill {
+.quill-block {
     margin-top: 20px;
     height: 80%;
     color: black;
+}
+
+.quill{
+    height: 100%;
 }
 
 
@@ -985,6 +1029,10 @@ main {
 .ql-editor {
     font-size: 20px;
     background: rgba(105, 105, 105, 0.55);
+}
+
+.ql-editor span, .ql-editor strong, .ql-editor em, .ql-editor u, .ql-editor s, .task-data span, .task-data strong, .task-data em, .task-data u, .task-data s{
+    background-color: rgba(1, 1, 1, 0) !important;
 }
 
 .ql-fill {
@@ -1089,11 +1137,16 @@ main {
 
 .decline-comment-dialog textarea {
     margin: 20px;
+    margin-bottom: 0;
     width: 90%;
     height: 500px;
     background-color: #454545;
     font-size: 22px;
     padding: 20px;
+}
+
+.decline-comment-field{
+    margin-bottom: 20px;
 }
 
 .decline-comment-dialog textarea::placeholder {
@@ -1186,6 +1239,16 @@ table .approve-button {
     text-align: center;
 }
 
+.add-employee-select-block{
+    position: relative;
+}
+
+.add-employee-select-block img{
+    position: absolute;
+    top: 10%;
+    left: 1%;
+}
+
 .add-employee-form p {
     font-size: 24px;
     margin-bottom: 40px;
@@ -1199,7 +1262,11 @@ table .approve-button {
     border-radius: 3px;
     background: #3F3F3F;
     font-size: 22px;
-    padding-left: 10px;
+    padding-left: 40px;
+}
+
+.add-employee-form input{
+    padding-left: 40px;
 }
 
 .add-employee-form button[type="submit"] {
@@ -1224,6 +1291,7 @@ table .approve-button {
 .employee-data-header .profile-logo {
     width: 45px;
     height: 45px;
+    user-select: none;
 }
 
 .employee-data-container {
@@ -1569,7 +1637,7 @@ table .approve-button {
 .exit-button {
     position: absolute !important;
     left: 90%;
-    height: 20%;
+    height: 35px;
     margin-left: auto !important;
     width: 10% !important;
     border-radius: 50% !important;

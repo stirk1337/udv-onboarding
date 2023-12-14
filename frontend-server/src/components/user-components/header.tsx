@@ -102,7 +102,7 @@ function Header() {
                 <div>
                     <button className="notifications" onClick={()=>NotificationClickHandler(true)}>
                         <img src="/notifications-icon.svg" alt="Кнопка уведомлений"></img>
-                        {notReadNotifications !== 0 && <div className="notifications-number">{notReadNotifications}</div>}
+                        {notReadNotifications !== 0 && <div className="notifications-number">{notReadNotifications > 9 ? '9+' : notReadNotifications}</div>}
                     </button>
                 </div>
                 <div>

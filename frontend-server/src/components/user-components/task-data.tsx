@@ -30,8 +30,10 @@ enum ButtonsContent {
 
 function TaskData({id, curatorAnswer, planetId, name, data, currentAnswer, taskStatus, isApprovePage=false}: TaskDataProps) {
     const [answer, setAnswer] = useState(currentAnswer !== null ? currentAnswer : '')
+    const [errorMessage, setErrorMessage] = useState('')
 
     useEffect(() => {
+        setErrorMessage('')
         setAnswer(currentAnswer !== null ? currentAnswer : '')
     }, [id])
 
@@ -50,8 +52,15 @@ function TaskData({id, curatorAnswer, planetId, name, data, currentAnswer, taskS
         }
     }
 
-    function handleAnswer(evt: ChangeEvent<HTMLInputElement>){
+    function handleAnswer(evt: ChangeEvent<HTMLTextAreaElement>){
+        const userAnswer = evt.target.value
         setAnswer(evt.target.value)
+        if(userAnswer.length > 1000){
+            setErrorMessage('Превышен лимит комментария')
+        }
+        else{
+            setErrorMessage('')
+        }
     }
 
     function handleSubmit(evt: any){
@@ -61,33 +70,38 @@ function TaskData({id, curatorAnswer, planetId, name, data, currentAnswer, taskS
           task_id: id,
           planet_id: planetId
         }
-        store.dispatch(updateAnswerTask(data))
+        if(!errorMessage){
+            store.dispatch(updateAnswerTask(data))
+        }
     }
 
     return ( 
         <>
             <p className="task-name">{name}</p>
-            <div style={curatorAnswer ? {height: '65%'}: {height:'75%'}} className="task-data" dangerouslySetInnerHTML={{__html: data}}></div>
+            <div style={curatorAnswer ? {height: '64%'}: {height:'74%'}} className="task-data" dangerouslySetInnerHTML={{__html: data}}></div>
             {!isApprovePage ?
                         <form onSubmit={handleSubmit} className="task-comments">
                             <label htmlFor="comment"><p>Введите комментарий к этапу:</p></label>
-                            <input type="text" autoComplete="off" value={answer} onChange={handleAnswer} id="comment"></input>
+                            <div className="user-answer">
+                                <textarea autoComplete="off" value={answer} onChange={handleAnswer} id="comment"></textarea>
+                                <span className='error-message'>{errorMessage}</span>
+                            </div>
                             {curatorAnswer &&
                                 <>
                                     <p>Комментарий Куратора:</p>
-                                    <p id="comment">{curatorAnswer}</p>
+                                    <div id="comment">{curatorAnswer}</div>
                                 </>
                             }
-                            {!isApprovePage && <button type="submit" disabled={buttonInfo[0] !== 'approve-button'} className={buttonInfo[0]}>{buttonInfo[1]}</button>}
+                            {!isApprovePage && !errorMessage && <button type="submit" disabled={buttonInfo[0] !== 'approve-button'} className={buttonInfo[0]}>{buttonInfo[1]}</button>}
                         </form>
                             :
                         <div className="task-comments">
                             <p>Комментарий к этапу:</p>
-                            <p id="comment">{answer}</p>
+                            <div id="comment">{answer}</div>
                             {curatorAnswer &&
                                 <>
                                     <p>Ваш комментарий:</p>
-                                    <p id="comment">{curatorAnswer}</p>
+                                    <div id="comment">{curatorAnswer}</div>
                                 </>
                             }
                             {!isApprovePage && <button type="submit" className={buttonInfo[0]}>{buttonInfo[1]}</button>}

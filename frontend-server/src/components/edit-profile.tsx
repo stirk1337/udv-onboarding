@@ -13,7 +13,7 @@ type EditProfileProps = {
 
 function EditProfile({userData, onClickExit, onClickEdit}: EditProfileProps) {
     const dispatch = useAppDispatch()
-    const [contact, setContact] = useState(userData.contact)
+    const [contact, setContact] = useState(userData.contact || '')
     const [user, setIsUserData] = useState<UserData>(userData)
     const [isUserProfile, setIsUserProfile] = useState(true)
 

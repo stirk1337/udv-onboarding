@@ -3,6 +3,7 @@ import { ProductRoles, Products } from "../../types";
 import { useAppDispatch } from "../hooks";
 import { registerNewEmployee } from "../store/api-actions/post-actions";
 import { errors } from "../../const-data";
+import InputComponent from "../input-component";
 
 type AddEmployeeFormProps = {
     onDialogClick: () => void
@@ -33,12 +34,26 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
     }, [])
 
     function nameChangeHandler(evt: ChangeEvent<HTMLInputElement>){
-        setName(evt.target.value)
+        const name = evt.target.value
+        setName(name)
+        if(name.length > 100){
+            setErrorMessage('Слишком длинное ФИО')
+        }
+        else{
+            setErrorMessage('')
+        }
     }
 
     function emailChangeHandler(evt: ChangeEvent<HTMLInputElement>){
-        setEmail(evt.target.value)
-        setErrorMessage('')
+        const email = evt.target.value
+        setEmail(email)
+        const emailParts = email.split('@')
+        if(emailParts[0].length > 64 || (emailParts[1] && emailParts[1].length > 255)){
+            setErrorMessage('Слишком длинный email')
+        }
+        else{
+            setErrorMessage('')
+        }
     }
 
     function productSelectHandler(evt: ChangeEvent<HTMLSelectElement>){
@@ -51,10 +66,20 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
 
     async function submitHandle(evt: SyntheticEvent){
         evt.preventDefault();
-        const isValid = await dispatch(registerNewEmployee({email: email, name: name, product: product, productRole: role}))
-        console.log(isValid.payload)
-        if(isValid.payload){
-            onDialogClick()
+        const emailParts = email.split('@')
+        if(name.length <= 100 && emailParts[0].length <= 64 && emailParts[1].length <= 255){
+            const isValid = await dispatch(registerNewEmployee({email: email, name: name, product: product, productRole: role}))
+            if(isValid.payload){
+                onDialogClick()
+            }
+        }
+        else{
+            if(name.length > 100){
+                setErrorMessage('Слишком длинное ФИО')
+            }
+            else{
+                setErrorMessage('Слишком длинный email')
+            }
         }
     }
 
@@ -69,16 +94,22 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
                     <p>Добавить нового сотрудника</p>
                 </div>
                 <form onSubmit={submitHandle}>
-                    <input required value={name} onChange={nameChangeHandler} placeholder="Фио сотрудника"></input>
-                    <input required type="email" value={email} onChange={emailChangeHandler} placeholder="Email сотрудника"></input>
-                    <select name="Выбор продукта" required value={product} onChange={productSelectHandler}>
-                        <option value="" disabled>Выбор продукта</option>
-                        {(Object.values(Products) as Array<keyof typeof Products>).map((product) => <option key={product} value={product}>{product}</option>)}
-                    </select>
-                    <select name="Выбор роли" required value={role} onChange={roleSelectHandler}>
-                        <option value="" disabled>Выбор роли</option>
-                        {(Object.values(ProductRoles) as Array<keyof typeof ProductRoles>).map((role) => <option key={role} value={role}>{role}</option>)}
-                    </select>
+                    <InputComponent name="" icon='/name-employee-icon.svg' value={name} placeholder='Фио сотрудника' type='text' onchange={nameChangeHandler}/>
+                    <InputComponent name="" icon='/email-icon.svg' value={email} placeholder='Email сотрудника' type='email' onchange={emailChangeHandler}/>
+                    <div className="add-employee-select-block">
+                        <img src="/product-icon.svg" alt="" width={26} height={26}></img>
+                        <select name="Выбор продукта" required value={product} onChange={productSelectHandler}>
+                            <option value="" disabled>Выбор продукта</option>
+                            {(Object.values(Products) as Array<keyof typeof Products>).map((product) => <option key={product} value={product}>{product}</option>)}
+                        </select>
+                    </div>
+                    <div className="add-employee-select-block">
+                        <img src="/role-icon.svg" alt="" width={26} height={26}></img>
+                        <select name="Выбор роли" required value={role} onChange={roleSelectHandler}>
+                            <option value="" disabled>Выбор роли</option>
+                            {(Object.values(ProductRoles) as Array<keyof typeof ProductRoles>).map((role) => <option key={role} value={role}>{role}</option>)}
+                        </select>
+                    </div>
                     <span className="error-message">{errorMessage}</span>
                     <button className="send-button" type="submit">Отправить</button>
                 </form>
