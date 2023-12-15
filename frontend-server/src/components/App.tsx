@@ -1,6 +1,5 @@
 import LoginPage from "../pages/login-page"
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import MainPage from "../pages/main-page"
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom"
 import TaskConstructor from "./curator-components/task-constructor"
 import CuratorPageLayout from "./curator-components/curator-page-layout"
 import TaskEditor from "./curator-components/task-editor"
@@ -9,7 +8,7 @@ import Personal from "./curator-components/personal"
 import { useAppSelector } from "./hooks"
 import { store } from "./store"
 import { getCurrentUserInfo, getNotifications } from "./store/api-actions/get-actions"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import HistoryRouter from "./history-route"
 import browserHistory from "../browser-history"
 import { UserRoles } from "../types"
@@ -18,14 +17,14 @@ import NewPasswordPage from "../pages/new-password-page"
 import EmailPage from "../pages/email-page"
 import NotFoundPage from "../pages/not-found-page"
 import TaskForVerification from "./curator-components/task-for-verification"
+import Content from "./user-components/content"
 
 function App() {
-  const isRegistered = useAppSelector((state) => state.authorizationStatus);
   const userRole = useAppSelector((state) => state.userData.role);
   const tasks = useAppSelector((state) => state.planetTasks);
+
   useEffect(() => {
     store.dispatch(getCurrentUserInfo())
-
   }, [])
 
   return (
@@ -36,7 +35,7 @@ function App() {
               <CuratorPageLayout userRole={userRole}/>
           }>
             <Route index element={
-              <MainPage/>
+              <Content />
             }/>
             <Route path="planet/:planetId" element={<TaskBlock tasks={tasks}/>}/>
             <Route path="planet/:planetId/:taskId" element={<TaskBlock tasks={tasks}/>}/>

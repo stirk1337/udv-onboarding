@@ -105,12 +105,16 @@ function CuratorHeader() {
                     </button>
                 </div>
             </div>
-            {isVisibleNotification && <Notifications notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
-            {isVisibleProfileButtons && <ProfileButtons role={userData.role} userName={userData.name} onClickEditProfile={()=>editProfileClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>}
-            {isVisibleUsefulLinks && <UsefulLinks onClickExit={()=>linksClickHandler(false)}/>}
-            {isVisibleEditImage && <ImageCropper onClickExit={()=>editImageClickHandler(false)}/>}
-            {isVisibleProfileEdit && <EditProfile userData={userData} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>}
-            {isVisibleBackdrop && <div onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>}
+            {isVisibleNotification && <Notifications isOpen={isVisibleNotification}  notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
+            <ProfileButtons isOpen={isVisibleProfileButtons} role={userData.role} userName={userData.name} onClickEditProfile={()=>editProfileClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>
+            <UsefulLinks isOpen={isVisibleUsefulLinks} onClickExit={()=>linksClickHandler(false)}/>
+            <ImageCropper isOpen={isVisibleEditImage} onClickExit={()=>editImageClickHandler(false)}/>
+            <EditProfile isOpen={isVisibleProfileEdit} userData={userData} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>
+            <div style={{
+            opacity: !isVisibleBackdrop ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isVisibleBackdrop ? "hidden" : "visible",
+          }}  onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>
         </header>
     );
 }

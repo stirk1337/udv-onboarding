@@ -11,9 +11,10 @@ interface Image {
 
 type ImageCropperProps = {
     onClickExit: () => void
+    isOpen: boolean;
 }
 
-function ImageCropper({onClickExit}: ImageCropperProps) {
+function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
     const dispatch = useAppDispatch()
     const cropperRef = useRef<CropperRef>(null);
     const [image, setImage] = useState<Image | null>(null);
@@ -80,7 +81,11 @@ function ImageCropper({onClickExit}: ImageCropperProps) {
     }, [image]);
     
     return (
-        <div className='update-image'>
+        <div className='update-image' style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="update-image-header">
                 <button onClick={onClickExit}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

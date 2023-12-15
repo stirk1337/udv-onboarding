@@ -6,9 +6,10 @@ import { getAchievements } from "../store/api-actions/get-actions";
 
 type AchievementsProps ={
     onClickExit: () => void
+    isOpen: boolean
 }
 
-function Achievements({onClickExit}:AchievementsProps) {
+function Achievements({onClickExit, isOpen}:AchievementsProps) {
     const dispatch = useAppDispatch()
     const achievements = useAppSelector((state) => state.achievements)
     const completedAchievementsNumber = achievements.filter(achievement => achievement.completed === true).length;
@@ -20,7 +21,11 @@ function Achievements({onClickExit}:AchievementsProps) {
     }, [])
 
     return ( 
-        <div className="achievements-block">
+        <div className="achievements-block" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="achievements-header">
                 <button onClick={onClickExit}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

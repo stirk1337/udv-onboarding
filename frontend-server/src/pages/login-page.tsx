@@ -49,7 +49,7 @@ function LoginPage() {
         <div className="enter-page">
             <img src="logo.svg" alt="" width={299} height={57}></img>
             <form onSubmit={handleSubmit}>
-                  <InputComponent name="Email" icon='login-icon.svg' value={email} placeholder='Введите email' type='email' onchange={handleEmail}/>
+                  <InputComponent name="Email" icon='email-icon.svg' value={email} placeholder='Введите email' type='email' onchange={handleEmail}/>
                   <InputComponent name="Пароль" icon='password-icon.svg' value={password} placeholder='Введите пароль' type="password" onchange={handlePassword}/>
                   <span className="error-message">{errorMessage}</span>
                 <div className="assistance-block">

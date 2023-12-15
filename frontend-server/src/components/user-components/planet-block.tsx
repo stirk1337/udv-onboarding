@@ -1,16 +1,22 @@
-import Planet from "./planet";
+
+import { Planet } from "../../types";
+import PlanetComponent from "./planet";
 
 type PlanetBlockProps = {
-    onPlanetClick: (id:number) => void;
-    id: number;
-    image: string;
+    onPlanetClick: (id: Planet) => void;
+    planet: Planet
 }
 
-function PlanetBlock({id, image, onPlanetClick}: PlanetBlockProps) {
+function PlanetBlock({planet, onPlanetClick}: PlanetBlockProps) {
     return ( 
-        <div className="planet">
-            <Planet id={id} image={image} onPlanetClick={onPlanetClick}/>
-        </div>
+        <>
+            <div className="planet">
+                <PlanetComponent planet={planet} onPlanetClick={onPlanetClick}/>
+                <div className="comets">
+                    <img src="/comets.svg" alt=""></img>
+                </div>
+            </div>
+        </>
      );
 }
 

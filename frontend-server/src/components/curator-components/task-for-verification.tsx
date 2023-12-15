@@ -8,21 +8,19 @@ import { checkTask } from "../store/api-actions/patch-action";
 import { useNavigate, useParams } from "react-router-dom";
 import { PlanetTaskForVerification } from "../../types";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { redirectToRoute } from "../store/action";
 
 function TaskForVerification() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const  {id} = useParams()
-    const tId = Number(id)
-    if(!tId && id){
-        navigate('/not-found')
-    }
+    const tId = id || ''
     console.log(tId);
     const taskForVerificationStore = useAppSelector((state) => state.taskForVerification);
     const [taskForVerification, setTaskForVerification] = useState(useAppSelector((state) => state.taskForVerification))
     const [isDeclineOpen, setIsDeclineOpen] = useState(false)
     const [currentTaskForVerificationId, setCurrentTaskForVerificationId] = useState(tId)
-    const [selectedTask, setCurrentTask] =  useState<PlanetTaskForVerification>(taskForVerification.find(task => currentTaskForVerificationId === Number(String(task.planet_id) + String(task.id))) || taskForVerification[0])
+    const [selectedTask, setCurrentTask] =  useState<PlanetTaskForVerification>(taskForVerification.find(task => currentTaskForVerificationId === String(task.employee.id) + '-' + String(task.id)) || taskForVerification[0])
 
     useEffect(() => {
         if(currentTaskForVerificationId !== tId && tId) {
@@ -33,7 +31,7 @@ function TaskForVerification() {
 
     useEffect(() =>{
         dispatch(getTasksBeingChecked()).then(unwrapResult).then((tasks) => {checkDispatch(tasks)})
-    }, [JSON.stringify(taskForVerificationStore)])
+    }, [JSON.stringify(taskForVerificationStore), navigate])
 
     useEffect(() =>{
         if(taskForVerification.length !== 0){
@@ -43,16 +41,18 @@ function TaskForVerification() {
 
     function checkDispatch(tasks: PlanetTaskForVerification[]){
         setTaskForVerification(tasks);
+        console.log(tasks)
         let curTask: PlanetTaskForVerification | 'not-found'
         if(currentTaskForVerificationId){
-            curTask = tasks.find((task) => currentTaskForVerificationId === Number(String(task.planet_id) + String(task.id))) || 'not-found'
+            curTask = tasks.find((task) => currentTaskForVerificationId === String(task.employee.id) + '-' + String(task.id)) || 'not-found'
         }
         else{
             curTask = tasks[0]
         }
         console.log(curTask, currentTaskForVerificationId, tasks)
         if(curTask === 'not-found' && tasks.length !== 0){
-            navigate('/not-found')
+            navigate(`/curator/tasks-for-verification/${tasks[0].employee.id}-${tasks[0].id}`)
+            setCurrentTask(tasks[0])
         }
         else if(curTask !== 'not-found'){
             setCurrentTask(curTask)
@@ -60,12 +60,13 @@ function TaskForVerification() {
     }
 
     useEffect(() => {
-        setCurrentTask(taskForVerification.find(task => currentTaskForVerificationId === Number(String(task.planet_id) + String(task.id))) || taskForVerification[0])
+        setCurrentTask(taskForVerification.find(task => currentTaskForVerificationId === String(task.employee.id) + '-' + String(task.id)) || taskForVerification[0])
     },[taskForVerificationStore])
     
     function taskClickHandler(evt: React.MouseEvent<HTMLLIElement>, idTask: number, idBlock: number){
-        setCurrentTaskForVerificationId(Number(String(idBlock) + String(idTask)))
-        navigate(`/curator/tasks-for-verification/${idBlock}${idTask}`)
+        const currentTask = taskForVerification.find(task => task.id === idTask && task.planet_id === idBlock);
+        setCurrentTaskForVerificationId(String(currentTask?.employee.id) + '-' + String(idTask))
+        navigate(`/curator/tasks-for-verification/${currentTask?.employee.id}-${idTask}`)
     }
 
     function declineClickHandler(){
@@ -87,13 +88,13 @@ function TaskForVerification() {
         const index = taskForVerification.findIndex((task) => task.id === selectedTask.id)
         if(taskForVerificationStore.length !== index + 1){
             const item = taskForVerification[index + 1]
-            const id = Number(String(item.planet_id) + String(item.id))
+            const id = String(item.employee.id) + '-' + String(item.id)
             setCurrentTaskForVerificationId(id)
             navigate(`/curator/tasks-for-verification/${id}`)
         }
         else if(index - 1 >= 0){
             const item = taskForVerification[index - 1]
-            const id = Number(String(item.planet_id) + String(item.id))
+            const id = String(item.employee.id) + '-' + String(item.id)
             setCurrentTaskForVerificationId(id)
             navigate(`/curator/tasks-for-verification/${id}`)
         }
@@ -103,11 +104,13 @@ function TaskForVerification() {
         setIsDeclineOpen(!isDeclineOpen)
     }
 
+    console.log(selectedTask)
+
     return ( 
         <>
             <div className="task-for-verification-block">
                 <ul className="task-for-verification-list">
-                    {taskForVerification && taskForVerification.map((task, index) => <TaskConstructorTasks index={index} isDraggable={false} key={String(task.planet_id) + String(task.id)} currentTaskId={String(task.planet_id) + String(task.id) === String(selectedTask.planet_id) + String(selectedTask.id)} taskId={task.id} blockId={task.planet_id} icon={task.employee.image_url} name={task.employee.name} date={task.updated_at} isCanDelete={false} onClickElement={taskClickHandler}/>)}
+                    {taskForVerification && taskForVerification.map((task, index) => <TaskConstructorTasks index={index} isDraggable={false} key={String(task.employee.id) + '-' + String(task.id)} currentTaskId={String(task.employee.id) + '-' + String(task.id) === String(selectedTask.employee.id) + '-' + String(selectedTask.id)} taskId={task.id} blockId={task.planet_id} icon={task.employee.image_url} name={task.employee.name} date={task.updated_at} isCanDelete={false} onClickElement={taskClickHandler}/>)}
                 </ul>
                 <div className="task-approve-content">
                     {selectedTask && taskForVerification.length !== 0 && <> <TaskData curatorAnswer={selectedTask.curator_answer} id={selectedTask.id} planetId={selectedTask.planet_id} currentAnswer={selectedTask.employee_answer} taskStatus={selectedTask.task_status} name={selectedTask.name} data={selectedTask.description} isApprovePage={true}/>
@@ -119,8 +122,12 @@ function TaskForVerification() {
                     }
                 </div>
             </div>
-            {isDeclineOpen && <DeclineTask onDeclineClick={declinebuttonClickHandler} onDialogClick={declineClickHandler}/>}
-            {isDeclineOpen && <div onClick={closeDialog} className={"backdrop"}></div>}
+            {isDeclineOpen && <DeclineTask isOpen={isDeclineOpen} onDeclineClick={declinebuttonClickHandler} onDialogClick={declineClickHandler}/>}
+            <div style={{
+            opacity: !isDeclineOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isDeclineOpen ? "hidden" : "visible",
+          }} onClick={closeDialog} className={"backdrop"}></div>
         </>
      );
 }

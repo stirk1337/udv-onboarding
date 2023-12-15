@@ -1,10 +1,15 @@
 type UsefulLinksProps ={
     onClickExit: () => void
+    isOpen: boolean
 }
 
-function UsefulLinks({onClickExit}: UsefulLinksProps) {
+function UsefulLinks({onClickExit, isOpen}: UsefulLinksProps) {
     return ( 
-        <div className="useful-links-block">
+        <div className="useful-links-block" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="useful-links-header">
                 <button onClick={onClickExit}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

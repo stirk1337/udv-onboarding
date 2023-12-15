@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance, AxiosRequestConfig } from "axios";
-import { login, redirectToRoute, setAchievements, setCompletedPlanets, setEmployees, setNotifications, setPercentageCompletedPlanets, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from "../action";
-import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification, NotificationType, Achievement, EmployeePlanets } from "../../../types";
+import { login, redirectToRoute, setAchievements, setEmployees, setNotifications, setPercentageCompletedPlanets, setPercentageCompletedTasks, setPlanet, setPlanetTasks, setPlanets, setProgressData, setTaskForVerification, setUserData } from "../action";
+import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification, NotificationType, Achievement, EmployeePlanets, EmployeeProgressData } from "../../../types";
 
 export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     dispatch: AppDispatch;
@@ -49,11 +49,17 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
     async (id, {dispatch, extra: api}) => {
         const {data: tasks} = await api.get<PlanetTask[]>(`/task/get_tasks_with_status`, {params: {planet_id: id}});
         dispatch(setPlanetTasks(tasks))
+        const completedTaskCount = tasks.filter(task => task.task_status === 'completed').length;
+        if(tasks.length !== 0){
+          dispatch(setPercentageCompletedTasks(Math.round(completedTaskCount / tasks.length * 100)))
+        }
+        else{
+          dispatch(setPercentageCompletedTasks(0))
+        }
         let task = tasks.find(task => task.task_status === TaskStatus.completed)
         if(task === undefined){
             task = tasks[0]
         }
-        console.log(id)
         if(!task){
           dispatch(redirectToRoute(`/employee/planet/${id}`));
         }
@@ -123,7 +129,7 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
         dispatch(setTaskForVerification(taskData))
         const currentTask = taskData[0]
         if(location.pathname.split('/').length === 3 && currentTask){
-          dispatch(redirectToRoute(`/curator/tasks-for-verification/${currentTask.planet_id}${currentTask.id}`))
+          dispatch(redirectToRoute(`/curator/tasks-for-verification/${currentTask.employee.id}-${currentTask.id}`))
         }
         else if(!currentTask){
           dispatch(redirectToRoute(`/curator/tasks-for-verification`))
@@ -211,8 +217,15 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
       async (id, {dispatch, extra: api}) => {
         try {
           const {data: planetsData} = await api.get<EmployeePlanets[]>(`/planet/get_employee_planets_by_employee_id?employee_id=${id}`);
-          const CompletedPlanets = planetsData.filter(planet => planet.completed === planet.task_count);
-          dispatch(setCompletedPlanets(CompletedPlanets));
+          const progressData: EmployeeProgressData[] = []
+          planetsData.forEach(element => {
+            progressData.push({
+              icon: element.image,
+              name: element.name,
+              percentage: element.task_count !== 0 ? Math.round(element.completed / element.task_count * 100) : 100
+            })
+          });
+          dispatch(setProgressData(progressData));
         } catch {
           dispatch(login(false));
         }

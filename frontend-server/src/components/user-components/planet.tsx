@@ -1,15 +1,16 @@
+import { Planet } from "../../types";
+
 type PlanetProps = {
-    onPlanetClick: (id:number) => void;
-    id:number;
-    image: string;
+    onPlanetClick: (id: Planet) => void;
+    planet: Planet
 }
 
-function Planet({id, image, onPlanetClick}: PlanetProps) {
+function PlanetComponent({planet, onPlanetClick}: PlanetProps) {
     return ( 
-        <button onClick={() => onPlanetClick(id)}>
-            <img src={`/planet-gif/${image}.gif`} alt="Блок"></img>
+        <button onClick={() => onPlanetClick(planet)}>
+            <img src={`/planet-gif/${planet.image}.gif`} alt="Блок"></img>
         </button>
      );
 }
 
-export default Planet;
+export default PlanetComponent;

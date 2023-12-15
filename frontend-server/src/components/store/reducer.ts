@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setAchievements, setCompletedPlanets, setEmployees, setErrorMessage, setNotifications, setPercentageCompletedPlanets, setPlanet, setPlanetTasks, setPlanets, setTaskForVerification, setUserData } from './action';
-import { Achievement, CuratorPlanetData, EmployeePlanets, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
+import { changeCurrentPlanet, changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setAchievements, setEmployees, setErrorMessage, setNotifications, setPercentageCompletedPlanets, setPercentageCompletedTasks, setPlanet, setPlanetTasks, setPlanets, setProgressData, setTaskForVerification, setUserData } from './action';
+import { Achievement, CuratorPlanetData, EmployeePlanets, EmployeeProgressData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
 
 type InitialState = {
   authorizationStatus: boolean;
@@ -14,8 +14,9 @@ type InitialState = {
   notifications: NotificationType[],
   achievements: Achievement[]
   percentage: number
-  completedPlanets: EmployeePlanets[];
+  employeeProgressPlanets: EmployeeProgressData[];
   errorMessage: string;
+  currentPlanetPercentage: number
 }
 
 const initialState: InitialState = {
@@ -41,6 +42,7 @@ const initialState: InitialState = {
     image: '',
     pos: 0,
   },
+  currentPlanetPercentage: 0,
   planetTasks: [],
   employees: [],
   currentTask: {
@@ -59,7 +61,7 @@ const initialState: InitialState = {
   notifications: [],
   achievements: [],
   percentage: 0,
-  completedPlanets: [],
+  employeeProgressPlanets: [],
   errorMessage: ''
 };
 
@@ -90,6 +92,9 @@ export const reducer = createReducer(initialState, (builder) => {
           state.currentPlanet = action.payload;
           state.currentPlanet.task_count = tasks
         }
+      })
+      .addCase(changeCurrentPlanet,(state, action) => {
+        state.currentPlanet = action.payload;
       })
       .addCase(clearCurrentPlanet,(state) => {
         state.currentPlanet = initialState.currentPlanet
@@ -124,10 +129,13 @@ export const reducer = createReducer(initialState, (builder) => {
       .addCase(setPercentageCompletedPlanets,(state, action) => {
         state.percentage = action.payload
       })
-      .addCase(setCompletedPlanets,(state, action) => {
-        state.completedPlanets = action.payload
+      .addCase(setProgressData,(state, action) => {
+        state.employeeProgressPlanets = action.payload
       })
       .addCase(setErrorMessage,(state, action) => {
         state.errorMessage = action.payload
+      })
+      .addCase(setPercentageCompletedTasks,(state, action) => {
+        state.currentPlanetPercentage = action.payload
       })
 });

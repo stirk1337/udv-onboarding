@@ -30,6 +30,11 @@ textarea {
 html {
     background-color: #0F0D0D;
     font-size: 21px;
+    height: 100%;
+}
+
+body, html, #root, main{
+    height: 100%;
 }
 
 .bold {
@@ -211,6 +216,8 @@ main {
     flex-direction: column;
     overflow: auto;
     overflow-x: hidden;
+    background-image: url(/public/background.svg);
+    background-attachment: local;
 }
 
 .logo {
@@ -226,7 +233,6 @@ main {
 
 .progress-bar div[role="progressbar"] {
     display: inline-block !important;
-    width: 50%;
     min-width: 280px
 }
 
@@ -456,6 +462,8 @@ main {
 }
 
 .achievement {
+    align-items: center;
+    height: fit-content;
     box-sizing: border-box;
     display: flex;
     gap: 6px;
@@ -467,6 +475,10 @@ main {
     padding: 5px;
 }
 
+.achievement-data{
+    padding-right: 55px;
+}
+
 .achievement .type {
     font-weight: 700;
 }
@@ -474,7 +486,6 @@ main {
 .achievement .completed-icon {
     position: absolute;
     left: 87%;
-    top: 60%;
 }
 
 .progress-data {
@@ -580,9 +591,11 @@ main {
 }
 
 .planet {
+    position: relative;
     user-select: none;
     cursor: pointer;
 }
+
 
 .planet img{
     pointer-events: none;
@@ -594,10 +607,38 @@ main {
     margin-right: 15%;
 }
 
+.comets{
+    position: absolute;
+    pointer-events: none;
+}
+
+.comets img {
+    width: 563px;
+    height: 533px;
+}
+
+.planet:nth-child(even) .comets {
+    transform: rotate(145deg);
+    top: -30%;
+    right: 110%;
+}
+
 .planet:nth-child(odd) {
     align-self: flex-start;
     margin-top: 20px;
     margin-left: 15%;
+}
+
+.planet:nth-child(odd) .comets {
+    z-index: -1;
+    align-self: flex-end;
+    top: -40%;
+    left: 100%;
+    transform: rotate(0deg);
+}
+
+.planet:nth-last-child(1) .comets {
+    display: none;
 }
 
 .task-block {
@@ -656,7 +697,7 @@ main {
     color: #00C996;
 }
 
-.monster p.in_progress {
+.monster p.being_checked {
     margin-left: 0 !important;
     color: #F39314;
 }
@@ -1276,6 +1317,7 @@ table .approve-button {
 }
 
 .employee-data {
+    height: 90%;
     padding: 20px;
 }
 
@@ -1295,11 +1337,32 @@ table .approve-button {
 }
 
 .employee-data-container {
-    display: flex;
+    overflow: auto;
+    height: 80%;
 }
 
-.employee-data-container ul li {
-    color: #00C996;
+.employee-data-container ul {
+    margin-top: 20px;
+}
+
+.employee-data-container li{
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.employee-data-container img{
+    object-fit:contain;
+}
+
+.employee-progress-data{
+    width: 100%;
+}
+
+.employee-progress-data div[role="progressbar"]{
+    display: inline-block !important;
+    width: 50%;
+    margin-top: 10px;
 }
 
 .selected-bock-header {
@@ -1654,7 +1717,6 @@ table .approve-button {
 
 .not-found{
     text-align: center;
-    margin-top: 20%;
 }
 
 @media (max-width: 1920px) {
