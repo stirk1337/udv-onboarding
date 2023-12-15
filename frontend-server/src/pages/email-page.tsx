@@ -39,7 +39,7 @@ function LoginPage() {
             :
             <form onSubmit={handleSubmit}>
                 <div className="solo-input">
-                    <InputComponent name="Почта" icon='/login-icon.svg' value={email} placeholder='Введите почту' type='email' onchange={handleEmail}/>
+                    <InputComponent name="Почта" icon='/email-icon.svg' value={email} placeholder='Введите почту' type='email' onchange={handleEmail}/>
                 </div>
                 <div className="assistance-block">
                     <span className="error-message"></span>

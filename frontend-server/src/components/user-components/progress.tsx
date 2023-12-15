@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 type ProgressProps = {
     onClickExit: () => void
+    isOpen: boolean
 }
 
 type TProgressData = {
@@ -21,7 +22,7 @@ type ProgressTaskData = {
     completed: boolean,
 }
 
-function Progress({onClickExit}:ProgressProps) {
+function Progress({onClickExit, isOpen}:ProgressProps) {
     const dispatch = useAppDispatch()
     const [progressData, setProgressData] = useState<TProgressData[]>([])
     const planets = useAppSelector((state) => state.planets)
@@ -55,7 +56,11 @@ function Progress({onClickExit}:ProgressProps) {
     }
     fillProgressData()
     return ( 
-        <div className="progress-block">
+        <div className="progress-block" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="progress-header">
                 <button onClick={onClickExit}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

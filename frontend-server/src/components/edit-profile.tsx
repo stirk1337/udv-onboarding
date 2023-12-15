@@ -9,9 +9,10 @@ type EditProfileProps = {
     onClickExit: () => void
     onClickEdit: () => void
     userData: UserData
+    isOpen: boolean
 }
 
-function EditProfile({userData, onClickExit, onClickEdit}: EditProfileProps) {
+function EditProfile({userData,isOpen, onClickExit, onClickEdit}: EditProfileProps) {
     const dispatch = useAppDispatch()
     const [contact, setContact] = useState(userData.contact || '')
     const [user, setIsUserData] = useState<UserData>(userData)
@@ -43,7 +44,11 @@ function EditProfile({userData, onClickExit, onClickEdit}: EditProfileProps) {
     }
 
     return ( 
-        <div className='edit-profile-page'>
+        <div className='edit-profile-page' style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="edit-profile-page-header">
                 <button onClick={onClickExit}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

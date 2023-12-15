@@ -6,16 +6,21 @@ import { readAllNotification } from "./store/api-actions/patch-action";
 type NotificationsProps = {
     notificationsList: NotificationType[]
     onClickExit: () => void
+    isOpen: boolean
 }
 
-function Notifications({notificationsList, onClickExit}: NotificationsProps){
+function Notifications({notificationsList, isOpen, onClickExit}: NotificationsProps){
     const dispatch = useAppDispatch()
     function readAllNotifications(){
         dispatch(readAllNotification())
     }
 
     return ( 
-        <div className="notification-block">
+        <div className="notification-block" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="read-all-notifications">
                 <svg onClick={readAllNotifications} width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g id="Group 198">

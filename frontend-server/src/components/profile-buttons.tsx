@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { UserRoles } from "../types";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { logOutAction } from "./store/api-actions/post-actions";
@@ -9,13 +10,18 @@ type ProfileButtonsProps = {
     onClickEditProfile: () => void;
     userName: string
     role: UserRoles
+    isOpen: boolean;
 }
 
-function ProfileButtons({onClickEditProfile, onClickLinks, onClickProgress, onClickAchievements, userName, role}: ProfileButtonsProps) {
+function ProfileButtons({onClickEditProfile, onClickLinks, onClickProgress, onClickAchievements, isOpen, userName, role}: ProfileButtonsProps) {
     const dispatch = useAppDispatch()
 
     return (     
-        <div className="profile-buttons">
+        <div className="profile-buttons" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div className="user-name-info">
                 <p className="user-name">{userName} </p>
                 <button className="exit-button" onClick={() => dispatch(logOutAction())}>

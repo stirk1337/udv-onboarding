@@ -4,8 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { useEffect, useState } from "react";
 import { getPlanetTasks } from "../store/api-actions/get-actions";
-import { PlanetTask } from "../../types";
+import { CuratorPlanetData, PlanetTask } from "../../types";
 import { unwrapResult } from '@reduxjs/toolkit';
+import { changeCurrentPlanet, clearCurrentPlanet } from "../store/action";
 
 type TaskBlockProps = {
     tasks: PlanetTask[],
@@ -17,6 +18,7 @@ function TaskBlock({}: TaskBlockProps) {
     const  {planetId, taskId} = useParams()
     const tId = Number(taskId)
     const pId = Number(planetId)
+    const planets = useAppSelector((state) => state.planets)
     const data = useAppSelector((state) => state.planetTasks)
     const [tasks, setTasks] =  useState<PlanetTask[]>(useAppSelector((state) => state.planetTasks))
     const [currentTask, setCurrentTask] =  useState<PlanetTask>(tasks.find((task) => task.id === tId) || tasks[0])
@@ -30,6 +32,12 @@ function TaskBlock({}: TaskBlockProps) {
     useEffect(() =>{
         dispatch(getPlanetTasks(pId)).then(unwrapResult).then((tasks) => {checkDispatch(tasks)})
     }, [JSON.stringify(data), tId])
+
+    useEffect(() =>{
+        if(planets.length !== 0) {
+            dispatch(changeCurrentPlanet((planets.find((planet) => planet.id === pId) || planets[0]) as CuratorPlanetData))
+        }
+    }, [planets])
 
     function checkDispatch(tasks: PlanetTask[]){
         setTasks(tasks); 
@@ -46,12 +54,17 @@ function TaskBlock({}: TaskBlockProps) {
         setCurrentTask(tasks.find((task) => task.id === id) || tasks[0])
         navigate(`/employee/planet/${pId}/${id}`)
     }
+
+    function exitClick(){
+        dispatch(clearCurrentPlanet())
+        navigate('/employee')
+    }
     
     return ( 
         <div className="task-block">
             <div className="monsters">
                 <div className="monster-header">
-                    <button onClick={() => navigate('/employee')}>
+                    <button onClick={exitClick}>
                         <p><img src="/back-arrow.svg" alt=""></img> Вернуться к блокам</p>
                     </button>
                 </div>

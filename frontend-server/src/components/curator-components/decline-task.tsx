@@ -3,9 +3,10 @@ import { ChangeEvent, useState } from "react";
 type DeclineTaskProps = {
     onDialogClick: () => void
     onDeclineClick: (message: string) => void
+    isOpen: boolean
 }
 
-function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
+function DeclineTask({onDialogClick, onDeclineClick, isOpen}: DeclineTaskProps) {
     const [message, setMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
@@ -28,7 +29,11 @@ function DeclineTask({onDialogClick, onDeclineClick}: DeclineTaskProps) {
 
 
     return ( 
-        <div className="decline-comment-dialog">
+        <div className="decline-comment-dialog" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
             <div onClick={onDialogClick} className="useful-links-header">
                 <button>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

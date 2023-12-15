@@ -107,6 +107,12 @@ export type EmployeePlanets = Planet & {
     task_count: number,
 }
 
+export type EmployeeProgressData = {
+    icon: string,
+    name: string,
+    percentage: number
+}
+
 export enum Products {
     datapkIndustrialKit = 'datapk industrial kit',
     industrialFirewall = 'industrial firewall',

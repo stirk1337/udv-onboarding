@@ -7,9 +7,10 @@ import InputComponent from "../input-component";
 
 type AddEmployeeFormProps = {
     onDialogClick: () => void
+    isOpen: boolean
 }
 
-function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
+function AddEmployeeForm({onDialogClick, isOpen}: AddEmployeeFormProps) {
 
     const dispatch = useAppDispatch()
     const [name, setName] = useState('')
@@ -84,7 +85,11 @@ function AddEmployeeForm({onDialogClick}: AddEmployeeFormProps) {
     }
 
     return ( 
-        <div className="add-employee-form">
+        <div className="add-employee-form" style={{
+            opacity: !isOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isOpen ? "hidden" : "visible",
+          }}>
                 <div className="useful-links-header">
                     <button onClick={onDialogClick}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">

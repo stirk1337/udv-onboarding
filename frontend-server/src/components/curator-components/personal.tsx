@@ -92,7 +92,8 @@ function Personal() {
         setVisibleBackdrop(false)
         dialogClickHandler(false);
     }
-    
+    console.log(isFormOpen, selectedEmployee)
+    console.log(!isFormOpen || selectedEmployee === -1)
     return ( 
         <>
             <div className="personal-block">
@@ -123,9 +124,13 @@ function Personal() {
                     </table>
                 </div>
             </div>
-            {isFormOpen && <AddEmployeeForm onDialogClick={()=>dialogClickHandler(false)}/>}
-            {selectedEmployee !== -1 && <StatisticEmployee avatar={currentEmployee.image_url} id={currentEmployee.id} name={currentEmployee.name} onDelete={deleteEmployee} clickExit={employeeClick}/>}
-            {(isFormOpen || selectedEmployee !== -1) && <div onClick={closeDialog} className={"backdrop"}></div>}
+            <AddEmployeeForm isOpen={isFormOpen} onDialogClick={()=>dialogClickHandler(false)}/>
+            <StatisticEmployee isOpen={selectedEmployee !== -1} currentEmployee={currentEmployee} onDelete={deleteEmployee} clickExit={employeeClick}/>
+            <div style={{
+            opacity: (!isFormOpen && selectedEmployee === -1) ? "0" : "1",
+            transition: "all .5s",
+            visibility: (!isFormOpen && selectedEmployee === -1) ? "hidden" : "visible",
+          }} onClick={closeDialog} className={"backdrop"}></div>
         </>
      );
 }
