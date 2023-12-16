@@ -115,7 +115,7 @@ function Header() {
                     </button>
                 </div>
             </div>
-            {isVisibleNotification && <Notifications isOpen={isVisibleNotification} notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>}
+            <Notifications isOpen={isVisibleNotification} notificationsList={notifications} onClickExit={()=>NotificationClickHandler(false)}/>
             <ProfileButtons role={userData.role} isOpen={isVisibleProfileButtons} userName={userData.name} onClickEditProfile={()=>editProfileClickHandler(true)} onClickLinks={()=>linksClickHandler(true)} onClickProgress={()=>ProgressClickHandler(true)} onClickAchievements={()=>AchievementsClickHandler(true)}/>
             <Achievements isOpen={isVisibleAchievements} onClickExit={()=>AchievementsClickHandler(false)}/>
             <UsefulLinks isOpen={isVisibleUsefulLinks} onClickExit={()=>linksClickHandler(false)}/>
@@ -123,7 +123,7 @@ function Header() {
             <ImageCropper isOpen={isVisibleEditImage} onClickExit={()=>editImageClickHandler(false)}/>
             <EditProfile isOpen={isVisibleProfileEdit} userData={userData} onClickExit={()=>editProfileClickHandler(false)} onClickEdit={()=>editImageClickHandler(true)}/>
             <div style={{
-            opacity: !isVisibleBackdrop ? "0" : "1",
+            opacity: !isVisibleBackdrop || (isVisibleProfileButtons || isVisibleNotification) ? "0" : "1",
             transition: "all .5s",
             visibility: !isVisibleBackdrop ? "hidden" : "visible",
           }} onClick={closeDialog} className={isVisibleProfileButtons || isVisibleNotification ? "backdrop without-color" : "backdrop"}></div>
