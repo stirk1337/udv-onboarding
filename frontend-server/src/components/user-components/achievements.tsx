@@ -1,6 +1,6 @@
 import ProgressBarComponent from "./progress-bar";
 import Achievement from "./achievement";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { getAchievements } from "../store/api-actions/get-actions";
 
@@ -12,13 +12,14 @@ type AchievementsProps ={
 function Achievements({onClickExit, isOpen}:AchievementsProps) {
     const dispatch = useAppDispatch()
     const achievements = useAppSelector((state) => state.achievements)
-    const completedAchievementsNumber = achievements.filter(achievement => achievement.completed === true).length;
+    const [completedAchievementsNumber, setCompletedAchievementsNumber] = useState(0)
 
     console.log(achievements)
 
     useEffect(() => {
         dispatch(getAchievements())
-    }, [])
+        setCompletedAchievementsNumber(achievements.filter(achievement => achievement.completed === true).length)
+    }, [isOpen])
 
     return ( 
         <div className="achievements-block" style={{

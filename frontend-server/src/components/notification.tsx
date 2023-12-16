@@ -18,7 +18,7 @@ type NotificationProps = {
 
 export enum NotificationTextByType {
     accept = 'Проверил этап',
-    new = 'Новая задача появилась в блоке',
+    new = 'Создал этап в блоке',
     invited = 'Пригласил вас на блок',
     decline = 'Отклонил этап',
     answer = 'Отправил этап на проверку'
@@ -54,7 +54,7 @@ function Notification({id, data, date, checked, task, planet, employee, onClickE
     function getTextByType(type: string){
         if(type === 'new'){
             console.log(id)
-            return `${NotificationTextByType.new} "${task.name}"`
+            return `${NotificationTextByType.new} "${planet.name}"`
         }
         else if(type === 'accept'){
             return `${NotificationTextByType.accept} "${task.name}"`
