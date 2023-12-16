@@ -54,7 +54,7 @@ function Progress({onClickExit, isOpen}:ProgressProps) {
         };
         return newProgressData
     }
-    fillProgressData()
+
     return ( 
         <div className="progress-block" style={{
             opacity: !isOpen ? "0" : "1",
