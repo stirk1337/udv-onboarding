@@ -577,6 +577,10 @@ main {
     padding-top: 15px;
 }
 
+.useful-links-content li:hover{
+    background-color: #5E5E5E;
+}
+
 .useful-links-content a {
     height: 100%;
     display: block;

@@ -29,7 +29,7 @@ function Progress({onClickExit, isOpen}:ProgressProps) {
 
     useEffect(() => {
         fillProgressData().then((progressData) => setProgressData(progressData))
-    }, [])
+    }, [isOpen])
 
     async function fillProgressData(){
         const newProgressData: TProgressData[] = [] 
