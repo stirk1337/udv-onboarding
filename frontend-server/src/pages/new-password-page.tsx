@@ -57,6 +57,7 @@ function NewPasswordPage() {
         }
         else if(!errorMessage){
             const isValid = await dispatch(newPassword(data))
+            console.log(isValid)
             if(isValid.payload){
                 setNewPasswordIsSend(true)
             }

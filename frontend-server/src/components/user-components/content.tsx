@@ -17,7 +17,9 @@ function Content() {
 
     return ( 
         <main>
-            {blockData.map((block) => <PlanetBlock key={block.id} planet={block} onPlanetClick={PlanetClickHandler}/>)}
+            <div className="planet-background">
+                {blockData.map((block) => <PlanetBlock key={block.id} planet={block} onPlanetClick={PlanetClickHandler}/>)}
+            </div>
         </main>
      );
 }

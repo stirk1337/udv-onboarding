@@ -55,6 +55,12 @@ select:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s;
 }
 
+html::-webkit-scrollbar{
+    display: none;
+}
+
+html, body {margin: 0; height: 100%; overflow: hidden}
+
 main::-webkit-scrollbar,
 html::-webkit-scrollbar {
     width: 0;
@@ -216,8 +222,13 @@ main {
     flex-direction: column;
     overflow: auto;
     overflow-x: hidden;
+}
+
+.planet-background{
     background-image: url(/public/background.svg);
-    background-attachment: local;
+    background-size: contain;
+    display: flex;
+    flex-direction: column;
 }
 
 .logo {
@@ -612,6 +623,7 @@ main {
 }
 
 .comets{
+    z-index: -100;
     position: absolute;
     pointer-events: none;
 }
@@ -623,8 +635,14 @@ main {
 
 .planet:nth-child(even) .comets {
     transform: rotate(145deg);
-    top: -30%;
+    top: -50%;
     right: 110%;
+}
+
+.big-planet:nth-child(even) .comets {
+    transform: rotate(145deg);
+    top: -30%;
+    right: 80%;
 }
 
 .planet:nth-child(odd) {
@@ -638,6 +656,14 @@ main {
     align-self: flex-end;
     top: -40%;
     left: 100%;
+    transform: rotate(0deg);
+}
+
+.big-planet:nth-child(odd) .comets {
+    z-index: -1;
+    align-self: flex-end;
+    top: -40%;
+    left: 70%;
     transform: rotate(0deg);
 }
 
@@ -722,9 +748,13 @@ main {
     font-size: 20px;
     font-weight: 300;
     margin-bottom: 20px;
-    height: 68%;
+    height: 71%;
     overflow: auto;
     overflow-x: hidden;
+}
+
+.with-curator-comment{
+    height: 59% !important;
 }
 
 .task-comments input,
@@ -870,7 +900,8 @@ main {
     fill: rgba(0, 201, 150, 1);
 }
 
-.monster p, .constructor-planet-list-item-content p {
+.monster p, .constructor-planet-list-item-content p, .selected-block-monster-list-item-content p
+{
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -1739,6 +1770,7 @@ table .approve-button {
         gap: 40px;
         align-items: center;
         font-size: 20px;
+        margin-top: 0;
     }
 
     .constructor-block,
@@ -1749,26 +1781,16 @@ table .approve-button {
         height: 85vh;
     }
 
-    .constructor-planet-list ul,
-    .selected-block-monster-list ul,
-    .task-for-verification-list {
-        max-height: 75%;
-    }
-
-    .selected-block-monster-list ul {
-        max-height: 70%;
-    }
-
     .added-employee-list {
         max-height: 75%;
     }
 
     .task-data {
-        max-height: 60%;
+        max-height: 61%;
     }
 
-    .quill {
-        height: 75%;
+    .with-curator-comment{
+        max-height: 49%;
     }
 
     .personal-table {
@@ -1800,5 +1822,352 @@ table .approve-button {
         gap: 25px;
         height: 451px;
         padding-right: 10px;
+    }
+
+    .edit-profile-page, .useful-links-block, .progress-block, .achievements-block, .update-image, .task-data, .decline-comment-dialog, .add-employee-form, .employee-data{
+        width: auto !important;
+    }
+
+    .constructor-planet-list-block{
+        height: 75%;
+    }
+    
+    .constructor-task-list-block{
+        height: 70%;
+    }
+    
+    .quill-block{
+        height: 70%;
+    }
+}
+
+@media (max-width: 1280px) {
+    .planet button img {
+        width: 155px;
+    }
+
+    .big-planet button img {
+        width: 345px;
+    }
+
+    .planet button img {
+        width: 155px;
+    }
+
+    .big-planet button img {
+        width: 345px;
+    }
+
+    .comets img {
+        width: 467px;
+        height: 437px;
+    }
+
+    .notification-block{
+        width: 370px;
+    }
+
+    .notification-list {
+        height: 400px;
+    }
+
+    .task-content, .task-content{
+        font-size: 15px !important;
+    }
+
+    .task-comments input, .task-comments #comment {
+        height: 35px;
+        font-size: 15px;
+    }
+
+    .constructor-planet-list-block {
+        max-height: 75%;
+    }
+
+    header{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .task-approve-buttons button{
+        margin-top: 0;
+    }
+
+    .personal-table .approve-button{
+        font-size: 13px;
+        padding: 0 5px;
+        width: 90%;
+    }
+
+    .employee-data-container {
+        height: 70%;
+    }
+}
+
+@media (max-width: 1100px) {
+    .big-planet:nth-child(odd) .comets {
+        top: -0%;
+        left: 70%;
+    }
+
+    .big-planet:nth-child(even) .comets {
+        top: -10%;
+        right: 80%;
+    }
+
+    .comets img {
+        width: 371px;
+        height: 341px;
+    }
+
+    .profile-buttons{
+        width: 346px;
+    }
+
+    .profile-buttons p{
+        font-size: 14px;
+    }
+
+    .progress-content, .achievements-content {
+        height: 351px;
+    }
+
+    .edit-image .cropper{
+        height: 300px;
+    }
+
+    .task-block{
+        height: 84%;
+    }
+
+    .task-data {
+        max-height: 51%;
+    }
+
+    .with-curator-comment{
+        max-height: 39%;
+    }
+
+    .added-employee-block{
+        height: 80%;
+    }
+
+    .constructor-block button, .new-task-button{
+        font-size: 13px !important;
+    }
+
+    .constructor-planet-list button, .new-task-button{
+        height: fit-content;
+    }
+
+    .constructor-block button svg, .new-task-button svg{
+        width: 47px;
+    }
+
+    .header-task-form{
+        font-size: 17px;
+    }
+
+    .add-task-form-choice {
+        padding-right: 10px;
+    }
+    
+    .selected-bock-header p{
+        font-size: 20px;
+    }
+
+    .selected-bock-header span, .selected-task-input span {
+        font-size: 13px;
+        top: 56%;
+    }
+
+    .add-task-form select{
+        font-size: 20px;
+    }
+
+    .added-list-item{
+        width: 80%;
+    }
+
+    .quill-block{
+        height: 60%;
+    }
+
+    .decline-comment-field textarea{
+        height: 300px;
+    }
+
+    .personal-table{
+        height: 65%;
+    }
+
+    .constructor-planet-list-item .constructor-planet-list-item-content, .selected-block-monster-list-item .selected-block-monster-list-item-content{
+        width: 60%;
+    }
+}
+
+@media (max-width: 1000px) {
+    .big-planet:nth-child(odd) .comets {
+        top: -0%;
+        left: 70%;
+    }
+
+    .big-planet:nth-child(even) .comets {
+        top: -0%;
+        right: 80%;
+    }
+
+    .planet button img {
+        width: 123px;
+    }
+
+    .big-planet button img {
+        width: 313px;
+    }
+
+    .comets img {
+        width: 371px;
+        height: 341px;
+    }
+
+    .notification-block{
+        width: 270px;
+    }
+
+    .notification-list {
+        height: 300px;
+    }
+
+    .notification-item p, .notification-item b {
+        font-size: 0.5rem;
+    }
+
+    .not-checked{
+        width: 10px;
+        height: 10px 
+    }
+
+    .progress-content, .achievements-content{
+        height: 251px;
+    }
+
+    .edit-image .cropper{
+        height: 200px;
+    }
+
+    .task-block{
+        height: 81%;
+    }
+
+    .monster-content{
+        height: 90%;
+    }
+
+    .with-curator-comment{
+        max-height: 29%;
+    }
+
+    .header-nav{
+        font-size: 15px;
+    }
+
+    .constructor-task-list-block{
+        height: 60%;
+    }
+
+    .employee-data-container {
+        height: 60%;
+    }
+
+    .constructor-planet-list-item .constructor-planet-list-item-content, .selected-block-monster-list-item .selected-block-monster-list-item-content{
+        width: 50%;
+    }
+}
+
+@media (max-width: 900px) {
+    .big-planet:nth-child(odd) .comets {
+        transform: rotate(10deg);
+        top: 30% !important;
+        left: 70% !important; 
+    }
+
+    .big-planet:nth-child(even) .comets {
+        transform: rotate(135deg);
+        top: 30% !important;
+        right: 80% !important;
+    }
+
+    .planet:nth-child(even) .comets {
+        top: -20%;
+        right: 110%;
+    }
+    .planet:nth-child(odd) .comets {
+        top: -20%;
+        left: 100%;
+    }
+
+    .comets img {
+        width: 307px;
+        height: 277px;
+    }
+}
+
+@media (max-width: 800px) {
+    .planet:nth-child(even) .comets {
+        top: -20%;
+        right: 110%;
+    }
+    .planet:nth-child(odd) .comets {
+        top: -20%;
+        left: 100%;
+    }
+
+    .planet button img {
+        width: 91px;
+    }
+
+    .big-planet button img {
+        width: 281px;
+    }
+
+    .comets img {
+        width: 275px;
+        height: 245px;
+    }
+
+    .progress-bar div[role="progressbar"]{
+        min-width: 150px;
+    }
+
+    .notification-block{
+        width: 200px;
+    }
+
+    .notification-list {
+        height: 200px;
+    }
+
+    .notification-item p, .notification-item b {
+        font-size: 0.4rem;
+    }
+
+    .profile-buttons{
+        width: 246px;
+    }
+
+    .profile-buttons img{
+        height: 27px;
+    }
+
+    .profile-buttons p{
+        font-size: 8px;
+    }
+
+    .exit-button{
+        height: 20px;
+    }
+
+    .edit-profile-page{
+        width: 100%;
     }
 }

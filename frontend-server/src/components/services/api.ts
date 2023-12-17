@@ -33,7 +33,7 @@ export const createAPI = (): AxiosInstance => {
 
   api.interceptors.response.use(
     (config) => {
-      if((window.location.href.split('/')[3] === 'login' || !window.location.href.split('/')[3]) && config.data.role !== undefined){
+      if(((window.location.href.split('/')[3] === 'login' && !window.location.href.split('/')[4]) || !window.location.href.split('/')[3]) && config.data.role !== undefined){
         console.log(config.data.role)
         window.location.href = `/${config.data.role}`
       }

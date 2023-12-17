@@ -78,7 +78,7 @@ function TaskData({id, curatorAnswer, planetId, name, data, currentAnswer, taskS
     return ( 
         <>
             <p className="task-name">{name}</p>
-            <div style={curatorAnswer ? {height: '59%'}: {height:'71%'}} className="task-data" dangerouslySetInnerHTML={{__html: data}}></div>
+            <div className={curatorAnswer ? "task-data with-curator-comment" : "task-data"} dangerouslySetInnerHTML={{__html: data}}></div>
             {!isApprovePage ?
                         <form onSubmit={handleSubmit} className="task-comments">
                             <label htmlFor="comment"><p>Введите комментарий к этапу:</p></label>

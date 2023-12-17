@@ -34,6 +34,13 @@ function AddEmployeeForm({onDialogClick, isOpen}: AddEmployeeFormProps) {
       return () => window.removeEventListener('storage', handleStorage)
     }, [])
 
+    useEffect(() => {
+        setName('')
+        setEmail('')
+        setProduct('')
+        setRole('')
+    }, [isOpen])
+
     function nameChangeHandler(evt: ChangeEvent<HTMLInputElement>){
         const name = evt.target.value
         setName(name)

@@ -1,6 +1,7 @@
 export const planetNumber = 19
 export const taskNumber = 10
 export const maxWeightEdit = 1000000
+export const bigPlanets = ['3', '7', '13', '14', '16', '18', '19']
 
 export const errors: {[key: string]: string} = {
     LOGIN_BAD_CREDENTIALS: 'Неверный email или пароль',

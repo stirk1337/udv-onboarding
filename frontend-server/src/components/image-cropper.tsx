@@ -91,7 +91,7 @@ function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
             visibility: !isOpen ? "hidden" : "visible",
           }}>
             <div className="update-image-header">
-                <button onClick={onClickExit}>
+                <button onClick={()=> {setImage(null); onClickExit()}}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">
                             <path d="M29 2L2 29M2.00006 2L29 29" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
