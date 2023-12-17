@@ -69,7 +69,7 @@ class CuratorOut(BaseModel):
                           name=curator.user.name,
                           email=curator.user.email,
                           role=curator.user.role,
-                          image_url=curator.user.image_url,
+                          image_url=curator.user.image_url if curator.user.image_url else 'static/avatars/profile-logo.png',
                           contact=curator.user.contact)
 
 
@@ -88,7 +88,7 @@ class UserOut(BaseModel):
                        name=user.name,
                        email=user.email,
                        role=user.role,
-                       image_url=user.image_url,
+                       image_url=user.image_url if user.image_url else 'static/avatars/profile-logo.png',
                        contact=user.contact,
                        curator=CuratorOut.parse(curator) if curator else None)
 
@@ -116,6 +116,6 @@ class EmployeeOut(BaseModel):
                            employee_status=employee.employee_status,
                            created_at=employee.created_at,
                            updated_at=employee.updated_at,
-                           image_url=employee.user.image_url,
+                           image_url=employee.user.image_url if employee.user.image_url else 'static/avatars/profile-logo.png',
                            contact=employee.user.contact,
                            curator_id=employee.curator_id)

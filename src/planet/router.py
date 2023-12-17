@@ -60,7 +60,7 @@ async def get_planets(user: User = Depends(current_user),
     planets = [
         ShowPlanet.parse(planet) for planet in planets
     ]
-    planets = sorted(planets, key=lambda x: (x.pos, x.id))
+    planets = sorted(planets, key=lambda x: (-x.is_first_day, x.pos, x.id))
     return planets
 
 
@@ -79,7 +79,8 @@ async def get_employee_planets_by_employee_id(
         planet_dal = PlanetDAL(session)
         task_dal = TaskDAL(session)
         planets = await planet_dal.get_planets_for_employee(employee)
-        sorted_planets = sorted(planets, key=lambda x: (x.pos, x.id))
+        sorted_planets = sorted(
+            planets, key=lambda x: (-x.is_first_day, x.pos, x.id))
         for planet in sorted_planets:
             tasks = await task_dal.get_tasks_by_planet(planet)
             employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
@@ -104,7 +105,8 @@ async def get_employee_planets(
     planet_dal = PlanetDAL(session)
     task_dal = TaskDAL(session)
     planets = await planet_dal.get_planets_for_employee(employee)
-    sorted_planets = sorted(planets, key=lambda x: (x.pos, x.id))
+    sorted_planets = sorted(
+        planets, key=lambda x: (-x.is_first_day, x.pos, x.id))
     for planet in sorted_planets:
         tasks = await task_dal.get_tasks_by_planet(planet)
         employee_tasks = [await task_dal.get_employee_task(task, employee) for task in tasks]
@@ -167,7 +169,8 @@ async def change_planet_position(planet_in: PlanetInChangePos,
     curator_dal = CuratorDAL(session)
     curator = await curator_dal.get_curator_by_user(user)
     planets = await planet_dal.get_planets_for_curator(curator)
-    sorted_planets = sorted(planets, key=lambda x: (x.pos, x.id))
+    sorted_planets = sorted(
+        planets, key=lambda x: (-x.is_first_day, x.pos, x.id))
 
     if planet_in.new_pos < 0 or planet_in.new_pos >= len(sorted_planets):
         raise HTTPException(
