@@ -19,7 +19,6 @@ function Personal() {
     const [isSortProduct, setIsSortProduct] = useState('0')
     const [isSortRole, setIsSortRole] = useState('0')
     const [searchValue, setSearchValue] = useState('')
-    const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
 
     let personalData:UserOnPlanetData[] = searchFinder(sortPersonal(useAppSelector((state) => state.employees)))
     let currentEmployee = personalData.find(employee => employee.id === selectedEmployee) || personalData[0]
@@ -89,7 +88,6 @@ function Personal() {
 
     function closeDialog(){
         setSelectedEmployee(-1)
-        setVisibleBackdrop(false)
         dialogClickHandler(false);
     }
     console.log(isFormOpen, selectedEmployee)

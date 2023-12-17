@@ -118,11 +118,7 @@ export const loginAction = createAsyncThunk<void, Login, {
   }>(
     'user/newPassword',
     async (data, {dispatch, extra: api}) => {
-        try {
           await api.post<PlanetTask>(`/auth/reset-password`, {token: data.token, password: data.password})
           return true
-        } catch {
-          return false
-        }
     },
   );

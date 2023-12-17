@@ -1,4 +1,5 @@
 
+import { bigPlanets } from "../../const-data";
 import { Planet } from "../../types";
 import PlanetComponent from "./planet";
 
@@ -10,7 +11,7 @@ type PlanetBlockProps = {
 function PlanetBlock({planet, onPlanetClick}: PlanetBlockProps) {
     return ( 
         <>
-            <div className="planet">
+            <div className={bigPlanets.includes(planet.image.split('planet')[1]) ? 'planet big-planet' : 'planet'}>
                 <PlanetComponent planet={planet} onPlanetClick={onPlanetClick}/>
                 <div className="comets">
                     <img src="/comets.svg" alt=""></img>
