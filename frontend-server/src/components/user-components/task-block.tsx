@@ -27,8 +27,6 @@ function TaskBlock({}: TaskBlockProps) {
         navigate('/not-found')
     }
 
-    console.log(pId)
-
     useEffect(() =>{
         dispatch(getPlanetTasks(pId)).then(unwrapResult).then((tasks) => {checkDispatch(tasks)})
     }, [JSON.stringify(data), tId])

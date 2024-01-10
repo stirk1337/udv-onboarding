@@ -3,8 +3,8 @@ import { AppDispatch, State } from "..";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Id, Login, Planet, PlanetTask } from "../../../types";
 import { changeCurrentTask, logOut, login, redirectToRoute } from "../action";
-import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
-import { Token, createAPI } from "../../services/api";
+import { getCurrentUserInfo, getEmployees, getPlanet, getPlanetCuratorTasks, getPlanets } from "./get-actions";
+import { Token } from "../../services/api";
 
 export const loginAction = createAsyncThunk<void, Login, {
     dispatch: AppDispatch;
@@ -13,7 +13,6 @@ export const loginAction = createAsyncThunk<void, Login, {
   }>(
     'user/login',
     async (data, {dispatch, extra: api}) => {
-      console.log(data)
       const {data: tokenData} = await api.post<Token>('/auth/jwt/login', data, {headers: {
         'Content-Type': 'multipart/form-data'
       }});
@@ -117,7 +116,7 @@ export const loginAction = createAsyncThunk<void, Login, {
     extra: AxiosInstance;
   }>(
     'user/newPassword',
-    async (data, {dispatch, extra: api}) => {
+    async (data, {extra: api}) => {
           await api.post<PlanetTask>(`/auth/reset-password`, {token: data.token, password: data.password})
           return true
     },

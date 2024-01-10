@@ -8,14 +8,12 @@ import { checkTask } from "../store/api-actions/patch-action";
 import { useNavigate, useParams } from "react-router-dom";
 import { PlanetTaskForVerification } from "../../types";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { redirectToRoute } from "../store/action";
 
 function TaskForVerification() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const  {id} = useParams()
     const tId = id || ''
-    console.log(tId);
     const taskForVerificationStore = useAppSelector((state) => state.taskForVerification);
     const [taskForVerification, setTaskForVerification] = useState(useAppSelector((state) => state.taskForVerification))
     const [isDeclineOpen, setIsDeclineOpen] = useState(false)
@@ -26,7 +24,6 @@ function TaskForVerification() {
         if(currentTaskForVerificationId !== tId && tId) {
             setCurrentTaskForVerificationId(tId)
         }
-        console.log(currentTaskForVerificationId, tId)
     }, [tId])
 
     useEffect(() =>{
@@ -41,7 +38,6 @@ function TaskForVerification() {
 
     function checkDispatch(tasks: PlanetTaskForVerification[]){
         setTaskForVerification(tasks);
-        console.log(tasks)
         let curTask: PlanetTaskForVerification | 'not-found'
         if(currentTaskForVerificationId){
             curTask = tasks.find((task) => currentTaskForVerificationId === String(task.employee.id) + '-' + String(task.id)) || 'not-found'
@@ -49,7 +45,6 @@ function TaskForVerification() {
         else{
             curTask = tasks[0]
         }
-        console.log(curTask, currentTaskForVerificationId, tasks)
         if(curTask === 'not-found' && tasks.length !== 0){
             navigate(`/curator/tasks-for-verification/${tasks[0].employee.id}-${tasks[0].id}`)
             setCurrentTask(tasks[0])
@@ -63,7 +58,7 @@ function TaskForVerification() {
         setCurrentTask(taskForVerification.find(task => currentTaskForVerificationId === String(task.employee.id) + '-' + String(task.id)) || taskForVerification[0])
     },[taskForVerificationStore])
     
-    function taskClickHandler(evt: React.MouseEvent<HTMLLIElement>, idTask: number, idBlock: number){
+    function taskClickHandler(_arg: React.MouseEvent<HTMLLIElement>, idTask: number, idBlock: number){
         const currentTask = taskForVerification.find(task => task.id === idTask && task.planet_id === idBlock);
         setCurrentTaskForVerificationId(String(currentTask?.employee.id) + '-' + String(idTask))
         navigate(`/curator/tasks-for-verification/${currentTask?.employee.id}-${idTask}`)
@@ -103,8 +98,6 @@ function TaskForVerification() {
     function closeDialog(){
         setIsDeclineOpen(!isDeclineOpen)
     }
-
-    console.log(selectedTask)
 
     return ( 
         <>

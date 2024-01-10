@@ -5,11 +5,11 @@ import 'react-quill/dist/quill.snow.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import TaskConstructorTasks from './task-constructor-tasks';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { getPlanet, getPlanetCuratorTasks, getPlanetTasks, getPlanets } from '../store/api-actions/get-actions';
+import { getPlanet, getPlanetCuratorTasks } from '../store/api-actions/get-actions';
 import { deleteTask } from '../store/api-actions/delete-action';
 import { changeTaskPosition, updateTask } from '../store/api-actions/patch-action';
 import { createTask } from '../store/api-actions/post-actions';
-import { changeCurrentTask, clearCurrentPlanet, clearCurrentTask } from '../store/action';
+import { changeCurrentTask, clearCurrentTask } from '../store/action';
 import { maxWeightEdit, taskNumber } from '../../const-data';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { PlanetTask } from '../../types';
@@ -53,7 +53,6 @@ function TaskEditor() {
       if(isClicked){
           const lastChildElement = bottomEl.current?.lastElementChild;
           lastChildElement?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
-          console.log(bottomEl.current)
           setIsClicked(false)
       }
   }, [tasks])

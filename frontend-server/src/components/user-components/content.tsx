@@ -10,7 +10,6 @@ function Content() {
     const blockData = useAppSelector((state) => state.planets);
 
     function PlanetClickHandler(planetData: Planet){
-        console.log(planetData)
         dispatch(changeCurrentPlanet(planetData as CuratorPlanetData));
         dispatch(getPlanetTasks(planetData.id));
     }

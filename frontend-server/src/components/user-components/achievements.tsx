@@ -14,8 +14,6 @@ function Achievements({onClickExit, isOpen}:AchievementsProps) {
     const achievements = useAppSelector((state) => state.achievements)
     const [completedAchievementsNumber, setCompletedAchievementsNumber] = useState(0)
 
-    console.log(achievements)
-
     useEffect(() => {
         dispatch(getAchievements())
         setCompletedAchievementsNumber(achievements.filter(achievement => achievement.completed === true).length)

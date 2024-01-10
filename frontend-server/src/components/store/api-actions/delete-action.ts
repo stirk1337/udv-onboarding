@@ -3,7 +3,7 @@ import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
 import { Id } from "../../../types";
 import { clearCurrentPlanet, clearCurrentTask, login } from "../action";
-import { getPlanetCuratorTasks, getPlanetTasks, getPlanets } from "./get-actions";
+import { getPlanetCuratorTasks, getPlanets } from "./get-actions";
 
 export const deletePlanet = createAsyncThunk<void, Id, {
     dispatch: AppDispatch;

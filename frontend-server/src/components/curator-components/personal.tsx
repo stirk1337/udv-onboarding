@@ -22,7 +22,6 @@ function Personal() {
 
     let personalData:UserOnPlanetData[] = searchFinder(sortPersonal(useAppSelector((state) => state.employees)))
     let currentEmployee = personalData.find(employee => employee.id === selectedEmployee) || personalData[0]
-    console.log(isSortAdded, isSortName, isSortEmail, isSortProduct, isSortRole)
 
     useEffect(() => {
         dispatch(clearCurrentPlanet())
@@ -90,8 +89,7 @@ function Personal() {
         setSelectedEmployee(-1)
         dialogClickHandler(false);
     }
-    console.log(isFormOpen, selectedEmployee)
-    console.log(!isFormOpen || selectedEmployee === -1)
+    
     return ( 
         <>
             <div className="personal-block">

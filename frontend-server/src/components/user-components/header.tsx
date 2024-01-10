@@ -88,11 +88,6 @@ function Header() {
         setVisibleProfileEdit(false);
     }
 
-
-    console.log(currentPlanet)
-
-
-
     return ( 
         <header>
             <div className="logo">

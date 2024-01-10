@@ -14,9 +14,7 @@ function CuratorHeader() {
     const dispatch = useAppDispatch()
     const [isVisibleProfileButtons, setVisibleProfileButtons] = useState(false)
     const [isVisibleUsefulLinks, setVisibleUsefulLinks] = useState(false)
-    const [isVisibleProgress, setVisibleProgress] = useState(false)
     const [isVisibleNotification, setVisibleNotification] = useState(false)
-    const [isVisibleAchievements, setVisibleAchievements] = useState(false)
     const [isVisibleEditImage, setVisibleEditImage] = useState(false)
     const [isVisibleBackdrop, setVisibleBackdrop] = useState(false)
     const [isVisibleProfileEdit, setVisibleProfileEdit] = useState(false)
@@ -43,7 +41,6 @@ function CuratorHeader() {
     }
 
     function ProgressClickHandler(action: boolean){
-        setVisibleProgress(action);
         setVisibleBackdrop(action)
         setVisibleProfileButtons(false);
     }
@@ -55,7 +52,6 @@ function CuratorHeader() {
     }
 
     function AchievementsClickHandler(action: boolean){
-        setVisibleAchievements(action);
         setVisibleBackdrop(action)
         setVisibleProfileButtons(false);
     }
@@ -75,9 +71,7 @@ function CuratorHeader() {
         setVisibleBackdrop(false)
         setVisibleProfileButtons(false);
         setVisibleUsefulLinks(false);
-        setVisibleProgress(false);
         setVisibleNotification(false);
-        setVisibleAchievements(false);
         setVisibleEditImage(false);
         setVisibleProfileEdit(false);
     }
