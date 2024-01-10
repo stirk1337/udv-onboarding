@@ -12,6 +12,7 @@ function PlanetBlock({planet, onPlanetClick}: PlanetBlockProps) {
     return ( 
         <>
             <div className={bigPlanets.includes(planet.image.split('planet')[1]) ? 'planet big-planet' : 'planet'}>
+                <p>{planet.name}</p>
                 <PlanetComponent planet={planet} onPlanetClick={onPlanetClick}/>
                 <div className="comets">
                     <img src="/comets.svg" alt=""></img>

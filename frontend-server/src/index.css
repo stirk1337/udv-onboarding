@@ -225,6 +225,7 @@ main {
 }
 
 .planet-background{
+    padding-top: 20px;
     background-image: url(/public/background.svg);
     background-size: contain;
     display: flex;
@@ -611,6 +612,14 @@ main {
     cursor: pointer;
 }
 
+.planet p{
+    position: absolute;
+    text-align: center;
+    top: -15%;
+    font-weight: 700;
+    cursor: default;
+}
+
 
 .planet img{
     pointer-events: none;
@@ -637,6 +646,15 @@ main {
     transform: rotate(145deg);
     top: -50%;
     right: 110%;
+}
+
+.planet:nth-child(even) p {
+    width: 200%;
+}
+
+.planet:nth-child(odd) p {
+    left: -100%;
+    width: 200%;
 }
 
 .big-planet:nth-child(even) .comets {
@@ -900,7 +918,7 @@ main {
     fill: rgba(0, 201, 150, 1);
 }
 
-.monster p, .constructor-planet-list-item-content p, .selected-block-monster-list-item-content p
+.monster p, .constructor-planet-list-item-content p, .selected-block-monster-list-item-content p, .planet p
 {
     overflow: hidden;
     white-space: nowrap;
