@@ -1,10 +1,8 @@
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import InputComponent from "../components/input-component";
-import { store } from "../components/store";
-import { loginAction, newPassword } from "../components/store/api-actions/post-actions";
-import { useAppDispatch, useAppSelector } from "../components/hooks";
-import { UserRoles } from "../types";
+import { newPassword } from "../components/store/api-actions/post-actions";
+import { useAppDispatch } from "../components/hooks";
 import { errors } from "../const-data";
 
 function NewPasswordPage() {
@@ -21,7 +19,6 @@ function NewPasswordPage() {
     useEffect(() => {
         const handleStorage = () => {
           const error = localStorage.getItem('error') || ''
-          console.log(error)
           setErrorMessage(errors[error])
         }
       
@@ -57,7 +54,6 @@ function NewPasswordPage() {
         }
         else if(!errorMessage){
             const isValid = await dispatch(newPassword(data))
-            console.log(isValid)
             if(isValid.payload){
                 setNewPasswordIsSend(true)
             }

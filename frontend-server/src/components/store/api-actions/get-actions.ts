@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
-import { AxiosInstance, AxiosRequestConfig } from "axios";
+import { AxiosInstance } from "axios";
 import { login, redirectToRoute, setAchievements, setEmployees, setNotifications, setPercentageCompletedPlanets, setPercentageCompletedTasks, setPlanet, setPlanetTasks, setPlanets, setProgressData, setTaskForVerification, setUserData } from "../action";
 import { Planet, UserData, Id, PlanetTask, TaskStatus, CuratorPlanetData, UserOnPlanetData, PlanetTaskForVerification, NotificationType, Achievement, EmployeePlanets, EmployeeProgressData } from "../../../types";
 
@@ -11,10 +11,8 @@ export const getCurrentUserInfo = createAsyncThunk<void, undefined, {
   }>(
     'user/get-current-user-info',
     async (_arg, {dispatch, extra: api}) => {
-      console.log('www')
       try {
         const {data} = await api.get<UserData>('/user/get_current_user_info');
-        console.log(data)
         dispatch(setUserData(data))
         dispatch(login(true))
         dispatch(getPlanets())

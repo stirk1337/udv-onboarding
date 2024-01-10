@@ -12,7 +12,6 @@ function SelectOneEmployeeForm({idBlock}: SelectedBlockContentProps) {
     const employees = useAppSelector((state) => state.employees);
     const [employee, setEmployee] = useState('')
     const [employeeId, setEmployeeId] = useState(-1)
-    console.log(employee)
 
     useEffect(() => {
         setEmployee('')

@@ -1,10 +1,8 @@
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import { Navigate, redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputComponent from "../components/input-component";
-import { store } from "../components/store";
 import { loginAction } from "../components/store/api-actions/post-actions";
-import { useAppDispatch, useAppSelector } from "../components/hooks";
-import { UserRoles } from "../types";
+import { useAppDispatch } from "../components/hooks";
 import { errors } from "../const-data";
 
 function LoginPage() {

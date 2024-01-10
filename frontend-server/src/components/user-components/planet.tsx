@@ -1,4 +1,3 @@
-import { bigPlanets } from "../../const-data";
 import { Planet } from "../../types";
 
 type PlanetProps = {

@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { changeCurrentPlanet, changeCurrentTask, changePlanetName, changeTaskData, clearCurrentPlanet, clearCurrentTask, logOut, login, setAchievements, setEmployees, setErrorMessage, setNotifications, setPercentageCompletedPlanets, setPercentageCompletedTasks, setPlanet, setPlanetTasks, setPlanets, setProgressData, setTaskForVerification, setUserData } from './action';
-import { Achievement, CuratorPlanetData, EmployeePlanets, EmployeeProgressData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
+import { Achievement, CuratorPlanetData, EmployeeProgressData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, TaskStatus, UserData, UserOnPlanetData, UserRoles } from '../../types';
 
 type InitialState = {
   authorizationStatus: boolean;
@@ -83,7 +83,6 @@ export const reducer = createReducer(initialState, (builder) => {
         state.planetTasks = action.payload;
       })
       .addCase(setPlanet,(state,action) => {
-        console.log(action.payload)
         const tasks = action.payload.task_count
         if(tasks) {
           state.currentPlanet = action.payload;

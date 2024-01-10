@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../services/api";
 import { Draggable } from "react-beautiful-dnd";
 

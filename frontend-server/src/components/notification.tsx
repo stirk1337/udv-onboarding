@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { getPlanetTasks } from "./store/api-actions/get-actions";
 import { useAppDispatch } from "./hooks";
-import { NotificationCuratorData, Planet, PlanetTask, UserData, UserOnPlanetData } from "../types";
+import { NotificationCuratorData, PlanetTask, UserOnPlanetData } from "../types";
 import { readNotification } from "./store/api-actions/patch-action";
 import { BACKEND_URL } from "./services/api";
 
@@ -53,7 +53,6 @@ function Notification({id, data, date, checked, task, planet, employee, onClickE
 
     function getTextByType(type: string){
         if(type === 'new'){
-            console.log(id)
             return `${NotificationTextByType.new} "${planet.name}"`
         }
         else if(type === 'accept'){

@@ -3,7 +3,7 @@ import InputComponent from "./input-component";
 import { BACKEND_URL } from "./services/api";
 import { editUserProfile } from "./store/api-actions/patch-action";
 import { useAppDispatch } from "./hooks";
-import { UserData, UserRoles } from "../types";
+import { UserData } from "../types";
 
 type EditProfileProps = {
     onClickExit: () => void

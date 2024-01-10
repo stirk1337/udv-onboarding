@@ -11,7 +11,6 @@ type TaskProps = {
 
 function Task({id, currentTask, icon, taskStatus, name, taskClick}:TaskProps){
     const active = currentTask && 'active'
-    console.log(taskStatus)
     return ( 
         <div className={"monster " + active}>
             <button onClick={() => taskClick(id)}>

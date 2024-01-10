@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CuratorPlanetData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, UserData, UserOnPlanetData, Achievement, EmployeePlanets, EmployeeProgressData } from "../../types";
+import { CuratorPlanetData, NotificationType, Planet, PlanetTask, PlanetTaskForVerification, UserData, UserOnPlanetData, Achievement, EmployeeProgressData } from "../../types";
 
 export const redirectToRoute = createAction<string>('user/redirectToRoute');
 

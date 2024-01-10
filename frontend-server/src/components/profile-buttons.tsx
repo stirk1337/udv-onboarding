@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { UserRoles } from "../types";
-import { useAppDispatch, useAppSelector } from "./hooks";
+import { useAppDispatch } from "./hooks";
 import { logOutAction } from "./store/api-actions/post-actions";
 
 type ProfileButtonsProps = {

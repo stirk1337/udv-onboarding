@@ -1,10 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AddedEmployee from "./added-employee";
-import TaskConstructorTasks from "./task-constructor-tasks";
 import { UserOnPlanetData } from "../../types";
-import { useAppDispatch, useAppSelector } from "../hooks";
+import { useAppDispatch } from "../hooks";
 import { ChangeEvent, useEffect, useState } from "react";
-import { changePlanetName } from "../store/action";
 import { updateEmployeeOnPlanet, updatePlanetName } from "../store/api-actions/patch-action";
 import { getEmployees } from "../store/api-actions/get-actions";
 import SelectOneEmployeeForm from "./select-one-employee-form";

@@ -15,7 +15,6 @@ type StatisticEmployeesProps = {
 function StatisticEmployee({currentEmployee, onDelete, isOpen, clickExit}: StatisticEmployeesProps) {
     const dispatch = useAppDispatch()
     const progressData = useAppSelector((state) => state.employeeProgressPlanets)
-    console.log(progressData)
 
     useEffect(() => {
         if(isOpen){

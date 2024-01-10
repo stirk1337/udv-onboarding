@@ -1,9 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { TaskStatus } from "../../types";
-import { useDispatch } from "react-redux";
 import { updateAnswerTask } from "../store/api-actions/patch-action";
 import { store } from "../store";
-import { getPlanetTasks } from "../store/api-actions/get-actions";
 
 type TaskDataProps = {
     id: number;
@@ -40,7 +38,6 @@ function TaskData({id, curatorAnswer, planetId, name, data, currentAnswer, taskS
     const buttonInfo = getStyleForButton(taskStatus);
     
     function getStyleForButton(taskStatus: String){
-        console.log(taskStatus)
         if(taskStatus === TaskStatus.completed){
             return [ButtonClasses.completedButton, ButtonsContent.completedButton]
         }

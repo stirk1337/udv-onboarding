@@ -3,7 +3,7 @@ import PlanetBlockConstructor from "./planet-block-constructor";
 import SelectedBlockContent from "./selected-block-content";
 import { useAppSelector } from "../hooks";
 import { AppDispatch } from "../store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deletePlanet } from "../store/api-actions/delete-action";
 import { getPlanet } from "../store/api-actions/get-actions";
 import { createPlanet } from "../store/api-actions/post-actions";
@@ -35,7 +35,6 @@ function TaskConstructor() {
         if(isClicked){
             const lastChildElement = bottomEl.current?.lastElementChild;
             lastChildElement?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
-            console.log(bottomEl.current)
             setIsClicked(false)
         }
     }, [constructorPlanets])
@@ -60,12 +59,10 @@ function TaskConstructor() {
         }
         const lastPlanet = constructorPlanets[constructorPlanets.length - 1].image
         const iconId = Number(lastPlanet.split('planet')[1])
-        console.log(iconId, planetNumber)
         if(iconId === planetNumber){
             dispatch(createPlanet(1))
         }
         else{
-            console.log(iconId)
             dispatch(createPlanet(iconId + 1))
         }
     }
@@ -85,7 +82,6 @@ function TaskConstructor() {
           }
 
           const array = [...constructorPlanets]
-          console.log(array)
           const element = array[source.index]
           array.splice(source.index, 1)
           array.splice(destination.index, 0, element)

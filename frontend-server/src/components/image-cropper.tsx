@@ -27,10 +27,6 @@ function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
             inputRef.current.click();
         }
     };
-    
-    const onChange = (cropper: CropperRef) => {
-        console.log(cropper.getCoordinates(), cropper.getCanvas());
-    };
 
     const onCrop = () => {
         if (cropperRef.current) {
@@ -44,7 +40,6 @@ function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
     async function imageToFile(image: string){
         const file = await url2File(image, 'profile-logo.png')
         dispatch(updateImage({file: file}))
-        console.log('xd')
         setImage(null)
         onClickExit()
     }
@@ -57,7 +52,6 @@ function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
     const onLoadImage = (event: ChangeEvent<HTMLInputElement>) => {
         const { files } = event.target;
         if (files && files[0]) {
-            console.log(files[0].type)
             if(files[0].type.split('/')[0] !== 'image'){
                 setErrorMessage('Этот формат файлов не поддерживается')
                 return
@@ -81,8 +75,6 @@ function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
             }
         };
     }, [image]);
-
-    console.log(image)
     
     return (
         <div className='update-image' style={{
@@ -116,7 +108,6 @@ function ImageCropper({onClickExit, isOpen}: ImageCropperProps) {
                 <Cropper
                     ref={cropperRef}
                     src={image?.src}
-                    onChange={onChange}
                     stencilComponent={CircleStencil}
                     className={'cropper'}
                 />

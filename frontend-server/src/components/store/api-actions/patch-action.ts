@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, State } from "..";
 import { AxiosInstance } from "axios";
-import { changePlanetName, changeTaskData, login, setEmployees, setPlanet } from "../action";
-import { CuratorPlanetData, Id, Planet, UpdateAnswer } from "../../../types";
-import { getCurrentUserInfo, getEmployees, getNotifications, getPlanet, getPlanetTasks, getPlanets, getTasksBeingChecked } from "./get-actions";
+import { changePlanetName, changeTaskData, login } from "../action";
+import { CuratorPlanetData, Id, UpdateAnswer } from "../../../types";
+import { getCurrentUserInfo, getEmployees, getNotifications, getPlanet, getPlanetTasks, getTasksBeingChecked } from "./get-actions";
 
 export const updateAnswerTask = createAsyncThunk<void, UpdateAnswer, {
     dispatch: AppDispatch;

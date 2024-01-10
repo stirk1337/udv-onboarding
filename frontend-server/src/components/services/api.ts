@@ -1,7 +1,6 @@
-import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError} from 'axios';
+import axios, {AxiosInstance, AxiosResponse, AxiosError} from 'axios';
 import {StatusCodes} from 'http-status-codes';
 import {toast} from 'react-toastify';
-import { redirectToRoute } from '../store/action';
 
 type DetailMessageType = {
   type: string;
@@ -34,13 +33,11 @@ export const createAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (config) => {
       if(((window.location.href.split('/')[3] === 'login' && !window.location.href.split('/')[4]) || !window.location.href.split('/')[3]) && config.data.role !== undefined){
-        console.log(config.data.role)
         window.location.href = `/${config.data.role}`
       }
       return config
     },
     (error: AxiosError<DetailMessageType>) => {
-      console.log(error.response?.statusText)
       if(error.response?.statusText === 'Not Found' || error.response?.statusText === 'Unprocessable Entity'){
         window.location.href = '/Not-found'
       }
@@ -63,7 +60,6 @@ export const createAPI = (): AxiosInstance => {
 
   api.interceptors.request.use((request) => {
     const token = localStorage.getItem('token') && JSON.parse(localStorage.getItem('token') || '')
-    console.log(token);
     if (token) {
       request.headers.Authorization = `Bearer ${token}`;
     }

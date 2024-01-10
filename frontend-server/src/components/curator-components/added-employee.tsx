@@ -8,7 +8,6 @@ type AddedEmployeesProps = {
 }
 
 function AddedEmployee({id, avatar, data, onDelete}: AddedEmployeesProps) {
-    console.log(avatar);
     return ( 
         <li className="added-list-item" onClick={() => onDelete(id)}>
             <img className="profile-logo" src={avatar ? BACKEND_URL + '/' + avatar : '/profile-logo.png'} alt="" width={31} height={31}></img>
