@@ -32,6 +32,8 @@ function TaskEditor() {
     const [isClicked , setIsClicked] = useState(false)
     const [errorMessage, setErrorMessage] = useState(`${name.length}/100`)
     const [editWeight, setEditWeight] = useState(countWeight(description.length))
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [dialogOpenPlanetId, setDialogOpenPlanetId] = useState(-1)
 
     useEffect(() => {
       dispatch(clearCurrentTask())
@@ -99,8 +101,14 @@ function TaskEditor() {
     }
 
   function deleteTaskHandler(taskId: number){
-    dispatch(deleteTask({planetId: Number(id), taskId: taskId}))
-    dispatch(clearCurrentTask())
+    if(isDialogOpen){
+      dispatch(deleteTask({planetId: Number(id), taskId: taskId}))
+      dispatch(clearCurrentTask())
+    }
+    if(!isDialogOpen){
+        setDialogOpenPlanetId(taskId)
+    }
+    setIsDialogOpen(!isDialogOpen)
   }
 
   function onChangeNameHandler(evt: ChangeEvent<HTMLInputElement>){
@@ -158,6 +166,10 @@ function TaskEditor() {
         setTasks(array)
         dispatch(changeTaskPosition({taskId: draggableId, position: destination.index}))
     };
+
+    function closeDialog(){
+      setIsDialogOpen(!isDialogOpen)
+  }
     
     return ( 
         <div className='task-edit-block'>
@@ -202,6 +214,18 @@ function TaskEditor() {
                 <span className={editWeight >= 100 ? `error-message` : 'edit-message'}>{editWeight}% {String.fromCodePoint(getSmileByWeight(editWeight))}</span>
               </div>
             </div>}
+            {isDialogOpen && <div className="decline-comment-dialog">
+                <p>Вы уверены, что хотите удалить этап?</p>
+                <div className="dialog-buttons">
+                    <button className="approve-button" onClick={() => deleteTaskHandler(dialogOpenPlanetId)}>Да</button>
+                    <button className="decline-button" onClick={closeDialog}>Нет</button>
+                </div>
+            </div>}
+            <div style={{
+            opacity: !isDialogOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isDialogOpen ? "hidden" : "visible",
+          }} onClick={closeDialog} className={"backdrop"}></div>
         </div>
      );
 }

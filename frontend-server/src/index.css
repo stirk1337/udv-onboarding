@@ -620,6 +620,19 @@ main {
     cursor: default;
 }
 
+.dialog-buttons{
+    margin-top: 30px;
+    display: flex;
+    margin-bottom: 30px;
+    justify-content: center;
+    gap: 25%;
+}
+
+.dialog-buttons button{
+    margin: 0 !important;
+    width: 15%;
+}
+
 
 .planet img{
     pointer-events: none;

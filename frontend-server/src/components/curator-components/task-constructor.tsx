@@ -22,6 +22,8 @@ function TaskConstructor() {
     const dispatch = useDispatch<AppDispatch>()
     let personalList = currentConstructorPlanet.employees
     const [isClicked , setIsClicked] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [dialogOpenPlanetId, setDialogOpenPlanetId] = useState(-1)
 
     useEffect(() => {
         dispatch(clearCurrentPlanet())
@@ -48,7 +50,13 @@ function TaskConstructor() {
     }
 
     function deletePlanetHandler(id: number){
-        dispatch(deletePlanet(id))
+        if(isDialogOpen){
+            dispatch(deletePlanet(id))
+        }
+        if(!isDialogOpen){
+            setDialogOpenPlanetId(id)
+        }
+        setIsDialogOpen(!isDialogOpen)
     }
 
     function onClickAddPlaner(){
@@ -89,6 +97,10 @@ function TaskConstructor() {
           
         dispatch(changePlanerPosition({planetId: draggableId, position: destination.index}))
     };
+
+    function closeDialog(){
+        setIsDialogOpen(!isDialogOpen)
+    }
     
 
     return ( 
@@ -118,6 +130,18 @@ function TaskConstructor() {
                 </div>
             </DragDropContext>
             {currentConstructorPlanet.id !== -1 && <SelectedBlockContent inputRef={inputRef} numberTask={currentConstructorPlanet.task_count} personalList={personalList} idBlock={currentConstructorPlanet.id} blockName={currentConstructorPlanet.name}/>}
+            {isDialogOpen && <div className="decline-comment-dialog">
+                <p>Вы уверены, что хотите удалить планету?</p>
+                <div className="dialog-buttons">
+                    <button className="approve-button" onClick={() => deletePlanetHandler(dialogOpenPlanetId)}>Да</button>
+                    <button className="decline-button" onClick={closeDialog}>Нет</button>
+                </div>
+            </div>}
+            <div style={{
+            opacity: !isDialogOpen ? "0" : "1",
+            transition: "all .5s",
+            visibility: !isDialogOpen ? "hidden" : "visible",
+          }} onClick={closeDialog} className={"backdrop"}></div>
         </div>
     );
 }
