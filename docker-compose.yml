@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfiles/React
     restart: "always"
     ports:
-      - "5173:5173"
+      - "3000:3000"
 
   python:
     build:
@@ -51,7 +51,7 @@ services:
       dockerfile: Dockerfiles/Nginx
     restart: "always"
     ports:
-      - "80:80"
+      - "81:80"
     depends_on:
       - python
       - react
