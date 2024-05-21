@@ -51,7 +51,7 @@ services:
       dockerfile: Dockerfiles/Nginx
     restart: "always"
     ports:
-      - "81:80"
+      - "82:80"
     depends_on:
       - python
       - react
